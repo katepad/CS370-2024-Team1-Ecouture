@@ -1,20 +1,17 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class MyJDBC {
 
-    private static Connection connection;
+    private static Connection connect;
 
-    public static void connectDatabase(){
+    public static void openConnection(){
         try {
-
             //connect to local SQL workbench.
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_ecouture", "root", "cs370");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_ecouture", "root", "cs370");
 
             //TEST: test to see if connected.
-            System.out.println("connected");
+            System.out.println("connected to my local database successfully!");
 
         } catch (Exception e){
             //if connection is unsuccessful...
@@ -23,21 +20,15 @@ public class MyJDBC {
         }
     }
 
-    static void displayClothes(){
-        try {
-
-            //create an object that helps execute SQL queries.
-            Statement statement = connection.createStatement();
-            //create a result set that will store information based on statement query.
-            ResultSet resultSet = statement.executeQuery("select * from clothing");
-
-            while (resultSet.next()) { //"while there are items still left in the result set..."
-                System.out.println(resultSet.getString("clothing_material")); //print the information stored in result set by query.
+    public static void closeConnection(){
+        if (connect != null) { //if there has been an established connection,
+            try {
+                connect.close(); //close connection
+                System.out.println("connection closed.");
+            } catch (Exception e) {
+                System.out.println("cannot close connection.");
+                e.printStackTrace();
             }
-
-        } catch (Exception e){
-            //if connection is unsuccessful...
-            e.printStackTrace();
         }
     }
 
