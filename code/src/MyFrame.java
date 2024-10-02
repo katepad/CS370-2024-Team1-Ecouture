@@ -1,8 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
 
 public class MyFrame extends JFrame {
+
+    Font lato;
+    Font oswald;
 
     MyFrame() { //constructor to create a JFrame.
 
@@ -15,6 +21,27 @@ public class MyFrame extends JFrame {
 
         ImageIcon logo = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/ecouturelogo2.png"))); //create an image icon
         this.setIconImage(logo.getImage());
+    }
+
+    public void createFonts() {
+
+        //Create Lato font
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            lato = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/Lato-Regular.ttf")); // assign Lato font to variable
+            ge.registerFont(lato); // Register Lato to fonts
+        } catch (IOException | FontFormatException e) {
+            System.out.println("Cannot create the Lato Font.");
+        }
+
+        //Create Oswald Font
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            oswald = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/Oswald-SemiBold.ttf")); // assign Oswald font to variable
+            ge.registerFont(oswald); // Register Oswald to fonts
+        } catch (IOException | FontFormatException e) {
+            System.out.println("Cannot create the Oswald Font.");
+        }
     }
 
 }
