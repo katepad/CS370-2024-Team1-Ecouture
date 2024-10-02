@@ -16,11 +16,19 @@ public class MyFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //if you close the frame, exit the program
         this.setResizable(false); //prevents frame from being resized
         this.setSize(330, 700); //set size of JFrame.
-        this.setVisible(true); //actually show the JFrame
         this.getContentPane().setBackground(new Color(235,219,195));
 
         ImageIcon logo = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/ecouturelogo2.png"))); //create an image icon
         this.setIconImage(logo.getImage());
+
+        this.setLayout(new BorderLayout());
+
+        JPanel footer = new JPanel();
+        footer.setBackground(new Color(0,99,73));
+        footer.setPreferredSize(new Dimension(330,55));
+        this.add(footer,BorderLayout.SOUTH);
+
+        this.setVisible(true); //actually show the JFrame
     }
 
     public void createFonts() {
