@@ -38,7 +38,10 @@ public class MyFrame extends JFrame {
         //start Frame on Login Page by Default
         Login loginPanel = new Login(oswald, lato);
         this.add(loginPanel,BorderLayout.CENTER);
-
+        
+        StartPage startPage = new StartPage(oswald, lato);
+        this.add(startPage, BorderLayout.CENTER);
+        
         //show contents of Frame
         this.setVisible(true); //actually show the JFrame
     }
