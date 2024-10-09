@@ -26,27 +26,13 @@ public class StartPage extends JPanel
 
 
 
-   //-------------------CREATE EACH BUTTON FOR NAVIGATION BAR-----------------------------
-        Icon icon = new ImageIcon("pictures/homeButton.png");
-        homeButton = new JButton(icon); // Create a button with text only
-        homeButton.setBounds(10, 700, 60, 60); // Set the bounds
-        this.add(homeButton); // Add the button to the container
-
-        forumButton = new JButton("Forum");
-        forumButton.setBounds(90, 700, 60, 60);
-        this.add(forumButton);
-
-        closetButton = new JButton("Closet");
-        closetButton.setBounds(170, 700, 60, 60);
-        this.add(closetButton);
-
-        dashboardButton = new JButton("Dashboard");
-        dashboardButton.setBounds(250, 700, 60, 60);
-        this.add(dashboardButton);
-
-        reviewButton = new JButton("Review");
-        reviewButton.setBounds(330, 700, 60, 60);
-        this.add(reviewButton);
+   //-------------------CALL NAVIGATION BAR-----------------------------
+        // Add the navigation bar at the bottom
+        NavigationBar navigationBar = new NavigationBar();
+        navigationBar.setBounds(0, 720, 500, 60); // Adjust the size and position
+        this.add(navigationBar);
+        this.revalidate();
+        this.repaint();
 //--------------------------------------------------------------------------------------
 
 
