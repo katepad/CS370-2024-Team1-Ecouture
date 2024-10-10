@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class Login extends JPanel {
 
@@ -77,8 +80,54 @@ public class Login extends JPanel {
         //hide login error
         loginError.setVisible(false); //hide visibility until a login error happens.
 
+        //add action listener to login button to execute
+        loginButton.addActionListener(e -> loginButtonActionPerformed(e, oswald, lato));
+
         //show panel
         this.setVisible(true);
+    }
+
+    private void loginButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
+
+        try {
+            // Ensure database connection is valid
+            if (MyJDBC.connect == null || MyJDBC.connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return; // Exit the method if connection is not valid
+            }
+
+            //get input from username field
+            String username = unField.getText();
+            //get input from password field
+            String password = new String(pwField.getPassword()); // Use pwField for password
+
+            //create a statement to execute
+            Statement statement = MyJDBC.connect.createStatement();
+            //sql query to match user data
+            String sql = "Select * from user where user_username='" + username + "' and user_password='" + password + "'";
+            //find results of user data that matches the inputs from user table
+            ResultSet rs = statement.executeQuery(sql);
+
+            if(rs.next()) {
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                topFrame.getContentPane().removeAll(); // Clear all components from the frame
+                StartPage startPage = new StartPage(oswald, lato);
+                topFrame.add(startPage, BorderLayout.CENTER); // Add StartPage to the frame
+                topFrame.revalidate(); // Refresh the frame
+                topFrame.repaint(); // Repaint the frame
+                System.out.println("YAY! You're logged in!");
+            } else {
+                loginError.setVisible(true);
+                unField.setText("");
+                pwField.setText("");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("General error: " + e.getMessage());
+        }
+
     }
 
 
