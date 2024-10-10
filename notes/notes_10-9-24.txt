@@ -1,3 +1,2 @@
-If we use the Jforum API, we must connect it to the mySQL database.
-So, we must learn how to configure it before I attempt to make any tables related to the forum post.
-This also means I may have to change the ERD as well.
+We might not need to use a Jforum API.
+We could display forum post information via the database table.
