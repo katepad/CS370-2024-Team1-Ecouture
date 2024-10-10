@@ -27,21 +27,13 @@ public class MyFrame extends JFrame {
         //allow border layouts
         this.setLayout(new BorderLayout());
 
-        /*
-        //adding a footer to the frame
-        JPanel footer = new JPanel();
-        footer.setBackground(new Color(0,99,73));
-        footer.setPreferredSize(new Dimension(330,55));
-        this.add(footer,BorderLayout.SOUTH);
-        */
-
         //start Frame on Login Page by Default
         Login loginPanel = new Login(oswald, lato);
         this.add(loginPanel,BorderLayout.CENTER);
-        
-        StartPage startPage = new StartPage(oswald, lato);
-        this.add(startPage, BorderLayout.CENTER);
-        
+
+        //StartPage startPage = new StartPage(oswald, lato);
+        //this.add(startPage, BorderLayout.CENTER);
+
         //show contents of Frame
         this.setVisible(true); //actually show the JFrame
     }
