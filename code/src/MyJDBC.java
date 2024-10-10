@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 
 public class MyJDBC {
 
-    private static Connection connect;
+    public static Connection connect;
 
     public static void openConnection(){
         try {
@@ -16,7 +16,6 @@ public class MyJDBC {
         } catch (Exception e){
             //if connection is unsuccessful...
             System.out.println("didn't connect");
-            e.printStackTrace();
         }
     }
 
@@ -26,8 +25,8 @@ public class MyJDBC {
                 connect.close(); //close connection
                 System.out.println("connection closed.");
             } catch (Exception e) {
+                //if closing connection is not successful...
                 System.out.println("cannot close connection.");
-                e.printStackTrace();
             }
         }
     }
