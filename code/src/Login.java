@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class Login extends JPanel {
@@ -30,13 +29,13 @@ public class Login extends JPanel {
         logoDisplay = new JLabel(logo);
 
         // Set size and position for components
-        logoDisplay.setBounds(55, 0, 200, 200);
+        logoDisplay.setBounds(55, -5, 200, 200);
         usernameTitle.setBounds(50,225,100,30);
         passwordTitle.setBounds(50,325,100,30);
         unField.setBounds(50,275,200,30);
         pwField.setBounds(50,375,200,30);
-        loginButton.setBounds(30, 475, 100, 40);
-        signupButton.setBounds(180, 475, 100, 40);
+        loginButton.setBounds(180, 475, 100, 40);
+        signupButton.setBounds(30, 475, 100, 40);
         loginError.setBounds(50,425,250,30);
 
         // Set Label Titles Font: Oswald, size 18, green.
@@ -80,8 +79,11 @@ public class Login extends JPanel {
         //hide login error
         loginError.setVisible(false); //hide visibility until a login error happens.
 
-        //add action listener to login button to execute
+        //execute an attempt to login if login is clicked.
         loginButton.addActionListener(e -> loginButtonActionPerformed(e, oswald, lato));
+
+        //execute signup method if signup is clicked.
+        signupButton.addActionListener(e -> signupButtonActionPerformed(e, oswald, lato));
 
         //show panel
         this.setVisible(true);
@@ -109,8 +111,9 @@ public class Login extends JPanel {
             ResultSet rs = statement.executeQuery(sql);
 
             if(rs.next()) {
+                //Switch the Start Page by switching main JFrame
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.getContentPane().removeAll(); // Clear all components from the frame
+                topFrame.getContentPane().removeAll(); // Clear all components from the current frame
                 StartPage startPage = new StartPage(oswald, lato);
                 topFrame.add(startPage, BorderLayout.CENTER); // Add StartPage to the frame
                 topFrame.revalidate(); // Refresh the frame
@@ -129,6 +132,21 @@ public class Login extends JPanel {
         }
 
     }
+
+    private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
+        try {
+            //Switch the Signup Page by switching main JFrame
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.getContentPane().removeAll(); // Clear all components from the current frame
+            Signup signup = new Signup(oswald, lato);
+            topFrame.add(signup, BorderLayout.CENTER); // Add SignupPage to the frame
+            topFrame.revalidate(); // Refresh the frame
+            topFrame.repaint(); // Repaint the frame
+        } catch (Exception e) {
+            System.out.println("General error: " + e.getMessage());
+        }
+    }
+
 
 
 }
