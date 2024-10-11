@@ -10,7 +10,7 @@ public class NavigationBar extends JPanel {
         this.setBackground(new Color(0, 99, 73));
 
        // Set the layout to FlowLayout for automatic horizontal alignment
-        this.setLayout(new FlowLayout(FlowLayout.LEFT, 25, 5)); // alignment, h
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5)); // alignment, h
 
 
 //----------------------------------CREATE HOME BUTTON------------------------------------------------------------------------------------------
