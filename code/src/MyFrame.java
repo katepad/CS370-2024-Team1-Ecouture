@@ -17,7 +17,7 @@ public class MyFrame extends JFrame {
         this.setTitle("Ecouture"); //Title of the frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //if you close the frame, exit the program
         this.setResizable(false); //prevents frame from being resized
-        this.setSize(330, 700); //set size of JFrame.
+        this.setSize(400, 800); //set size of JFrame.
         this.getContentPane().setBackground(new Color(235,219,195));
 
         //add image logo for Frame
