@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Signup extends JPanel {
 
@@ -20,9 +25,12 @@ public class Signup extends JPanel {
 
     //Error msg.
     JLabel signupError = new JLabel("");
-    //"Passwords do not match"
-    //"Username already taken"
-    //"Please fill in required field"
+    boolean isError = true;
+
+    //variables to store field inputs:
+    String fullname;
+    String password;
+    String username;
 
     //Constructor to make Signup Panel
     Signup(Font oswald, Font lato) {
@@ -34,24 +42,24 @@ public class Signup extends JPanel {
         //edit signup page title label to match other page titles.
         signupTitle.setFont(oswald.deriveFont(30f)); //set font and text size
         signupTitle.setForeground(new Color (0, 99, 73)); //set color
-        signupTitle.setBounds(20, -60, 200, 200);
+        signupTitle.setBounds(50, -60+80, 200, 200);
 
         // Set size and position for components
 
         //titles and input fields
-        usernameTitle.setBounds(50, 100, 100, 30);
-        unField.setBounds(50, 140, 200, 30);
-        passwordTitle.setBounds(50, 200, 100, 30);
-        pwField.setBounds(50, 240, 200, 30);
-        passwordRetypeTitle.setBounds(50, 300, 200, 30);
-        pwrtField.setBounds(50, 340, 200, 30);
-        fullnameTitle.setBounds(50, 400, 200, 30);
-        fnField.setBounds(50, 440, 200, 30);
+        usernameTitle.setBounds(50, 100+80, 100, 30);
+        unField.setBounds(50, 140+80, 250, 30);
+        passwordTitle.setBounds(50, 200+80, 100, 30);
+        pwField.setBounds(50, 240+80, 250, 30);
+        passwordRetypeTitle.setBounds(50, 300+80, 200, 30);
+        pwrtField.setBounds(50, 340+80, 250, 30);
+        fullnameTitle.setBounds(50, 400+80, 300, 30);
+        fnField.setBounds(50, 440+80, 250, 30);
 
         //button and error msg
-        loginButton.setBounds(30, 540, 100, 40);
-        signupButton.setBounds(180, 540, 100, 40);
-        signupError.setBounds(50, 490, 250, 30);
+        signupError.setBounds(50, 490+80, 250, 30);
+        loginButton.setBounds(50, 540+80, 100, 40);
+        signupButton.setBounds(200, 540+80, 100, 40);
 
         // Set Label Titles Font: Oswald, size 18, green.
 
@@ -128,11 +136,78 @@ public class Signup extends JPanel {
         this.setVisible(true);
     }
 
+    private void validateSignup() throws SQLException {
+        // To Ensure real name has no special characters
+        fullname = fnField.getText(); //get name
+        Pattern fullnameP = Pattern.compile("[^a-zA-Z -]"); //pattern finds special characters
+        Matcher fullnameM = fullnameP.matcher(fullname); //match the string to pattern
+        boolean isInvalidRealname = fullnameM.find(); //boolean to see if there is a match
+
+        // To Ensure password fields match
+        password = new String(pwField.getPassword()); //get password
+        String passwordRetyped = new String(pwrtField.getPassword()); //get retyped password
+
+        // Ensure username field has no special characters
+        username = unField.getText(); //Get username
+        Pattern usernameP = Pattern.compile("[^a-zA-Z0-9._]"); //pattern finds special characters
+        Matcher usernameM = usernameP.matcher(username); //match the string to pattern
+        boolean isInvalidUsername = usernameM.find(); //boolean to see if there is a match
+
+        //Ensure the username is not taken.
+        Statement statement = MyJDBC.connect.createStatement();
+        //sql query to match user data
+        String sql = "Select * from user where user_username='" + username + "'";
+        //find results of user data that matches the inputs from user table
+        ResultSet rs = statement.executeQuery(sql);
+
+        if (rs.next()) {
+            signupError.setText("Username is already taken");
+            signupError.setVisible(true);
+            isError = true;
+        } else if (isInvalidUsername) {
+            signupError.setText("Your username has an invalid character");
+            signupError.setVisible(true);
+            isError = true;
+        } else if (!password.equals(passwordRetyped)) { //if passwords do not match,
+            signupError.setText("Your passwords do not match");
+            signupError.setVisible(true);
+            isError = true;
+        } else if (isInvalidRealname) {
+            signupError.setText("Your name has an invalid character");
+            signupError.setVisible(true);
+            isError = true;
+        } else {
+            isError = false;
+        }
+    }
+
     //When clicked, sign up the user to database.
     private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {
-            //TODO: Catch signup errors and set error msg for each scenario.
-            //TODO: Write SQL queries to register user to database.
+
+            //Ensure there is a connection to the database
+            if (MyJDBC.connect == null || MyJDBC.connect.isClosed()) {
+                    System.out.println("Database connection is not established.");
+                    return; // Exit the method if connection is not valid
+            }
+
+            validateSignup(); //check for any errors in the signup fields.
+
+            //If fields are successful...
+            if (!isError) { //if there are no errors,
+                signupError.setText("");
+
+                Statement statement = MyJDBC.connect.createStatement();
+                String sql = "INSERT INTO user (user_username, user_password, user_realname) VALUES ('" + username + "', '" + password + "', '" + fullname + "')";
+                statement.executeUpdate(sql);
+
+                //TODO: create a popup (in another function) that will redirect to login.
+
+                System.out.println("Signup Successful");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
         }
