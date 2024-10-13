@@ -14,6 +14,7 @@ public class Login extends JPanel {
     ImageIcon logo;
     JLabel logoDisplay;
     JLabel loginError = new JLabel("Invalid Username or Password.");
+    JLabel loginTitle = new JLabel("LOGIN");
 
     //Constructor to make Login Panel
     Login (Font oswald, Font lato) {
@@ -22,21 +23,28 @@ public class Login extends JPanel {
         this.setPreferredSize(new Dimension(330,700));
         this.setLayout(null);
 
-        //create image
+        //create image for logo to be put at the bottom
         logo = new ImageIcon (getClass().getResource("pictures/ecouturelogo2.png"));
         Image scaledLogo = logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Resize image to 100x100
         logo = new ImageIcon(scaledLogo);  // Update logo with resized image
         logoDisplay = new JLabel(logo);
 
+        //edit login page title label to match other page titles.
+        loginTitle.setFont(oswald.deriveFont(30f)); //set font and text size
+        loginTitle.setForeground(new Color (0, 99, 73)); //set color
+        loginTitle.setBounds(50, 165, 200, 200);
+
         // Set size and position for components
-        logoDisplay.setBounds(55, -5, 200, 200);
-        usernameTitle.setBounds(50,225,100,30);
-        passwordTitle.setBounds(50,325,100,30);
-        unField.setBounds(50,275,200,30);
-        pwField.setBounds(50,375,200,30);
-        loginButton.setBounds(180, 475, 100, 40);
-        signupButton.setBounds(30, 475, 100, 40);
-        loginError.setBounds(50,425,250,30);
+        logoDisplay.setBounds(90, 20, 200, 200);
+
+        usernameTitle.setBounds(50,325,100,30);
+        unField.setBounds(50,375,250,30);
+        passwordTitle.setBounds(50,425,100,30);
+        pwField.setBounds(50,475,250,30);
+
+        loginError.setBounds(50,525,250,30);
+        loginButton.setBounds(200, 575, 100, 40);
+        signupButton.setBounds(50, 575, 100, 40);
 
         // Set Label Titles Font: Oswald, size 18, green.
         usernameTitle.setForeground(new Color (0,99,73));
@@ -75,6 +83,7 @@ public class Login extends JPanel {
         this.add(signupButton);
         this.add(logoDisplay);
         this.add(loginError);
+        this.add(loginTitle);
 
         //hide login error
         loginError.setVisible(false); //hide visibility until a login error happens.
