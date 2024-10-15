@@ -36,7 +36,7 @@ public class Signup extends JPanel {
     Signup(Font oswald, Font lato) {
 
         this.setBackground(new Color(235, 219, 195));
-        this.setPreferredSize(new Dimension(330, 700));
+        this.setPreferredSize(new Dimension(400, 800));
         this.setLayout(null);
 
         //edit signup page title label to match other page titles.
@@ -90,7 +90,6 @@ public class Signup extends JPanel {
         signupButton.setFocusable(false);
 
         //redesign textboxes
-
         //set color of input field box
         unField.setBackground(new Color(247, 248, 247));
         pwField.setBackground(new Color(247, 248, 247));
@@ -115,8 +114,8 @@ public class Signup extends JPanel {
         this.add(passwordTitle);
         this.add(unField);
         this.add(pwField);
-        this.add(loginButton);
-        this.add(signupButton);
+        this.add(loginButton, 2);
+        this.add(signupButton, 2);
         this.add(signupError);
         this.add(passwordRetypeTitle);
         this.add(pwrtField);
@@ -130,10 +129,21 @@ public class Signup extends JPanel {
         loginButton.addActionListener(e -> loginButtonActionPerformed(e, oswald, lato));
 
         //execute signup method if signup is clicked.
-        signupButton.addActionListener(e -> signupButtonActionPerformed(e, oswald, lato));
+        signupButton.addActionListener(e -> signupButtonActionPerformed(e));
 
         //show panel
         this.setVisible(true);
+
+    }
+
+    private void confirmSignup() {
+
+        //remove the signup for login and signup
+        signupButton.setVisible(false);
+
+        signupError.setText("You have successfully made an account!");
+        signupError.setVisible(true);
+
     }
 
     private void validateSignup() throws SQLException {
@@ -160,7 +170,11 @@ public class Signup extends JPanel {
         //find results of user data that matches the inputs from user table
         ResultSet rs = statement.executeQuery(sql);
 
-        if (rs.next()) {
+        if (username.isEmpty() || password.isEmpty() || passwordRetyped.isEmpty() || fullname.isEmpty()) {
+            signupError.setText("Must fill out all fields");
+            signupError.setVisible(true);
+            isError = true;
+        } else if (rs.next()) {
             signupError.setText("Username is already taken");
             signupError.setVisible(true);
             isError = true;
@@ -182,7 +196,7 @@ public class Signup extends JPanel {
     }
 
     //When clicked, sign up the user to database.
-    private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
+    private void signupButtonActionPerformed(Object evt) {
         try {
 
             //Ensure there is a connection to the database
@@ -201,9 +215,9 @@ public class Signup extends JPanel {
                 String sql = "INSERT INTO user (user_username, user_password, user_realname) VALUES ('" + username + "', '" + password + "', '" + fullname + "')";
                 statement.executeUpdate(sql);
 
-                //TODO: create a popup (in another function) that will redirect to login.
-
                 System.out.println("Signup Successful");
+
+                confirmSignup();
             }
 
         } catch (SQLException e) {
