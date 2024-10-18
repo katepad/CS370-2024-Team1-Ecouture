@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.Objects;
 
 public class Login extends JPanel {
 
@@ -20,11 +21,11 @@ public class Login extends JPanel {
     Login (Font oswald, Font lato) {
 
         this.setBackground(new Color(235,219,195));
-        this.setPreferredSize(new Dimension(330,700));
+        this.setPreferredSize(new Dimension(400,800));
         this.setLayout(null);
 
         //create image for logo to be put at the bottom
-        logo = new ImageIcon (getClass().getResource("pictures/ecouturelogo2.png"));
+        logo = new ImageIcon (Objects.requireNonNull(getClass().getResource("pictures/ecouturelogo2.png")));
         Image scaledLogo = logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Resize image to 100x100
         logo = new ImageIcon(scaledLogo);  // Update logo with resized image
         logoDisplay = new JLabel(logo);
@@ -120,6 +121,7 @@ public class Login extends JPanel {
             ResultSet rs = statement.executeQuery(sql);
 
             if(rs.next()) {
+
                 //Switch the Start Page by switching main JFrame
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                 topFrame.getContentPane().removeAll(); // Clear all components from the current frame
@@ -127,6 +129,7 @@ public class Login extends JPanel {
                 topFrame.add(startPage, BorderLayout.CENTER); // Add StartPage to the frame
                 topFrame.revalidate(); // Refresh the frame
                 topFrame.repaint(); // Repaint the frame
+
                 System.out.println("YAY! You're logged in!");
             } else {
                 loginError.setVisible(true);
