@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -201,8 +202,8 @@ public class Signup extends JPanel {
 
             //Ensure there is a connection to the database
             if (MyJDBC.connect == null || MyJDBC.connect.isClosed()) {
-                    System.out.println("Database connection is not established.");
-                    return; // Exit the method if connection is not valid
+                System.out.println("Database connection is not established.");
+                return; // Exit the method if connection is not valid
             }
 
             validateSignup(); //check for any errors in the signup fields.
@@ -210,7 +211,13 @@ public class Signup extends JPanel {
             //If fields are successful...
             if (!isError) { //if there are no errors,
                 signupError.setText("");
-
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
+                StringBuilder hexstring = new StringBuilder();
+                for(byte b : messageDigest){
+                    hexstring.append(String.format("%02x",b));
+                }
+                password = new String(hexstring);
                 Statement statement = MyJDBC.connect.createStatement();
                 String sql = "INSERT INTO user (user_username, user_password, user_realname) VALUES ('" + username + "', '" + password + "', '" + fullname + "')";
                 statement.executeUpdate(sql);
