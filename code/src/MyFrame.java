@@ -46,17 +46,9 @@ public class MyFrame extends JFrame {
 
         // Pass the initialized fonts (or default if failed) to StartPage
         Closet Closet = new Closet(oswald, lato, this);
-        // Wrap the Closet panel in a JScrollPane
-        JScrollPane scrollableCloset = new JScrollPane(Closet);
-        scrollableCloset.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollableCloset.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         cardPanel.add(Closet, "Closet");
 
         Forum Forum = new Forum(oswald, lato, this);
-        // Wrap the Closet panel in a JScrollPane
-        JScrollPane scrollableForum = new JScrollPane(Forum);
-        scrollableForum.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollableForum.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         cardPanel.add(Forum, "Forum");
         
         //show contents of Frame
