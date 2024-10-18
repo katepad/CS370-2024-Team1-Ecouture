@@ -1,7 +1,7 @@
 CREATE TABLE `jdbc_ecouture`.`user` (
   `user_ID` INT NOT NULL AUTO_INCREMENT,
   `user_username` VARCHAR(45) NOT NULL,
-  `user_password` VARCHAR(43) NOT NULL,
+  `user_password` VARCHAR(100) NOT NULL,
   `user_realname` VARCHAR(45) NULL,
   PRIMARY KEY (`user_ID`)
 );
