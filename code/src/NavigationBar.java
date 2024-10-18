@@ -1,15 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 //class to use throughout all other programs
 public class NavigationBar extends JPanel {
 
-    public NavigationBar() {
+   private MyFrame frame;
+
+    public NavigationBar(MyFrame frame)
+    {
+       this.frame = frame;
 
         // Set the background color
         this.setBackground(new Color(0, 99, 73));
 
-       // Set the layout to FlowLayout for automatic horizontal alignment
+        // Set the layout to FlowLayout for automatic horizontal alignment
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5)); // alignment, h
 
 
@@ -23,8 +30,15 @@ public class NavigationBar extends JPanel {
         homeButton.setBorderPainted(false);
         homeButton.setFocusPainted(false);
         homeButton.setContentAreaFilled(false);
-//------------------------------------------------------------------------------------------------------------------------------------------------
 
+        //attach homeButton to startPage
+        homeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Switch to the StartPage when the Home button is clicked
+                frame.showPage("StartPage");
+            }
+        });
+//------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 //------------------------------CREATE FORUM BUTTON-----------------------------------------------------------------------------------------------
@@ -36,34 +50,55 @@ public class NavigationBar extends JPanel {
         forumButton.setBorderPainted(false);
         forumButton.setFocusPainted(false);
         forumButton.setContentAreaFilled(false);
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 
+     //attach closet button to clost button
+     forumButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+       // Switch to the StartPage when the Home button is clicked
+       frame.showPage("Forum");
+      }
+     });
+//-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 //---------------------------------CREATE CLOSET BUTTON--------------------------------------------------------------------------------------------
-       ImageIcon closetIcon = new ImageIcon(getClass().getResource("/pictures/closetIcon.png"));
-       Image image3 = closetIcon.getImage();
-       Image scaledImage3 = image3.getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH);
-       ImageIcon scaledClosetIcon = new ImageIcon(scaledImage3);
-       JButton closetButton = new JButton(scaledClosetIcon);
-       closetButton.setBorderPainted(false);
-       closetButton.setFocusPainted(false);
-       closetButton.setContentAreaFilled(false);
-//-------------------------------------------------------------------------------------------------------------------------------------------------
+        ImageIcon closetIcon = new ImageIcon(getClass().getResource("/pictures/closetIcon.png"));
+        Image image3 = closetIcon.getImage();
+        Image scaledImage3 = image3.getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon scaledClosetIcon = new ImageIcon(scaledImage3);
+        JButton closetButton = new JButton(scaledClosetIcon);
+        closetButton.setBorderPainted(false);
+        closetButton.setFocusPainted(false);
+        closetButton.setContentAreaFilled(false);
 
+        //attach closet button to clost button
+       closetButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+             // Switch to the StartPage when the Home button is clicked
+             frame.showPage("Closet");
+          }
+       });
+//-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 //------------------------------------------------CREATE DASHBOARD BUTTON---------------------------------------------------------------------------
-       ImageIcon dashIcon = new ImageIcon(getClass().getResource("/pictures/dashIcon.png"));
-       Image image4 = dashIcon.getImage();
-       Image scaledImage4 = image4.getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH);
-       ImageIcon scaledDashIcon = new ImageIcon(scaledImage4);
-       JButton dashButton = new JButton(scaledDashIcon);
-       dashButton.setBorderPainted(false);
-       dashButton.setFocusPainted(false);
-       dashButton.setContentAreaFilled(false);
-//-------------------------------------------------------------------------------------------------------------------------------------------------
+        ImageIcon dashIcon = new ImageIcon(getClass().getResource("/pictures/dashIcon.png"));
+        Image image4 = dashIcon.getImage();
+        Image scaledImage4 = image4.getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon scaledDashIcon = new ImageIcon(scaledImage4);
+        JButton dashButton = new JButton(scaledDashIcon);
+        dashButton.setBorderPainted(false);
+        dashButton.setFocusPainted(false);
+        dashButton.setContentAreaFilled(false);
 
+     //attach closet button to clost button
+     dashButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+       // Switch to the StartPage when the Home button is clicked
+       frame.showPage("DashBoard");
+      }
+     });
+//-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 //-------------------------------------------CREATE REVIEW BUTTON-----------------------------------------------------------------------------------
@@ -75,8 +110,15 @@ public class NavigationBar extends JPanel {
         reviewButton.setBorderPainted(false);
         reviewButton.setFocusPainted(false);
         reviewButton.setContentAreaFilled(false);
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 
+     //attach closet button to clost button
+     reviewButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+       // Switch to the StartPage when the Home button is clicked
+       frame.showPage("Review");
+      }
+     });
+//-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
         // Set square size for each button (e.g., 45x45)
@@ -88,7 +130,6 @@ public class NavigationBar extends JPanel {
         reviewButton.setPreferredSize(squareSize);
 
 
-
         // Add buttons to the panel
         this.add(homeButton);
         this.add(forumButton);
@@ -98,8 +139,7 @@ public class NavigationBar extends JPanel {
 
 
 
-            // Set preferred size to ensure the navigation bar is displayed
-            this.setPreferredSize(new Dimension(400, 60));
+    }
+
 
     }
-}
