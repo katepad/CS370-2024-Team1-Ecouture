@@ -99,7 +99,7 @@ public class NavigationBar extends JPanel {
 
 
             // Set preferred size to ensure the navigation bar is displayed
-            this.setPreferredSize(new Dimension(500, 60));
+            this.setPreferredSize(new Dimension(400, 60));
 
     }
 }
