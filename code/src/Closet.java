@@ -13,8 +13,8 @@ public class Closet extends JPanel {
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //-------------------------------------------------------------------------
 
-       //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
-        NavigationBar navigationBar = new NavigationBar();
+        //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
+        NavigationBar navigationBar = new NavigationBar(oswald, lato);
         this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // --------------------------------------------------------------------------------------
 
@@ -66,5 +66,4 @@ public class Closet extends JPanel {
 
 
 
-    }
-
+}
