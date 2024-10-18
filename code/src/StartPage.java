@@ -4,30 +4,31 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.Color;
+import java.util.Objects;
 
 
-//WORK ON ATTACHING BUTTONS TO NEXT ACTION AND LOAD INCONS ON JBUTTONS
+//WORK ON ATTACHING BUTTONS TO NEXT ACTION AND LOAD ICONS ON BUTTONS
 
 public class StartPage extends JPanel
 {
 
     //button variables for navigation bar and texts
- JLabel aboutUs, aboutText, MissonText;
+    JLabel aboutUs, aboutText, MissonText;
 
- //constructor
-    StartPage(Font oswald, Font lato, MyFrame frame)
-    {
-    //-----------------------Set background color and preferred size----------
+    //constructor
+    StartPage(Font oswald, Font lato) {
+
+        //-----------------------Set background color and preferred size----------
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(330, 700));
         this.setLayout(null);
-   //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
 
 
-   //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
+        //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
         // Add the navigation bar at the bottom
-        NavigationBar navigationBar = new NavigationBar(frame);
+        NavigationBar navigationBar = new NavigationBar(oswald,lato);
         navigationBar.setBounds(0, 720, 500, 55); // Adjust the size and position
         this.add(navigationBar);
         this.revalidate();
@@ -45,9 +46,9 @@ public class StartPage extends JPanel
 
         //create about us TEXT
         aboutText = new JLabel("<html><div style='width:230px;'>" +
-                                                "Welcome to Ecouture, A friendly and " +
-                                                 "informative application that will teach you " +
-                                                "about how your shopping habits impact our environment." + "</div></html>");
+                "Welcome to Ecouture, A friendly and " +
+                "informative application that will teach you " +
+                "about how your shopping habits impact our environment." + "</div></html>");
 
         aboutText.setFont(lato.deriveFont(15f)); //set font and text size
         aboutText.setForeground(new Color (0, 99, 73)); //set color of text
@@ -57,22 +58,22 @@ public class StartPage extends JPanel
 
 
 
- //-----------------------------------------OUR MISSION---------------------------------------------------------------
+        //-----------------------------------------OUR MISSION---------------------------------------------------------------
         //create Our Mission Text
         MissonText = new JLabel("<html><div style='width:250px;'>" +
-                                            "Our mission is to educate the newer generations on sustainable" +
-                                            " shopping methods. With the rise of fast fashion we have seen " +
-                                            "the negative impacts it has had on our environment, from water" +
-                                            " pollution and deforestation to excessive waste. Our mission is " +
-                                            "to convert people to more eco-friendly practices, thereby fostering a healthier planet." + "</div></html>");
+                "Our mission is to educate the newer generations on sustainable" +
+                " shopping methods. With the rise of fast fashion we have seen " +
+                "the negative impacts it has had on our environment, from water" +
+                " pollution and deforestation to excessive waste. Our mission is " +
+                "to convert people to more eco-friendly practices, thereby fostering a healthier planet." + "</div></html>");
 
         MissonText.setFont(lato.deriveFont(15f)); //set font and text size
         MissonText.setForeground(new Color (0, 99, 73)); //set color of text
         MissonText.setBounds(22, 420, 350, 280); //set location
 
-       // Create a custom border with rounded corners
+        // Create a custom border with rounded corners
         Border roundedBorder = new LineBorder(new Color(0, 99, 73), 5, true); // Rounded edge with thickness 3
-       // Add a titled border around the label with the title "OUR MISSION"
+        // Add a titled border around the label with the title "OUR MISSION"
         TitledBorder title = new TitledBorder(roundedBorder, "OUR MISSION", TitledBorder.CENTER, TitledBorder.TOP);
         title.setTitleFont(oswald.deriveFont(30f));  // Set custom font size for the title
         title.setTitleColor(new Color(0, 99, 73)); // Set the color of the title
@@ -84,7 +85,7 @@ public class StartPage extends JPanel
 
 //----------------------------------IMAGE FOR HOME PAGE CURRENT IMAGE IS PLACE HOLDER!!!! -----------------------------
 // Load the image and scale it to the desired size
-        ImageIcon fact = new ImageIcon(getClass().getResource("pictures/facts.png"));
+        ImageIcon fact = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/ecouturelogo.png")));
         Image scaledFact = fact.getImage().getScaledInstance(300, 249, 4); // Resize image smoothly
         fact = new ImageIcon(scaledFact);  // Update fact with resized image
 // Create a JLabel to display the image
@@ -94,11 +95,8 @@ public class StartPage extends JPanel
 // Add the image display to the panel
         this.add(factDisplay);
 
-
-
 //---------------------------------------------------------------------------------------------------------------------
 
     }
 }
 
- 
