@@ -11,12 +11,12 @@ public class Forum extends JPanel {
         //-------------------------------------------------------------------------
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
-        NavigationBar navigationBar = new NavigationBar();
+        NavigationBar navigationBar = new NavigationBar(oswald, lato);
         this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // --------------------------------------------------------------------------------------
 
+        //-------------------ADD SOME FAKE ITEMS FOR DEMO-----------------------------//
 
-        //-------------------ADD SOME FAKE ITEMS FOR DEMO-----------------------------
         //-------------------CREATE PANEL (SCROLLABLE PART)-----------------------------
         JPanel ChatItemsPanel = new JPanel();
         ChatItemsPanel.setLayout(new BoxLayout(ChatItemsPanel, BoxLayout.Y_AXIS));
