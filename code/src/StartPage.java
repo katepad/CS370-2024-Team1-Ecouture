@@ -10,11 +10,12 @@ import java.awt.Color;
 
 public class StartPage extends JPanel
 {
-  //button variables for navigation bar and texts
+
+    //button variables for navigation bar and texts
  JLabel aboutUs, aboutText, MissonText;
 
  //constructor
-    StartPage(Font oswald, Font lato)
+    StartPage(Font oswald, Font lato, MyFrame frame)
     {
     //-----------------------Set background color and preferred size----------
         this.setBackground(new Color(235, 219, 195));
@@ -26,7 +27,7 @@ public class StartPage extends JPanel
 
    //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
         // Add the navigation bar at the bottom
-        NavigationBar navigationBar = new NavigationBar();
+        NavigationBar navigationBar = new NavigationBar(frame);
         navigationBar.setBounds(0, 720, 500, 55); // Adjust the size and position
         this.add(navigationBar);
         this.revalidate();
@@ -99,3 +100,5 @@ public class StartPage extends JPanel
 
     }
 }
+
+ 
