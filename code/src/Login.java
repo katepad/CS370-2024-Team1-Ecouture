@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Objects;
 
@@ -115,6 +116,15 @@ public class Login extends JPanel {
 
             //create a statement to execute
             Statement statement = MyJDBC.connect.createStatement();
+            //Hash password to send to database to check
+            MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
+            byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
+            StringBuilder hexstring = new StringBuilder();//The new string that will be hashed
+            for(byte b : messageDigest){
+                hexstring.append(String.format("%02x",b)); //Format of hashing
+            }
+            password = new String(hexstring);
+
             //sql query to match user data
             String sql = "Select * from user where user_username='" + username + "' and user_password='" + password + "'";
             //find results of user data that matches the inputs from user table
