@@ -31,6 +31,15 @@ public class MyFrame extends JFrame {
         Login loginPanel = new Login(oswald, lato);
         this.add(loginPanel,BorderLayout.CENTER);
 
+        StartPage StartPage = new StartPage(oswald, lato);
+        this.add(StartPage, BorderLayout.CENTER);
+
+         Closet Closet = new Closet(oswald, lato);
+        this.add(Closet, BorderLayout.CENTER);
+
+         Forum Forum = new Forum(oswald, lato);
+        this.add(Forum, BorderLayout.CENTER);
+        
         //show contents of Frame
         this.setVisible(true); //actually show the JFrame
     }
