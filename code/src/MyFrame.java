@@ -41,8 +41,6 @@ public class MyFrame extends JFrame {
          // Pass the initialized fonts (or default if failed) to StartPage
         StartPage startPage = new StartPage(oswald, lato, this);
         cardPanel.add(startPage, "StartPage");
-        cardLayout.show(cardPanel, "StartPage");
-
 
         // Pass the initialized fonts (or default if failed) to StartPage
         Closet Closet = new Closet(oswald, lato, this);
