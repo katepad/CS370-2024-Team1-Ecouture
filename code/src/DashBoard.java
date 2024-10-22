@@ -27,8 +27,16 @@ public class DashBoard extends JPanel {
             DashPanel.add(itemLabel);
             DashPanel.add(Box.createRigidArea(new Dimension(0, 10)));  // Add some space between items
         }
+    
+        
 
         // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
         JScrollPane scrollPane = new JScrollPane(DashPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+         // Add the scrollable items to the CENTER of the layout
+        this.add(scrollPane, BorderLayout.CENTER);
+
+    }
+}
