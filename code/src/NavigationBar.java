@@ -152,9 +152,15 @@ public class NavigationBar extends JPanel {
         }
     }
 
-    private void dashButtonActionPerformed(Object evt, Font oswald, Font lato) {
+   private void dashButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {
-            //Switch the StartPage to Dashboard
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.getContentPane().removeAll(); // Clear current page from the current frame
+            DashBoard Dash = new DashBoard(oswald, lato);
+            topFrame.add(Dash, BorderLayout.CENTER); // Add Page to the frame
+            topFrame.revalidate(); // Refresh the frame
+            topFrame.repaint(); // Repaint the frame
+            
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
             System.out.println("Can't open dashboard page");
@@ -163,10 +169,16 @@ public class NavigationBar extends JPanel {
 
     private void reviewButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {
-            //Switch the StartPage to Review Page
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.getContentPane().removeAll(); // Clear current page from the current frame
+            Review Review = new Review(oswald, lato);
+            topFrame.add(Review, BorderLayout.CENTER); // Add Page to the frame
+            topFrame.revalidate(); // Refresh the frame
+            topFrame.repaint(); // Repaint the frame
+            
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
-            System.out.println("Can't open dashboard page");
+            System.out.println("Can't open Review page");
         }
     }
 
