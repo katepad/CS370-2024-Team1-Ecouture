@@ -4,9 +4,9 @@ import java.util.Objects;
 
 
 //class to use throughout all other programs
-public class NavigationBar extends JPanel {
+public class navigationBarView extends JPanel {
 
-    public NavigationBar(Font oswald, Font lato) {
+    public navigationBarView(Font oswald, Font lato) {
 
         // Set the background color
         this.setBackground(new Color(0, 99, 73));
@@ -112,7 +112,7 @@ public class NavigationBar extends JPanel {
             //Switch the StartPage to StartPage
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            StartPage startpage = new StartPage(oswald, lato);
+            startPageView startpage = new startPageView(oswald, lato);
             topFrame.add(startpage, BorderLayout.CENTER); // Add StartPage to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -127,7 +127,7 @@ public class NavigationBar extends JPanel {
             //Switch the StartPage to Forum
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            Forum forumpage = new Forum(oswald, lato);
+            forumView forumpage = new forumView(oswald, lato);
             topFrame.add(forumpage, BorderLayout.CENTER); // Add Forum Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -142,7 +142,7 @@ public class NavigationBar extends JPanel {
             //Switch the StartPage to Closet
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            Closet closetpage = new Closet(oswald, lato);
+            closetView closetpage = new closetView(oswald, lato);
             topFrame.add(closetpage, BorderLayout.CENTER); // Add Forum Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -152,15 +152,15 @@ public class NavigationBar extends JPanel {
         }
     }
 
-   private void dashButtonActionPerformed(Object evt, Font oswald, Font lato) {
+    private void dashButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            DashBoard Dash = new DashBoard(oswald, lato);
+            dashboardView Dash = new dashboardView(oswald, lato);
             topFrame.add(Dash, BorderLayout.CENTER); // Add Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
-            
+
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
             System.out.println("Can't open dashboard page");
@@ -171,11 +171,11 @@ public class NavigationBar extends JPanel {
         try {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            Review Review = new Review(oswald, lato);
-            topFrame.add(Review, BorderLayout.CENTER); // Add Page to the frame
+            reviewView reviewView = new reviewView(oswald, lato);
+            topFrame.add(reviewView, BorderLayout.CENTER); // Add Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
-            
+
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
             System.out.println("Can't open Review page");
