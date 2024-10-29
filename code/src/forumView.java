@@ -1,16 +1,17 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.Color;
+import java.util.Objects;
 
-public class Forum extends JPanel {
+public class forumView extends JPanel {
     //constructor
-    Forum(Font oswald, Font lato) {
+    forumView(Font oswald, Font lato) {
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //--------------------------------------------------------------------------------------------------------------
 
-         //------------------------create add----------------------------------------------------------
+        //------------------------create add----------------------------------------------------------
         ImageIcon addButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/plus2.png")));
         Image image = addButton.getImage();
         Image newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -33,10 +34,10 @@ public class Forum extends JPanel {
         this.add(headerPanel, BorderLayout.NORTH); // Add header panel at the top
         //---------------------------------------------------------------------------------------------------------------
 
-        
+
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
-        NavigationBar navigationBar = new NavigationBar(oswald, lato);
-        this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato);
+        this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // -------------------------------------------------------------------------------------------------------------
 
         //-------------------CREATE items to go in panel----------------------------------------------------------------
