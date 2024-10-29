@@ -10,6 +10,30 @@ public class Forum extends JPanel {
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //--------------------------------------------------------------------------------------------------------------
 
+         //------------------------create add----------------------------------------------------------
+        ImageIcon addButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/plus2.png")));
+        Image image = addButton.getImage();
+        Image newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon newIcon = new ImageIcon(newImage);
+
+        JButton button = new JButton(newIcon);
+
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+
+        // Create a header panel to hold the button and keep it at the top
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT)); // Right-align the button
+        headerPanel.setBackground(new Color(235, 219, 195)); // Match background color
+
+        headerPanel.add(button);
+
+        this.add(headerPanel, BorderLayout.NORTH); // Add header panel at the top
+        //---------------------------------------------------------------------------------------------------------------
+
+        
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
         NavigationBar navigationBar = new NavigationBar(oswald, lato);
         this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
