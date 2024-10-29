@@ -1,13 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class Closet extends JPanel {
+public class closetView extends JPanel {
     //constructor
-    Closet(Font oswald, Font lato)
+    public closetView(Font oswald, Font lato)
     {
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
@@ -48,11 +46,11 @@ public class Closet extends JPanel {
         headerPanel.add(button1);
 
         this.add(headerPanel, BorderLayout.NORTH); // Add header panel at the top
-       //---------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------------
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
-        NavigationBar navigationBar = new NavigationBar(oswald, lato);
-        this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato);
+        this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // -------------------------------------------------------------------------------------------------------------
 
         //-------------------CREATE CLOSET ITEMS PANEL------------------------------------------------------------------
