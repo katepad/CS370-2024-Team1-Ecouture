@@ -9,14 +9,14 @@ import java.util.Objects;
 
 //WORK ON ATTACHING BUTTONS TO NEXT ACTION AND LOAD ICONS ON BUTTONS
 
-public class StartPage extends JPanel
+public class startPageView extends JPanel
 {
 
     //button variables for navigation bar and texts
     JLabel aboutUs, aboutText, MissonText;
 
     //constructor
-    StartPage(Font oswald, Font lato) {
+    startPageView(Font oswald, Font lato) {
 
         //-----------------------Set background color and preferred size----------
         this.setBackground(new Color(235, 219, 195));
@@ -28,9 +28,9 @@ public class StartPage extends JPanel
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
         // Add the navigation bar at the bottom
-        NavigationBar navigationBar = new NavigationBar(oswald,lato);
-        navigationBar.setBounds(0, 720, 500, 55); // Adjust the size and position
-        this.add(navigationBar);
+        navigationBarView navigationBarView = new navigationBarView(oswald,lato);
+        navigationBarView.setBounds(0, 709, 500, 55); // Adjust the size and position
+        this.add(navigationBarView, BorderLayout.SOUTH);
         this.revalidate();
         this.repaint();
 //--------------------------------------------------------------------------------------
