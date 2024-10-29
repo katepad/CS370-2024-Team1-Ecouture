@@ -1,7 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class MyJDBC {
+public class myJDBC {
 
     public static Connection connect;
 
