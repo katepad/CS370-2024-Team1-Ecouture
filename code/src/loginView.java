@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Objects;
 
-public class Login extends JPanel {
+public class loginView extends JPanel {
 
     JButton loginButton = new JButton("LOGIN");
     JButton signupButton = new JButton("SIGN UP");
@@ -19,7 +19,7 @@ public class Login extends JPanel {
     JLabel loginTitle = new JLabel("LOGIN");
 
     //Constructor to make Login Panel
-    Login (Font oswald, Font lato) {
+    public loginView(Font oswald, Font lato) {
 
         this.setBackground(new Color(235,219,195));
         this.setPreferredSize(new Dimension(400,800));
@@ -104,7 +104,7 @@ public class Login extends JPanel {
 
         try {
             // Ensure database connection is valid
-            if (MyJDBC.connect == null || MyJDBC.connect.isClosed()) {
+            if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
                 System.out.println("Database connection is not established.");
                 return; // Exit the method if connection is not valid
             }
@@ -115,7 +115,7 @@ public class Login extends JPanel {
             String password = new String(pwField.getPassword()); // Use pwField for password
 
             //create a statement to execute
-            Statement statement = MyJDBC.connect.createStatement();
+            Statement statement = myJDBC.connect.createStatement();
             //Hash password to send to database to check
             MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
             byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
@@ -135,8 +135,8 @@ public class Login extends JPanel {
                 //Switch the Start Page by switching main JFrame
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                 topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-                StartPage startPage = new StartPage(oswald, lato);
-                topFrame.add(startPage, BorderLayout.CENTER); // Add StartPage to the frame
+                startPageView startPageView = new startPageView(oswald, lato);
+                topFrame.add(startPageView, BorderLayout.CENTER); // Add StartPage to the frame
                 topFrame.revalidate(); // Refresh the frame
                 topFrame.repaint(); // Repaint the frame
 
@@ -160,8 +160,8 @@ public class Login extends JPanel {
             //Switch the Signup Page by switching main JFrame
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-            Signup signup = new Signup(oswald, lato);
-            topFrame.add(signup, BorderLayout.CENTER); // Add SignupPage to the frame
+            signupView signupView = new signupView(oswald, lato);
+            topFrame.add(signupView, BorderLayout.CENTER); // Add SignupPage to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
         } catch (Exception e) {
