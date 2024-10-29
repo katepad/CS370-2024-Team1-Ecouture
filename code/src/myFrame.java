@@ -5,12 +5,12 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
-public class MyFrame extends JFrame {
+public class myFrame extends JFrame {
 
     public Font lato;
     public Font oswald;
 
-    MyFrame() { //constructor to create a JFrame.
+    public myFrame() { //constructor to create a JFrame.
 
         createFonts();
 
@@ -28,12 +28,9 @@ public class MyFrame extends JFrame {
         this.setLayout(new BorderLayout());
 
         //start Frame on Login Page by Default
-        Login loginPanel = new Login(oswald, lato);
-        this.add(loginPanel,BorderLayout.CENTER);
+        loginView loginViewPanel = new loginView(oswald, lato);
+        this.add(loginViewPanel,BorderLayout.CENTER);
 
-        StartPage StartPage = new StartPage(oswald, lato);
-        this.add(StartPage, BorderLayout.CENTER);
-        
         //show contents of Frame
         this.setVisible(true); //actually show the JFrame
     }
