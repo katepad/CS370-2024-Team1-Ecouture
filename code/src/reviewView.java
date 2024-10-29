@@ -2,17 +2,17 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.Color;
 
-public class Review extends JPanel {
+public class reviewView extends JPanel {
     //constructor
-    Review(Font oswald, Font lato) {
+    reviewView(Font oswald, Font lato) {
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //--------------------------------------------------------------------------------------------------------------
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
-        NavigationBar navigationBar = new NavigationBar(oswald, lato);
-        this.add(navigationBar, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato);
+        this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // -------------------------------------------------------------------------------------------------------------
 
         //-------------------CREATE items to go in panel----------------------------------------------------------------
@@ -28,7 +28,7 @@ public class Review extends JPanel {
             ReviewPanel.add(itemLabel);
             ReviewPanel.add(Box.createRigidArea(new Dimension(0, 10)));  // Add some space between items
         }
-       //---------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------------
 
         //--------------------------Create scroll panel-----------------------------------------------------------------
         // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
