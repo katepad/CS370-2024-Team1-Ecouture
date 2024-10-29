@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +8,7 @@ import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Signup extends JPanel {
+public class signupView extends JPanel {
 
     //Labels
     JLabel signupTitle = new JLabel("SIGN UP");
@@ -34,7 +35,7 @@ public class Signup extends JPanel {
     String username;
 
     //Constructor to make Signup Panel
-    Signup(Font oswald, Font lato) {
+    signupView(Font oswald, Font lato) {
 
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(400, 800));
@@ -165,7 +166,7 @@ public class Signup extends JPanel {
         boolean isInvalidUsername = usernameM.find(); //boolean to see if there is a match
 
         //Ensure the username is not taken.
-        Statement statement = MyJDBC.connect.createStatement();
+        Statement statement = myJDBC.connect.createStatement();
         //sql query to match user data
         String sql = "Select * from user where user_username='" + username + "'";
         //find results of user data that matches the inputs from user table
@@ -201,7 +202,7 @@ public class Signup extends JPanel {
         try {
 
             //Ensure there is a connection to the database
-            if (MyJDBC.connect == null || MyJDBC.connect.isClosed()) {
+            if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
                 System.out.println("Database connection is not established.");
                 return; // Exit the method if connection is not valid
             }
@@ -212,13 +213,13 @@ public class Signup extends JPanel {
             if (!isError) { //if there are no errors,
                 signupError.setText("");
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
-                byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
+                byte[] messageDigest = md.digest(password.getBytes(StandardCharsets.UTF_8));
                 StringBuilder hexstring = new StringBuilder();
                 for(byte b : messageDigest){
                     hexstring.append(String.format("%02x",b));
                 }
                 password = new String(hexstring);
-                Statement statement = MyJDBC.connect.createStatement();
+                Statement statement = myJDBC.connect.createStatement();
                 String sql = "INSERT INTO user (user_username, user_password, user_realname) VALUES ('" + username + "', '" + password + "', '" + fullname + "')";
                 statement.executeUpdate(sql);
 
@@ -240,8 +241,8 @@ public class Signup extends JPanel {
             //Switch the Signup Page by switching main JFrame
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-            Login login = new Login(oswald, lato);
-            topFrame.add(login, BorderLayout.CENTER); // Add SignupPage to the frame
+            loginView loginView = new loginView(oswald, lato);
+            topFrame.add(loginView, BorderLayout.CENTER); // Add SignupPage to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
         } catch (Exception e) {
