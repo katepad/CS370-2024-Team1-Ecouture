@@ -7,11 +7,13 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class closetView extends JPanel {
+    
+    private final JPanel closetItemsPanel;
+    
     //constructor
     public closetView(Font oswald, Font lato)
     {
-        private final JPanel closetItemsPanel;
-
+        
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
