@@ -7,6 +7,8 @@ public class closetView extends JPanel {
     //constructor
     public closetView(Font oswald, Font lato)
     {
+        private final JPanel closetItemsPanel;
+
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
@@ -54,21 +56,14 @@ public class closetView extends JPanel {
         // -------------------------------------------------------------------------------------------------------------
 
         //-------------------CREATE CLOSET ITEMS PANEL------------------------------------------------------------------
-        JPanel closetItemsPanel = new JPanel();
+         closetItemsPanel = new JPanel();
         closetItemsPanel.setLayout(new BoxLayout(closetItemsPanel, BoxLayout.Y_AXIS));
-        closetItemsPanel.setBackground(new Color(235, 219, 195));  // Match background color
+        closetItemsPanel.setBackground(new Color(235, 219, 195));
 
-        String[] material = {"Blank2", "blank2", "Blank3"};
-        String[] type = {"Shirt", "Sweater", "Dress", "Pants", "Jeans", "Shorts", "Skirts"};
-
-        // Add multiple items to the closetItemsPanel to simulate closet items
-        for (int i = 1; i <= 50; i++)
+        //to save space panel will only be extended as items are added
+        for(int i = 0; i < closetItemsPanel.getComponentCount(); i++)
         {
-            JLabel itemLabel = new JLabel("Clothing " + i);
-            itemLabel.setFont(lato.deriveFont(18f));
-            itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            closetItemsPanel.add(itemLabel);
-            closetItemsPanel.add(Box.createRigidArea(new Dimension(0, 10)));  // Add some space between items
+            closetItemsPanel.setPreferredSize(new Dimension(400, i)); // Fixed size for items panel// Match background color
         }
 
         //--------------------------Create scroll panel-----------------------------------------------------------------
@@ -115,5 +110,35 @@ public class closetView extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
 
         //--------------------------------------------------------------------------------------------------------------
+
+         button.addActionListener(new ActionListener()
+        {
+         @Override
+         public void actionPerformed(ActionEvent e)
+       {
+         addNewItemPanel();
+       }
+});
+}
+    private void addNewItemPanel()
+    {
+        JPanel itemPanel = new JPanel();
+        itemPanel.setBackground(new Color(192, 168, 144));  // Set a distinct color for the item
+        itemPanel.setPreferredSize(new Dimension(200, 100));  // Set a fixed size for each item
+        itemPanel.setMaximumSize(new Dimension(200, 100));
+        itemPanel.setMinimumSize(new Dimension(200, 100));
+
+        // Placeholder for future item info
+        JLabel itemLabel = new JLabel("New Clothing Item");
+        itemLabel.setFont(new Font("Lato", Font.BOLD, 16));
+        itemPanel.add(itemLabel);
+
+        // Add the new item panel and spacing below each item
+        closetItemsPanel.add(itemPanel);
+        closetItemsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // Refresh the display as we add panels
+        closetItemsPanel.revalidate();
+        closetItemsPanel.repaint();
     }
 }
