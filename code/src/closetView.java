@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.util.Objects;
 
 public class closetView extends JPanel {
-    //constructor
+    
     private final JPanel closetItemsPanel;
 
+    //constructor
     public closetView(Font oswald, Font lato)
     {
 
