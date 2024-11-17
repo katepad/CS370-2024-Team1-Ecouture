@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.util.Objects;
 
 public class forumView extends JPanel {
-
+    
+  private final JPanel headerPanel;
+  private final JLabel PageTitle;
+    
     //constructor
     forumView(Font oswald, Font lato) {
         //-----------------------Set background color and preferred size------------------------------------------------
@@ -13,7 +16,7 @@ public class forumView extends JPanel {
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //--------------------------------------------------------------------------------------------------------------
 
-        //------------------------------- create add button ----------------------------------------------------------//
+         //------------------------------- create add button and title----------------------------------------------------------//
         ImageIcon addButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/plus2.png")));
         Image image = addButton.getImage();
         Image newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -26,15 +29,22 @@ public class forumView extends JPanel {
         addPostButton.setFocusPainted(false);
         addPostButton.setOpaque(false);
 
-        // Create a header panel to hold the button and keep it at the top
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT)); // Right-align the button
-        headerPanel.setBackground(new Color(235, 219, 195)); // Match background color
+        //create title
+        PageTitle = new JLabel("Forum Page");
+        PageTitle.setFont(oswald.deriveFont(20f));
+        PageTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-        headerPanel.add(addPostButton);
+        //create top panel
+        headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(235, 219, 195));
 
-        this.add(headerPanel, BorderLayout.NORTH); // Add header panel at the top
-        //---------------------------------------------------------------------------------------------------------------
+        //add them to panel
+        headerPanel.add(addPostButton, BorderLayout.EAST);
+        headerPanel.add(PageTitle, BorderLayout.CENTER);
+
+        //set panel to top of screen
+        this.add(headerPanel, BorderLayout.NORTH);
+        //-----------------------------------------------------------------------------
 
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
