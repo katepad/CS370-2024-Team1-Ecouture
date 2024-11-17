@@ -3,12 +3,32 @@ import javax.swing.*;
 import java.awt.Color;
 
 public class dashboardView extends JPanel {
+
+    private final JPanel headerPanel;
+    private final JLabel PageTitle;
+    
     //constructor
     dashboardView(Font oswald, Font lato) {
-        //-----------------------Set background color and preferred size------------------------------------------------
+         //-----------------------Set background color and preferred size and title------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
-        //--------------------------------------------------------------------------------------------------------------
+
+        //create title
+        PageTitle = new JLabel("Dashboard Page");
+        PageTitle.setFont(oswald.deriveFont(20f));
+        PageTitle.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //create top panel
+        headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(235, 219, 195));
+
+        //add them to panel
+        headerPanel.add(PageTitle, BorderLayout.CENTER);
+
+        //set panel to top of screen
+        this.add(headerPanel, BorderLayout.NORTH);
+
+        //---------------------------------------------------------------------------
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
         navigationBarView navigationBarView = new navigationBarView(oswald, lato);
