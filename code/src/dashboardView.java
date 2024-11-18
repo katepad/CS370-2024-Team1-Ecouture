@@ -6,10 +6,10 @@ public class dashboardView extends JPanel {
 
     private final JPanel headerPanel;
     private final JLabel PageTitle;
-    
+
     //constructor
-    dashboardView(Font oswald, Font lato) {
-         //-----------------------Set background color and preferred size and title------------------------------------------------
+    dashboardView(Font oswald, Font lato, user user) {
+        //-----------------------Set background color and preferred size and title------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
 
@@ -31,7 +31,7 @@ public class dashboardView extends JPanel {
         //---------------------------------------------------------------------------
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
-        navigationBarView navigationBarView = new navigationBarView(oswald, lato);
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
         this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
         // -------------------------------------------------------------------------------------------------------------
 

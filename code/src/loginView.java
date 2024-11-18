@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.Objects;
 
@@ -100,48 +102,55 @@ public class loginView extends JPanel {
         this.setVisible(true);
     }
 
-    private void loginButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-
+    public void loginButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
         try {
-            // Ensure database connection is valid
+            //Ensure there is a connection to the database
             if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
                 System.out.println("Database connection is not established.");
                 return; // Exit the method if connection is not valid
             }
 
-            //get input from username field
+            // Get input from username and password fields
             String username = unField.getText();
-            //get input from password field
             String password = new String(pwField.getPassword()); // Use pwField for password
 
-            //create a statement to execute
-            Statement statement = myJDBC.connect.createStatement();
-            //Hash password to send to database to check
-            MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
+            //TODO: put the hashing in a separate function called hashPassword()
+            // Hash password using SHA-256
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
-            StringBuilder hexstring = new StringBuilder();//The new string that will be hashed
-            for(byte b : messageDigest){
-                hexstring.append(String.format("%02x",b)); //Format of hashing
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                hexString.append(String.format("%02x", b));
             }
-            password = new String(hexstring);
+            password = hexString.toString();
 
-            //sql query to match user data
-            String sql = "Select * from user where user_username='" + username + "' and user_password='" + password + "'";
-            //find results of user data that matches the inputs from user table
-            ResultSet rs = statement.executeQuery(sql);
+            // SQL query to match user data
+            String sql = "SELECT user_ID, user_username, user_realname FROM user WHERE user_username=? AND user_password=?";
+            PreparedStatement statement = myJDBC.connect.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
 
-            if(rs.next()) {
+            ResultSet rs = statement.executeQuery();
 
-                //Switch the Start Page by switching main JFrame
+            if (rs.next()) {
+                // Retrieve user details from the ResultSet
+                int userId = rs.getInt("user_ID");
+                String realName = rs.getString("user_realname");
+
+                // Initialize User object
+                user loggedInUser = new user(userId, username, realName);
+
+                // Switch the Start Page by passing the User object
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                 topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-                startPageView startPageView = new startPageView(oswald, lato);
-                topFrame.add(startPageView, BorderLayout.CENTER); // Add StartPage to the frame
+                startPageView startPage = new startPageView(oswald, lato, loggedInUser); // Pass User object
+                topFrame.add(startPage, BorderLayout.CENTER); // Add StartPage to the frame
                 topFrame.revalidate(); // Refresh the frame
                 topFrame.repaint(); // Repaint the frame
 
-                System.out.println("YAY! You're logged in!");
+                System.out.println("YAY! You're logged in! Welcome, " + realName);
             } else {
+                // Show login error message
                 loginError.setVisible(true);
                 unField.setText("");
                 pwField.setText("");
@@ -152,7 +161,6 @@ public class loginView extends JPanel {
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
         }
-
     }
 
     private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
@@ -169,6 +177,15 @@ public class loginView extends JPanel {
         }
     }
 
-
+    private void hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        //Hash password to send to database to check
+        MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
+        byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
+        StringBuilder hexstring = new StringBuilder();//The new string that will be hashed
+        for(byte b : messageDigest){
+            hexstring.append(String.format("%02x",b)); //Format of hashing
+        }
+        password = new String(hexstring);
+    }
 
 }

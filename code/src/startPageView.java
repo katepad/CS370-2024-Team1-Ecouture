@@ -6,37 +6,34 @@ import java.awt.*;
 import java.awt.Color;
 import java.util.Objects;
 
-
-//WORK ON ATTACHING BUTTONS TO NEXT ACTION AND LOAD ICONS ON BUTTONS
-
-public class startPageView extends JPanel
-{
+public class startPageView extends JPanel {
 
     //button variables for navigation bar and texts
     JLabel aboutUs, aboutText, MissonText;
 
+    private user user;
+
     //constructor
-    startPageView(Font oswald, Font lato) {
+    startPageView(Font oswald, Font lato, user user) {
 
         //-----------------------Set background color and preferred size----------
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(330, 700));
         this.setLayout(null);
+        this.user = user;
         //-------------------------------------------------------------------------
-
-
 
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
         // Add the navigation bar at the bottom
-        navigationBarView navigationBarView = new navigationBarView(oswald,lato);
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
         navigationBarView.setBounds(0, 709, 500, 55); // Adjust the size and position
         this.add(navigationBarView, BorderLayout.SOUTH);
         this.revalidate();
         this.repaint();
-//--------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------
 
 
-//--------------------------------------ABOUT US---------------------------------------------------------
+        //--------------------------------------ABOUT US---------------------------------------------------------
         //create ABOUT US TEXT
         aboutUs = new JLabel("ABOUT US");
         aboutUs.setFont(oswald.deriveFont(30f)); //set font and text size
@@ -46,7 +43,8 @@ public class startPageView extends JPanel
 
         //create about us TEXT
         aboutText = new JLabel("<html><div style='width:230px;'>" +
-                "Welcome to Ecouture, A friendly and " +
+                "Hi, " + user.getRealName() +
+                "! Welcome to Ecouture, A friendly and " +
                 "informative application that will teach you " +
                 "about how your shopping habits impact our environment." + "</div></html>");
 
@@ -69,7 +67,7 @@ public class startPageView extends JPanel
 
         MissonText.setFont(lato.deriveFont(15f)); //set font and text size
         MissonText.setForeground(new Color (0, 99, 73)); //set color of text
-        MissonText.setBounds(22, 420, 350, 280); //set location
+        MissonText.setBounds(18, 415, 350, 280); //set location
 
         // Create a custom border with rounded corners
         Border roundedBorder = new LineBorder(new Color(0, 99, 73), 5, true); // Rounded edge with thickness 3
@@ -91,7 +89,7 @@ public class startPageView extends JPanel
 // Create a JLabel to display the image
         JLabel factDisplay = new JLabel(fact);
 // Set bounds for the image (ensure it fits in the layout)
-        factDisplay.setBounds(50, 150, 300, 300); // Adjust bounds based on the new image size
+        factDisplay.setBounds(35, 130, 300, 300); // Adjust bounds based on the new image size
 // Add the image display to the panel
         this.add(factDisplay);
 
@@ -99,4 +97,3 @@ public class startPageView extends JPanel
 
     }
 }
-

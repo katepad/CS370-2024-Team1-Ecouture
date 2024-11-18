@@ -8,6 +8,7 @@ import java.util.Objects;
 import static javax.swing.Box.createRigidArea;
 
 public class closetView extends JPanel {
+
     private final JPanel closetItemsPanel;
     private final navigationBarView navigationBar;
     private final JPanel headerPanel;
@@ -15,10 +16,8 @@ public class closetView extends JPanel {
     private final JLabel PageTitle;
     private final ArrayList<editClosetView> panels;
 
-
     // Constructor
-    closetView(Font oswald, Font lato)
-    {
+    closetView(Font oswald, Font lato, user user) {
 
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(235, 219, 195));
@@ -107,13 +106,12 @@ public class closetView extends JPanel {
 //----------------------------------------------------------------------------------------------------------------------
 
 // ------------------call Navigation Bar--------------------------------------------------------------------------------
-        navigationBar = new navigationBarView(oswald, lato);
+        navigationBar = new navigationBarView(oswald, lato, user);
         this.add(navigationBar, BorderLayout.SOUTH);
 //----------------------------------------------------------------------------------------------------------------------
 
 // -----------------Add ActionListener to the add button----------------------------------------------------------------
-        addButton.addActionListener(new ActionListener()
-        {
+        addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -123,8 +121,7 @@ public class closetView extends JPanel {
     } //end of constructor
 
     //----------------------------FUNCTION create new clothing item----------------------------------------------------------------
-    private void addNewItemPanel(Font oswald, Font lato)
-    {
+    private void addNewItemPanel(Font oswald, Font lato) {
         navigationBar.setVisible(false); //hide nav bar
         headerPanel.setVisible(false); //hide top panel
 

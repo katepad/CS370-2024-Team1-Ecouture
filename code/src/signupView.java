@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,9 +38,11 @@ public class signupView extends JPanel {
     //Constructor to make Signup Panel
     signupView(Font oswald, Font lato) {
 
+        //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(400, 800));
         this.setLayout(null);
+        //--------------------------------------------------------------------------------------------------------------
 
         //edit signup page title label to match other page titles.
         signupTitle.setFont(oswald.deriveFont(30f)); //set font and text size
@@ -138,6 +141,7 @@ public class signupView extends JPanel {
 
     }
 
+    //TODO: Move to Controller.
     private void confirmSignup() {
 
         //remove the signup for login and signup
@@ -148,6 +152,7 @@ public class signupView extends JPanel {
 
     }
 
+    //TODO: Move to Controller.
     private void validateSignup() throws SQLException {
         // To Ensure real name has no special characters
         fullname = fnField.getText(); //get name
@@ -197,12 +202,14 @@ public class signupView extends JPanel {
         }
     }
 
+    //TODO: Move to Controller.
     //When clicked, sign up the user to database.
     private void signupButtonActionPerformed(Object evt) {
         try {
 
+            Connection connect = myJDBC.openConnection();
             //Ensure there is a connection to the database
-            if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
+            if (connect == null || connect.isClosed()) {
                 System.out.println("Database connection is not established.");
                 return; // Exit the method if connection is not valid
             }
@@ -235,6 +242,7 @@ public class signupView extends JPanel {
         }
     }
 
+    //TODO: Move to Controller.
     //When clicked, go back to the login page.
     private void loginButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {

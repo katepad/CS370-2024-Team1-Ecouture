@@ -6,13 +6,17 @@ import java.util.Objects;
 //class to use throughout all other programs
 public class navigationBarView extends JPanel {
 
-    public navigationBarView(Font oswald, Font lato) {
+    private final user user;
+
+    public navigationBarView(Font oswald, Font lato, user user) {
 
         // Set the background color
         this.setBackground(new Color(0, 99, 73));
 
         // Set the layout to FlowLayout for automatic horizontal alignment
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5)); // alignment, h
+
+        this.user = user;
 
 
 //----------------------------------CREATE HOME BUTTON------------------------------------------------------------------------------------------
@@ -112,7 +116,7 @@ public class navigationBarView extends JPanel {
             //Switch the StartPage to StartPage
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            startPageView startpage = new startPageView(oswald, lato);
+            startPageView startpage = new startPageView(oswald, lato, user);
             topFrame.add(startpage, BorderLayout.CENTER); // Add StartPage to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -127,7 +131,7 @@ public class navigationBarView extends JPanel {
             //Switch the StartPage to Forum
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            forumView forumpage = new forumView(oswald, lato);
+            forumView forumpage = new forumView(oswald, lato, user);
             topFrame.add(forumpage, BorderLayout.CENTER); // Add Forum Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -142,7 +146,7 @@ public class navigationBarView extends JPanel {
             //Switch the StartPage to Closet
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            closetView closetpage = new closetView(oswald, lato);
+            closetView closetpage = new closetView(oswald, lato, user);
             topFrame.add(closetpage, BorderLayout.CENTER); // Add Forum Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -156,7 +160,7 @@ public class navigationBarView extends JPanel {
         try {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            dashboardView Dash = new dashboardView(oswald, lato);
+            dashboardView Dash = new dashboardView(oswald, lato, user);
             topFrame.add(Dash, BorderLayout.CENTER); // Add Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame
@@ -171,7 +175,7 @@ public class navigationBarView extends JPanel {
         try {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); // Clear current page from the current frame
-            reviewView reviewView = new reviewView(oswald, lato);
+            reviewView reviewView = new reviewView(oswald, lato, user);
             topFrame.add(reviewView, BorderLayout.CENTER); // Add Page to the frame
             topFrame.revalidate(); // Refresh the frame
             topFrame.repaint(); // Repaint the frame

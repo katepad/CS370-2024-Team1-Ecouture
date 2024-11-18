@@ -5,18 +5,20 @@ public class myJDBC {
 
     public static Connection connect;
 
-    public static void openConnection(){
+    public static Connection openConnection(){
         try {
-            //connect to local SQL workbench.
+            // Connect to the local SQL workbench.
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_ecouture", "root", "cs370");
 
-            //TEST: test to see if connected.
+            // TEST: test to see if connected.
             System.out.println("connected to my local database successfully!");
 
-        } catch (Exception e){
-            //if connection is unsuccessful...
+        } catch (Exception e) {
+            // If connection is unsuccessful...
             System.out.println("didn't connect");
+            e.printStackTrace();
         }
+        return connect; // Return the actual connection object
     }
 
     public static void closeConnection(){
