@@ -1,5 +1,9 @@
 import java.awt.*;
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -13,9 +17,11 @@ public class editClosetView extends JPanel
     private final Font lato;
     private final ArrayList<JPanel> materialBars;
 
+    //Drop Down Menus
     private JComboBox<String> typeComboBox;
     private JComboBox<String> acquiredComboBox;
     private JComboBox<String> brandComboBox;
+    private JComboBox<String> materialComboBox;
 
     private JLabel typeLabel;
     private JLabel methodLabel;
@@ -23,8 +29,7 @@ public class editClosetView extends JPanel
     private JLabel materialLabel;
 
 
-    public editClosetView(Font oswald, Font lato, closetView parentPanel)
-    {
+    public editClosetView(Font oswald, Font lato, closetView parentPanel) {
         this.parentPanel = parentPanel;
         this.lato = lato;
         this.materialBars = new ArrayList<>();
@@ -45,21 +50,12 @@ public class editClosetView extends JPanel
         titleField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); // Ensure it stretches to fit width
         expandedPanel.add(titleField);
 
-        // create Style Dropdown menu
-        String[] type = {"--Style--", "Top", "Sweater + Cardigans", "Jacket", "Jeans", "Shorts", "Skirt", "Dress", "Scarf", "Hat", "Vest", "Shoes"};
-        typeComboBox = createStyledComboBox(type, lato);
+        // Populate the combo boxes from the database
+        populateComboBoxes();
+
         expandedPanel.add(typeComboBox);
-
-        // create Acquisition Method Dropdown menu
-        String[] acquisitionMethods = {"--Acquisition Method--", "Thrifted + Second Hand", "Gifted", "Online", "in-store"};
-        acquiredComboBox = createStyledComboBox(acquisitionMethods, lato);
         expandedPanel.add(acquiredComboBox);
-
-        // create Brand Dropdown menu
-        String[] brands = {"--Brand--", "Abercrombie & Fitch", "Adidas", "Alo Yoga", "Artizia", "Brandy Melville", "Fashion Nova", "Forever 21", "Francesca's", "Free People", "Guess", "H&M", "Hollister", "Hot Topic", "Lululemon", "Motel Rocks", "Nasty Gal", "Nike", "PacSun", "PrettyLittleThing", "Princess Polly", "Romwe", "Shein", "Steve Madden", "Tilly's", "Uniqlo", "Urban Outfitters", "Zumiez"};
-        brandComboBox = createStyledComboBox(brands, lato);
         expandedPanel.add(brandComboBox);
-
 
 // ----------------------creating separate panel for material-----------------------------------------------------------
 
@@ -112,14 +108,12 @@ public class editClosetView extends JPanel
             }
         });
 
-// Add the scroll pane to the expanded panel
+        // Add the scroll pane to the expanded panel
         expandedPanel.add(materialScrollPane);
         expandedPanel.add(Box.createVerticalStrut(10)); // Add some spacing below the scroll pane
 
-
-
-//-----------------------------------BUTTONS----------------------------------------------------------------------------
-       //create add material button
+        //-----------------------------------BUTTONS------------------------------------------------------------------//
+        //create add material button
         JButton addMaterialButton = new JButton("Add Material");
         addMaterialButton.setFont(lato.deriveFont(Font.BOLD, 18));
         addMaterialButton.setBackground(new Color(255,178,194));
@@ -177,14 +171,14 @@ public class editClosetView extends JPanel
         // Add the button panel to the expandedPanel
         expandedPanel.add(buttonPanel);
         expandedPanel.add(Box.createVerticalStrut(-30)); // Spacing below buttons
-//----------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------//
 
 
-//-------------------------------------Collaped panel-------------------------------------------------------------
+        //-------------------------------------Collapsed panel--------------------------------------------------------//
 
         //create panel MAIN
         JPanel collapsedPanel = new JPanel(new BorderLayout());
-       // collapsedPanel.setLayout(new BoxLayout(collapsedPanel, BoxLayout.Y_AXIS));
+        // collapsedPanel.setLayout(new BoxLayout(collapsedPanel, BoxLayout.Y_AXIS));
         collapsedPanel.setBackground(Color.white);
 
         // Create a panel for the buttons
@@ -227,25 +221,25 @@ public class editClosetView extends JPanel
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(titleLabel);
 
-       // Style Label
+        // Style Label
         typeLabel = new JLabel();
         typeLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(typeLabel);
 
-       // Acquisition Method Label
+        // Acquisition Method Label
         methodLabel = new JLabel();
         methodLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         methodLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(methodLabel);
 
-       // Brand Label
+        // Brand Label
         brandLabel = new JLabel();
         brandLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         brandLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         textPanel.add(brandLabel);
 
-       // Material Label
+        // Material Label
         materialLabel = new JLabel();
         materialLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         materialLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -259,7 +253,61 @@ public class editClosetView extends JPanel
         this.add(expandedPanel, "Expanded");
         this.add(collapsedPanel, "Collapsed");
         cardLayout.show(this, "Expanded");
+
     } //end of constructor
+
+    // Function to populate combo boxes with values from the database
+    private void populateComboBoxes() {
+        try {
+
+            Connection connect = myJDBC.openConnection();
+            //Ensure there is a connection to the database
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return; // Exit the method if connection is not valid
+            }
+
+            // create Style Dropdown menu
+            String[] type = {"--Style--", "Top", "Sweater + Cardigans", "Jacket", "Jeans", "Shorts", "Skirt", "Dress", "Scarf", "Hat", "Vest", "Shoes"};
+            typeComboBox = createStyledComboBox(type, lato);
+
+            // create Acquisition Method Dropdown menu
+            String[] acquisitionMethods = {"--Acquisition Method--", "In-Store Bought", "Online Shopping", "In-Store Thrifted", "Online Thrifted", "Handmade"};
+            acquiredComboBox = createStyledComboBox(acquisitionMethods, lato);
+
+            // Fetch brands
+            String[] brands = getDatabaseValues(connect, "SELECT brand_name FROM brand");
+            brandComboBox = createStyledComboBox(brands, lato);
+
+            // Fetch materials
+            String[] materials = getDatabaseValues(connect, "SELECT material_type FROM material");
+            materialComboBox = createStyledComboBox(materials, lato);
+
+            // Close the database connection
+            connect.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading data from the database.", "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Helper function to execute a query and return the results as an array of Strings
+    private String[] getDatabaseValues(Connection connect, String query) {
+        ArrayList<String> values = new ArrayList<>();
+
+        try (Statement statement = connect.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                values.add(resultSet.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return values.toArray(new String[0]);
+    }
 
 
     //----------------------------------------FUNCTION MaterialBar design--------------------------------------------------------
@@ -281,8 +329,7 @@ public class editClosetView extends JPanel
         materialBar.add(percentLabel);
 
         // Material Dropdown
-        String[] materials = {"--material--", "Organic Cotton", "Cotton", "Polyester", "Wool", "Nylon", "Silk"};
-        JComboBox<String> materialComboBox = createStyledComboBox(materials, lato);
+        populateComboBoxes();
         materialBar.add(materialComboBox);
 
         materialBars.add(materialBar);
@@ -304,21 +351,26 @@ public class editClosetView extends JPanel
 //----------------------------------------------------------------------------------------------------------------------
 
     //------------------------------FUNCTION to save item-----------------------------------------------------------------
-    private void saveItem()
-    {
-        // Get selected values from the dropdowns
+    private void saveItem() {
+        // Capture the title
         String savedTitle = titleField.getText();
-        String selectedType = (String) typeComboBox.getSelectedItem();
-        String selectedMethod = (String) acquiredComboBox.getSelectedItem();
-        String selectedBrand = (String) brandComboBox.getSelectedItem();
 
-        //condition for long titles
+        if (savedTitle.isEmpty())
+        {
+            savedTitle = "Untitled Item";
+        }
         if(savedTitle.length() > 20)
         {
             savedTitle = savedTitle.substring(0, 17) + "...";
         }
+        titleLabel.setText(savedTitle);
 
-        titleLabel.setText((savedTitle != null && !savedTitle.equals("Untitled Item") ? savedTitle : "Untitled Item"));
+        // Get selected values from the dropdowns
+        String selectedType = (String) typeComboBox.getSelectedItem();
+        String selectedMethod = (String) acquiredComboBox.getSelectedItem();
+        String selectedBrand = (String) brandComboBox.getSelectedItem();
+
+        // Update the labels in the collapsed panel
         typeLabel.setText("Style: " + (selectedType != null && !selectedType.equals("--Style--") ? selectedType : "N/A"));
         methodLabel.setText("Acquisition Method: " + (selectedMethod != null && !selectedMethod.equals("--Acquisition Method--") ? selectedMethod : "N/A"));
         brandLabel.setText("Brand: " + (selectedBrand != null && !selectedBrand.equals("--Brand--") ? selectedBrand : "N/A"));
@@ -355,8 +407,7 @@ public class editClosetView extends JPanel
         // Switch to collapsed view
         cardLayout.show(this, "Collapsed");
         parentPanel.showAllPanels();
-        parentPanel.showNavigationBar(); 
-         
+        parentPanel.showNavigationBar();
     }
 //----------------------------------------------------------------------------------------------------------------------
 
