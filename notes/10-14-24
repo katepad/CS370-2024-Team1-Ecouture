@@ -1,2 +1,2 @@
 To disable safe update mode in SQL:
-set SQL_safe_updates = 0
+set SQL_safe_updates = 0;
