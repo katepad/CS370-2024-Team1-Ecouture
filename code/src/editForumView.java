@@ -135,6 +135,7 @@ public class editForumView extends JPanel {
 
     //TODO: Move to controller
     private void submitButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
+
         try {
 
             Connection connect = myJDBC.openConnection();
