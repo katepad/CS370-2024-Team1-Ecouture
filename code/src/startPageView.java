@@ -6,34 +6,37 @@ import java.awt.*;
 import java.awt.Color;
 import java.util.Objects;
 
-public class startPageView extends JPanel {
+
+//WORK ON ATTACHING BUTTONS TO NEXT ACTION AND LOAD ICONS ON BUTTONS
+
+public class startPageView extends JPanel
+{
 
     //button variables for navigation bar and texts
     JLabel aboutUs, aboutText, MissonText;
 
-    private user user;
-
     //constructor
-    startPageView(Font oswald, Font lato, user user) {
+    startPageView(Font oswald, Font lato) {
 
-        //-----------------------Set background color and preferred size----------
+        //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(330, 700));
         this.setLayout(null);
-        this.user = user;
-        //-------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------
 
-        //-------------------CALL NAVIGATION BAR AND SET BOUNDS-----------------------------
+
+
+        //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
         // Add the navigation bar at the bottom
-        navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
-        navigationBarView.setBounds(0, 709, 500, 55); // Adjust the size and position
+        navigationBarView navigationBarView = new navigationBarView(oswald,lato);
+        navigationBarView.setBounds(0, 717, 500, 55); // Adjust the size and position
         this.add(navigationBarView, BorderLayout.SOUTH);
         this.revalidate();
         this.repaint();
-        //--------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
 
-        //--------------------------------------ABOUT US---------------------------------------------------------
+//--------------------------------------ABOUT US------------------------------------------------------------------------
         //create ABOUT US TEXT
         aboutUs = new JLabel("ABOUT US");
         aboutUs.setFont(oswald.deriveFont(30f)); //set font and text size
@@ -42,32 +45,33 @@ public class startPageView extends JPanel {
         this.add(aboutUs); //add it
 
         //create about us TEXT
-        aboutText = new JLabel("<html><div style='width:230px;'>" +
-                "Hi, " + user.getRealName() +
-                "! Welcome to Ecouture, A friendly and " +
-                "informative application that will teach you " +
-                "about how your shopping habits impact our environment." + "</div></html>");
+        aboutText = new JLabel("<html><div style='text-align: center;'>"
+                                  + "Welcome to Ecouture, A friendly and <br>"
+                                  +"informative application that will teach you about how your shopping <br>"
+                                  +" habits impact our environment.<br>"
+                                  + "</div></html>");
 
-        aboutText.setFont(lato.deriveFont(15f)); //set font and text size
+        aboutText.setFont(oswald.deriveFont(18f)); //set font and text size
         aboutText.setForeground(new Color (0, 99, 73)); //set color of text
         aboutText.setBounds(45, 30, 300, 200); //set location
         this.add(aboutText); //add it
-//--------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
 
 
-        //-----------------------------------------OUR MISSION---------------------------------------------------------------
+        //-----------------------------------------OUR MISSION----------------------------------------------------------
         //create Our Mission Text
-        MissonText = new JLabel("<html><div style='width:250px;'>" +
-                "Our mission is to educate the newer generations on sustainable" +
-                " shopping methods. With the rise of fast fashion we have seen " +
-                "the negative impacts it has had on our environment, from water" +
-                " pollution and deforestation to excessive waste. Our mission is " +
-                "to convert people to more eco-friendly practices, thereby fostering a healthier planet." + "</div></html>");
+        MissonText = new JLabel("<html><div style='text-align: center;'>"
+                                    +"Our mission is to educate the newer generations on sustainable shopping methods. <br>"
+                                    + "With the rise of fast fashion we have seen the negative <br>"
+                                    + "impacts it has had on our environment, from water pollution and deforestation <br>"
+                                    + "to excessive waste. Our mission is to convert people to more eco-friendly practices, <br>"
+                                    + "thereby fostering a healthier planet. <br>"
+                                    + "</div></html>");
 
-        MissonText.setFont(lato.deriveFont(15f)); //set font and text size
+        MissonText.setFont(oswald.deriveFont(15f)); //set font and text size
         MissonText.setForeground(new Color (0, 99, 73)); //set color of text
-        MissonText.setBounds(18, 415, 350, 280); //set location
+        MissonText.setBounds(22, 420, 350, 280); //set location
 
         // Create a custom border with rounded corners
         Border roundedBorder = new LineBorder(new Color(0, 99, 73), 5, true); // Rounded edge with thickness 3
@@ -83,13 +87,13 @@ public class startPageView extends JPanel {
 
 //----------------------------------IMAGE FOR HOME PAGE CURRENT IMAGE IS PLACE HOLDER!!!! -----------------------------
 // Load the image and scale it to the desired size
-        ImageIcon fact = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/ecouturelogo.png")));
-        Image scaledFact = fact.getImage().getScaledInstance(300, 249, 4); // Resize image smoothly
+        ImageIcon fact = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/rec2.png")));
+        Image scaledFact = fact.getImage().getScaledInstance(200, 200, 4); // Resize image smoothly
         fact = new ImageIcon(scaledFact);  // Update fact with resized image
 // Create a JLabel to display the image
         JLabel factDisplay = new JLabel(fact);
 // Set bounds for the image (ensure it fits in the layout)
-        factDisplay.setBounds(35, 130, 300, 300); // Adjust bounds based on the new image size
+        factDisplay.setBounds(100, 200, 200, 200); // Adjust bounds based on the new image size
 // Add the image display to the panel
         this.add(factDisplay);
 
