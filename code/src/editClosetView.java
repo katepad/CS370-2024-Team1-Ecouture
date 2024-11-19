@@ -306,25 +306,19 @@ public class editClosetView extends JPanel
     //------------------------------FUNCTION to save item-----------------------------------------------------------------
     private void saveItem()
     {
-        // Capture the title
-        String savedTitle = titleField.getText();
-
-        if (savedTitle.isEmpty())
-        {
-            savedTitle = "Untitled Item";
-        }
-        if(savedTitle.length() > 20)
-        {
-            savedTitle = savedTitle.substring(0, 17) + "...";
-        }
-        titleLabel.setText(savedTitle);
-
         // Get selected values from the dropdowns
+        String savedTitle = titleField.getText();
         String selectedType = (String) typeComboBox.getSelectedItem();
         String selectedMethod = (String) acquiredComboBox.getSelectedItem();
         String selectedBrand = (String) brandComboBox.getSelectedItem();
 
-        // Update the labels in the collapsed panel
+        //condition for long titles
+        if(savedTitle.length() > 20)
+        {
+            savedTitle = savedTitle.substring(0, 17) + "...";
+        }
+
+        titleLabel.setText((savedTitle != null && !savedTitle.equals("Untitled Item") ? savedTitle : "Untitled Item"));
         typeLabel.setText("Style: " + (selectedType != null && !selectedType.equals("--Style--") ? selectedType : "N/A"));
         methodLabel.setText("Acquisition Method: " + (selectedMethod != null && !selectedMethod.equals("--Acquisition Method--") ? selectedMethod : "N/A"));
         brandLabel.setText("Brand: " + (selectedBrand != null && !selectedBrand.equals("--Brand--") ? selectedBrand : "N/A"));
@@ -361,7 +355,8 @@ public class editClosetView extends JPanel
         // Switch to collapsed view
         cardLayout.show(this, "Collapsed");
         parentPanel.showAllPanels();
-        parentPanel.showNavigationBar();
+        parentPanel.showNavigationBar(); 
+         
     }
 //----------------------------------------------------------------------------------------------------------------------
 
