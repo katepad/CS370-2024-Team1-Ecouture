@@ -23,7 +23,6 @@ public class startPageView extends JPanel {
         //--------------------------------------------------------------------------------------------------------------
 
 
-
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
         // Add the navigation bar at the bottom
         navigationBarView navigationBarView = new navigationBarView(oswald,lato,user);
@@ -31,10 +30,10 @@ public class startPageView extends JPanel {
         this.add(navigationBarView, BorderLayout.SOUTH);
         this.revalidate();
         this.repaint();
-//----------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------------------------
 
 
-//--------------------------------------ABOUT US------------------------------------------------------------------------
+        //--------------------------------------ABOUT US------------------------------------------------------------------------
         //create ABOUT US TEXT
         aboutUs = new JLabel("ABOUT US");
         aboutUs.setFont(oswald.deriveFont(30f)); //set font and text size

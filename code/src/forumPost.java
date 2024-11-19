@@ -1,22 +1,28 @@
 import java.sql.Date;
 
 public class forumPost {
-    private int id;
+    private int userID;
+    private int postID;
     private String title;
     private String content;
     private Date postDate;
 
     // Constructor
-    public forumPost(int id, String title, String content, Date postDate) {
-        this.id = id;
+    public forumPost(int userID, int postID, String title, String content, Date postDate) {
+        this.userID = userID;
+        this.postID = postID;
         this.title = title;
         this.content = content;
         this.postDate = postDate;
     }
 
     // Getters
-    public int getforumId() {
-        return id;
+    public int getPostId() {
+        return postID;
+    }
+
+    public int getUserId() {
+        return userID;
     }
 
     public String getTitle() {

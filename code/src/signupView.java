@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -134,7 +131,7 @@ public class signupView extends JPanel {
         loginButton.addActionListener(e -> loginButtonActionPerformed(e, oswald, lato));
 
         //execute signup method if signup is clicked.
-        signupButton.addActionListener(e -> signupButtonActionPerformed(e));
+        signupButton.addActionListener(e -> signupButtonActionPerformed(e, oswald, lato));
 
         //show panel
         this.setVisible(true);
@@ -142,13 +139,51 @@ public class signupView extends JPanel {
     }
 
     //TODO: Move to Controller.
-    private void confirmSignup() {
+    private void confirmSignup(Font oswald, Font lato) {
 
-        //remove the signup for login and signup
-        signupButton.setVisible(false);
+        // ------------------------------- CREATE SIGNUP MESSAGE WITH DIALOG MODAL -------------------------------//
+        JDialog SignupMessage = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Post Update", true);
+        SignupMessage.setLayout(new BorderLayout());
+        SignupMessage.setSize(300, 150);
+        SignupMessage.setBackground(new Color(247, 248, 247));
+        SignupMessage.setLocationRelativeTo(this); //center updateMessage Box relative to the editForumView
 
-        signupError.setText("You have successfully made an account!");
-        signupError.setVisible(true);
+        //create the confirmation message and OK button
+        JLabel SignupMessageText = new JLabel("<html><div style='width:150px; text-align: center;'><b>You have signed up successfully!</b></div></html>");
+        JPanel buttonPanel = new JPanel();
+        JButton okButton = new JButton("OK");
+
+        //------------------------------------------- redesign labels --------------------------------------------//
+        SignupMessageText.setHorizontalAlignment(SwingConstants.CENTER);
+        SignupMessageText.setFont(lato.deriveFont(18f));
+        //--------------------------------------------------------------------------------------------------------//
+
+        //------------------------------------------- redesign buttons -------------------------------------------//
+        //ok
+        okButton.setBackground(new Color (0, 99, 73)); //set button color to green
+        okButton.setForeground(new Color (247, 248, 247)); //set button text color to white
+        okButton.setFont(oswald.deriveFont(14f)); //change button text font to oswald, size 14.
+        okButton.setFocusable(false);
+        //--------------------------------------------------------------------------------------------------------//
+
+        okButton.addActionListener(e -> SignupMessage.dispose()); // Close dialog on "OK"
+
+        //add components to the Signup confirmation
+        SignupMessage.add(SignupMessageText, BorderLayout.CENTER);
+        buttonPanel.add(okButton, BorderLayout.CENTER);
+        SignupMessage.add(buttonPanel, BorderLayout.SOUTH);
+
+        SignupMessage.setVisible(true); //show Signup confirmation box
+
+        //--------------------------------------------------------------------------------------------------------//
+
+        //Switch the Signup Page by switching main JFrame
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        topFrame.getContentPane().removeAll(); // Clear all components from the current frame
+        loginView loginView = new loginView(oswald, lato);
+        topFrame.add(loginView, BorderLayout.CENTER); // Add SignupPage to the frame
+        topFrame.revalidate(); // Refresh the frame
+        topFrame.repaint(); // Repaint the frame
 
     }
 
@@ -204,7 +239,7 @@ public class signupView extends JPanel {
 
     //TODO: Move to Controller.
     //When clicked, sign up the user to database.
-    private void signupButtonActionPerformed(Object evt) {
+    private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
         try {
 
             Connection connect = myJDBC.openConnection();
@@ -232,7 +267,7 @@ public class signupView extends JPanel {
 
                 System.out.println("Signup Successful");
 
-                confirmSignup();
+                confirmSignup(oswald, lato);
             }
 
         } catch (SQLException e) {
