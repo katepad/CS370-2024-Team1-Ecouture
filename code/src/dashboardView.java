@@ -12,14 +12,9 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 public class dashboardView extends JPanel {
-
     static double[] getMaterialAverageForUser() throws SQLException {
         double[] averages = new double[4];
         int userID = user.getUserId();
-        Statement statement = myJDBC.connect.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY
-        );
         //Joins 3 tables of clothes, clothes_material, and material
         String sql = "SELECT " +
                 "AVG(m.material_decomp) AS avg_decomp, " +
@@ -32,20 +27,20 @@ public class dashboardView extends JPanel {
                 "WHERE c.user_ID = ?";
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         preparedStatement.setInt(1, userID);
+        //Sending the prepared statements to the database and executing them
         ResultSet resultSet = preparedStatement.executeQuery();
-        //If loop to put average of closet's clothes into the array
+        //Put average of closet's clothes into the array
         if (resultSet.next()) {
             averages[0] = resultSet.getDouble("avg_decomp");
             averages[1] = resultSet.getDouble("avg_water");
             averages[2] = resultSet.getDouble("avg_energy");
             averages[3] = resultSet.getDouble("avg_emission");
         }
-        resultSet.close();
-        statement.close();
-        preparedStatement.close();
+
         return averages;
     }
     //-------------------------------------Getting Stars from Materials--------------------------------------------------
+    //Calculations for stars for material's environment impact
     static int starsForDecomp(double f){
         int range = 0;
         if(f > 4000){
@@ -107,6 +102,7 @@ public class dashboardView extends JPanel {
         return range;
     }
     //------------------------------------------------------------------------------------------------------------------------------
+    //Gets the overall rating of all the clothes in the closet
     static double overallResult(double decomp, double water, double energy, double emission){
         double decompR = starsForDecomp(decomp);
         double waterR = starsForWater(water);
@@ -122,6 +118,7 @@ public class dashboardView extends JPanel {
 
 
     //----------------------------------Create Star Rating--------------------------------------------------------------
+    //Function to display stars to show how what the rating of the user's closet is
     public void createStarRating(Container container,double rating) {
         int fullstars = (int) rating;
         //Equation to get half star
@@ -139,10 +136,12 @@ public class dashboardView extends JPanel {
         Image full = fullstar.getImage();
         Image image = full.getScaledInstance(15,15,Image.SCALE_SMOOTH);
         ImageIcon fullIcon = new ImageIcon(image);
+
         ImageIcon halfstar = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/halfStars.png")));
         Image half = halfstar.getImage();
         Image image2 = half.getScaledInstance(15,15,Image.SCALE_SMOOTH);
         ImageIcon halfIcon = new ImageIcon(image2);
+
         ImageIcon emptystar = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
         Image empty = emptystar.getImage();
         Image image3 = empty.getScaledInstance(15,15,Image.SCALE_SMOOTH);
@@ -150,6 +149,7 @@ public class dashboardView extends JPanel {
 
         Box starBox = Box.createHorizontalBox();
         starBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         //Loops to add stars into a box to display it
         for (int i = 0; i < fullstars; i++) {
             JLabel starLables = new JLabel(fullIcon);
@@ -177,17 +177,17 @@ public class dashboardView extends JPanel {
                 "JOIN material m on cm.material_ID = m.material_ID "+
                 "WHERE c.user_ID = ? " +
                 "GROUP by m.material_type";
+
         PreparedStatement prepared_statement = myJDBC.connect.prepareStatement(sql);
         prepared_statement.setInt(1,userID);
         ResultSet result = prepared_statement.executeQuery();
-
+        
+        //While loop to save what material there are in the closet and how much of it is there
         while(result.next()){
             String material = result.getString("material_type");
             int count = result.getInt("count");
             materials.add(material + ": " + count);
         }
-        result.close();
-        prepared_statement.close();
         return materials;
     }
     //---------------------------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ public class dashboardView extends JPanel {
             int count = Integer.parseInt(parts[1]);
             dataset.setValue(materialTypes,count);
         }
-
+        //Sets the title, the legends for what materials are in the closet
         JFreeChart chart = ChartFactory.createPieChart(
                 "Material Distribution Breakdown".toUpperCase(),
                 dataset,
@@ -225,6 +225,7 @@ public class dashboardView extends JPanel {
     //-------------------------------------------------------------------------------------------------------------------
     //constructor
     dashboardView(Font oswald, Font lato, user user) throws SQLException {
+        myJDBC.openConnection();
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
@@ -264,33 +265,38 @@ public class dashboardView extends JPanel {
         double emission = userAvg[3];
         double rating = overallResult(decomp,water,energy,emission);
 
+        //Adds the decomposition time to the DashPanel
         JLabel Decomp = new JLabel();
         Decomp.setText("Decompostion Time: " + userAvg[0] + " months");
         Decomp.setFont(lato.deriveFont(15f));
         DashPanel.add(Decomp);
 
+        //Adds the water usage to the DashPanel
         JLabel Water = new JLabel();
         Water.setText("Water Used: " + userAvg[1] + " liters/kg");
         Water.setFont(lato.deriveFont(15f));
         DashPanel.add(Water);
 
+        //Adds the energy used to the DashPanel
         JLabel Energy = new JLabel();
         Energy.setText("Energy Used: " + userAvg[2] + " MJ/kg");
         Energy.setFont(lato.deriveFont(15f));
         DashPanel.add(Energy);
 
+        //Adds the emission rate to the DashPanel
         JLabel Emission = new JLabel();
         Emission.setText("Emission: " + userAvg[3] + " C02e/kg");
         Emission.setFont(lato.deriveFont(15f));
         DashPanel.add(Emission);
 
+        //Adds the rating of the user's closet to the DashPanel
         JLabel Rating = new JLabel();
         Rating.setText("Overall Rating " + rating );
         Rating.setFont(lato.deriveFont(15f));
         Rating.setAlignmentX(Component.LEFT_ALIGNMENT);
         DashPanel.add(Rating);
 
-
+        //This creates the box to show the stars based off of the environmental impact
         createStarRating(DashPanel,rating);
 
         //----------------------------------------------------------------------------------------------------------------
