@@ -1,185 +1,286 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.*;
 import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Objects;
 
-public class editClosetView extends JPanel
-{
+public class editClosetView extends JPanel {
 
-    private final closetView parentPanel; //parent class
-    private final JTextField titleField; //user input title
-    private final JComboBox<String> typeComboBox; //user selected clothing item
-    private final JComboBox<String> acquiredComboBox; //user selected aquired method
-    private final JComboBox<String> brandComboBox; //user selected brand
-    private final JPanel materialPanel; //user input material
-    private final ArrayList<JPanel> materialBars; //multiple materials
-    private final Font lato;
+    //Labels
+    JLabel editClosetTitle = new JLabel("ADD NEW CLOTHING ITEM");
+    JLabel clothesTitle = new JLabel("Title:");
+    JLabel clothesTypeTitle = new JLabel("Type:");
+    JLabel clothesAcquisitionTitle = new JLabel("Acquired by:");
+    JLabel clothesBrandTitle = new JLabel("Brand:");
+    JLabel clothesMaterialTitle = new JLabel("Material(s):");
+    JLabel clothesErrorMsg = new JLabel("Error...");
 
-    public editClosetView(Font oswald, Font lato, closetView parentPanel)
-    {
+    //input fields
+    final JTextField titleField; //user input title
+    JComboBox<String> typeComboBox; //user selected clothing item
+    JComboBox<String> acquiredComboBox; //user selected acquired method
+    JComboBox<String> brandComboBox; //user selected brand
+    JComboBox<String> materialComboBox; //user selected material
+    JTextField percentageField;
+    private JPanel materialPanel; //user input material
+    final ArrayList<JPanel> materialBars; //multiple materials
+
+    //variables to hold the input to save clothing objects
+    String title;
+    String type;
+    String acquireMethod;
+    String brand;
+
+    //save button
+    JButton saveButton = new JButton("SUBMIT");
+
+    private final user user;
+
+    public editClosetView(Font oswald, Font lato, user user) {
         //initialize
-        this.parentPanel = parentPanel;
-        this.lato = lato;
+        this.user = user;
         this.materialBars = new ArrayList<>();
 
         this.setLayout(null); //set to null so we can set our own bounds
         this.setBackground(new Color(235, 219, 195)); //color of panel
 
-//------------------------------TITLE, TYPE, METHOD, BRAND--------------------------------------------------------------
-        // Title Field
-        titleField = new JTextField("Enter Item Title");
-        titleField.setFont(oswald.deriveFont(Font.BOLD, 24));
-        titleField.setBackground(Color.WHITE);
-        titleField.setHorizontalAlignment(SwingConstants.CENTER);
-        titleField.setBounds(50, 20, 300, 40);
+        //----------------------------------------------- LABEL DESIGN -----------------------------------------------//
+
+        //set positions for the labels
+        //title of the page
+        editClosetTitle.setBounds(25, 30, 350, 30);
+        //sections
+        clothesTitle.setBounds(25, 100, 100, 30);
+        clothesTypeTitle.setBounds(25, 180, 350, 30);
+        clothesAcquisitionTitle.setBounds(25, 260, 350, 30);
+        clothesBrandTitle.setBounds(25, 340, 350, 30);
+        clothesMaterialTitle.setBounds(25, 440, 350, 30);
+        //error message
+        clothesErrorMsg.setBounds(50, 600, 250, 30);
+        clothesErrorMsg.setVisible(false); //make error message invisible initially
+
+        //set all title labels to color green
+        editClosetTitle.setForeground(new Color(0, 99, 73));
+        clothesTitle.setForeground(new Color(0, 99, 73));
+        clothesTypeTitle.setForeground(new Color(0, 99, 73));
+        clothesAcquisitionTitle.setForeground(new Color(0, 99, 73));
+        clothesBrandTitle.setForeground(new Color(0, 99, 73));
+        clothesMaterialTitle.setForeground(new Color(0, 99, 73));
+        clothesErrorMsg.setForeground(new Color(0, 99, 73));
+
+        //set font and size of the labels
+        editClosetTitle.setFont(oswald.deriveFont(30f));
+        clothesTitle.setFont(oswald.deriveFont(18f));
+        clothesTypeTitle.setFont(oswald.deriveFont(18f));
+        clothesAcquisitionTitle.setFont(oswald.deriveFont(18f));
+        clothesBrandTitle.setFont(oswald.deriveFont(18f));
+        clothesMaterialTitle.setFont(oswald.deriveFont(18f));
+        clothesErrorMsg.setFont(lato.deriveFont(16f));
+
+        this.add(editClosetTitle);
+        this.add(clothesTitle);
+        this.add(clothesTypeTitle);
+        this.add(clothesAcquisitionTitle);
+        this.add(clothesBrandTitle);
+        this.add(clothesMaterialTitle);
+        this.add(clothesErrorMsg);
+
+        //------------------------------------------------------------------------------------------------------------//
+
+        //------------------------------ TITLE, TYPE, METHOD, BRAND --------------------------------------------------//
+
+        //Title Field
+        titleField = new JTextField();
+        titleField.setFont(lato.deriveFont(16f));
+        titleField.setBackground(new Color(247, 248, 247));
+        titleField.setForeground(Color.BLACK);
+        titleField.setBounds(25, 130, 300, 30);
         this.add(titleField);
 
-      // Populate the combo boxes from the database
-        populateComboBoxes();
-
-        // Drop-downs
-       String[] type = {"--Style--", "Top", "Sweater + Cardigans", "Jacket", "Jeans",
-                        "Shorts", "Skirt", "Dress", "Scarf", "Hat", "Vest", "Shoes"};
-       typeComboBox = createStyledComboBox(type, lato);
-       typeComboBox.setBounds(50, 100, 300, 30);
+        //Drop-downs
+        String[] type = {"Top", "Sweater/Cardigan", "Jacket", "Jeans", "Pants",
+                "Shorts", "Skirt", "Dress", "Scarf", "Hat", "Vest", "Shoes"};
+        typeComboBox = createStyledComboBox(type, lato);
+        typeComboBox.setBounds(25, 220, 300, 30);
         this.add(typeComboBox);
 
-        String[] method = {"--Acquisition Method--", "Thrifted + Second Hand",
-                            "Gifted", "Online", "In-store"};
+        String[] method = {"In-Store Bought", "Online Shopping", "In-Store Thrift", "Online Thrift",
+                "Handmade", "Gifted"};
         acquiredComboBox = createStyledComboBox(method, lato);
-        acquiredComboBox.setBounds(50, 200, 300, 30);
+        acquiredComboBox.setBounds(25, 300, 300, 30);
         this.add(acquiredComboBox);
 
-        String[] brand = {"--Brand--", "Abercrombie & Fitch", "Adidas", "Alo Yoga",
-                "Artizia", "Brandy Melville", "Fashion Nova", "Forever 21",
-                "Francesca's", "Free People", "Guess", "H&M", "Hollister",
-                "Hot Topic", "Lululemon", "Motel Rocks", "Nasty Gal", "Nike",
-                "PacSun", "PrettyLittleThing", "Princess Polly", "Romwe", "Shein",
-                "Steve Madden", "Tilly's", "Uniqlo", "Urban Outfitters", "Zumiez"};
-        brandComboBox = createStyledComboBox(brand, lato);
-        brandComboBox.setBounds(50, 300, 300, 30);
-        this.add(brandComboBox);
-//----------------------------------------------------------------------------------------------------------------------
+        //populate the brand combo boxes from the database
+        try {
 
-//--------------------------------MATERIAL------------------------------------------------------------------------------
+            Connection connect = myJDBC.openConnection();
+            //ensure there is a connection to the database
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return; //exit the method if connection is not valid
+            }
+
+            //fetch brands
+            String[] brands = getDbValues(connect, "SELECT brand_name FROM brand");
+            brandComboBox = createStyledComboBox(brands, lato);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        brandComboBox.setBounds(25, 380, 300, 30);
+        brandComboBox.setBackground(new Color(247, 248, 247));
+        this.add(brandComboBox);
+
+        //------------------------------------------------------------------------------------------------------------//
+
+        //------------------------------------- MATERIAL -------------------------------------------------------------//
         //create a separate panel for material
         materialPanel = new JPanel();
         materialPanel.setLayout(new BoxLayout(materialPanel, BoxLayout.Y_AXIS)); //so they stack one after the other
         materialPanel.setBackground(new Color(235, 219, 195));
 
-        addMaterialBar(); // Add initial material bar
+        addMaterialBar(null, null, lato); //Add initial material bar
 
         JScrollPane materialScrollPane = new JScrollPane(materialPanel);
         materialScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         materialScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         materialScrollPane.setBorder(BorderFactory.createEmptyBorder());
         materialScrollPane.getViewport().setBackground(new Color(235, 219, 195));
-        materialScrollPane.setBounds(50, 400, 300, 100);
+        materialScrollPane.setBounds(25, 480, 300, 100);
         //redesign scroll bar to match page
-        materialScrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI()
-        {
+        materialScrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
             @Override
-            protected JButton createDecreaseButton(int orientation)
-            {
-                return new JButton()
-                {  // Invisible decrease button
+            protected JButton createDecreaseButton(int orientation) {
+                return new JButton() {  //Invisible decrease button
                     @Override
-                    public Dimension getPreferredSize()
-                    {
+                    public Dimension getPreferredSize() {
                         return new Dimension(0, 0);
                     }
                 };
             }
+
             @Override
-            protected JButton createIncreaseButton(int orientation)
-            {
-                return new JButton()
-                {  // Invisible increase button
+            protected JButton createIncreaseButton(int orientation) {
+                return new JButton() {  //Invisible increase button
                     @Override
-                    public Dimension getPreferredSize()
-                    {
+                    public Dimension getPreferredSize() {
                         return new Dimension(0, 0);
                     }
                 };
             }
+
             @Override
-            protected void configureScrollBarColors()
-            {
-                this.thumbColor = new Color(192, 168, 144); // Color of the scroll thumb
-                this.trackColor = new Color(235, 219, 195); // Color of the scroll track (matching panel background)
+            protected void configureScrollBarColors() {
+                this.thumbColor = new Color(192, 168, 144); //Color of the scroll thumb
+                this.trackColor = new Color(235, 219, 195); //Color of the scroll track (matching panel background)
             }
         });
         this.add(materialScrollPane);
-//----------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------------------//
 
-//---------------------------------------MATERIAL BUTTON, SAVE BUTTON, CANCEL BUTTON------------------------------------
+        //------------------------------- MATERIAL BUTTON, SAVE BUTTON, CANCEL BUTTON ------------------------------------//
+
+        //tooltip design
+        UIManager.put("ToolTip.background", new Color(247, 248, 247)); //Light yellow
+        UIManager.put("ToolTip.foreground", Color.BLACK);
+        UIManager.put("ToolTip.font", new Font("Lato", Font.PLAIN, 14));
+        UIManager.put("ToolTip.border", BorderFactory.createLineBorder(Color.BLACK, 1));
+        ToolTipManager.sharedInstance().setInitialDelay(300); //show after 200ms
+
         //create add material button
-        JButton addMaterialButton = new JButton("Add Material");
-        addMaterialButton.setFont(lato.deriveFont(Font.BOLD, 18));
-        addMaterialButton.setBackground(new Color(255,178,194));
-        addMaterialButton.setForeground(Color.BLACK);
-        addMaterialButton.setOpaque(true);
+        ImageIcon editIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/plus2.png")));
+        Image scalededitImage = editIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        JButton addMaterialButton = new JButton(new ImageIcon(scalededitImage));
+        addMaterialButton.setContentAreaFilled(false);
         addMaterialButton.setBorderPainted(false);
-        addMaterialButton.setContentAreaFilled(true);
-        addMaterialButton.setBounds(80, 550, 200, 40);
-        addMaterialButton.addActionListener(e -> addMaterialBar());
+        addMaterialButton.setFocusPainted(false);
+        addMaterialButton.setOpaque(false);
+        //set bounds of add material button
+        addMaterialButton.setBounds(120, 440, 25, 25);
+        //help the user know what the button does with a tool tip
+        addMaterialButton.setToolTipText("Click to add more clothing material!");
+
+        addMaterialButton.addActionListener(e -> addMaterialBar(null, null, lato)); //add material on click.
         this.add(addMaterialButton);
 
         //save button
-        JButton saveButton = new JButton("Save");
-        saveButton.setFont(lato.deriveFont(Font.BOLD, 18));
-        saveButton.setBackground(new Color(0,99,73));
-        saveButton.setForeground(Color.BLACK);
-        saveButton.setOpaque(true);
-        saveButton.setBorderPainted(false);
-        saveButton.setContentAreaFilled(true);
-        saveButton.setBounds(50, 650, 120, 40);
-        saveButton.addActionListener(e -> saveItem());
+        saveButton.setFont(oswald.deriveFont(18f));
+        saveButton.setBackground(new Color(0, 99, 73)); //green button
+        saveButton.setForeground(new Color(247, 248, 247)); //white text
+        saveButton.setBounds(200, 650, 100, 40);
+        saveButton.addActionListener(e -> saveItem(oswald, lato));
         this.add(saveButton);
 
         //cancel button
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setFont(lato.deriveFont(Font.BOLD, 18));
-        cancelButton.setBackground(new Color(239,201,49));
-        cancelButton.setForeground(Color.BLACK);
-        cancelButton.setOpaque(true);
-        cancelButton.setBorderPainted(false);
-        cancelButton.setContentAreaFilled(true);
-        cancelButton.setBounds(200, 650, 120, 40);
-        cancelButton.addActionListener(e -> cancelItem());
+        JButton cancelButton = new JButton("CANCEL");
+        cancelButton.setFont(oswald.deriveFont(18f));
+        cancelButton.setBackground(new Color(0, 99, 73)); //green button
+        cancelButton.setForeground(new Color(247, 248, 247)); //white text
+        cancelButton.setBounds(50, 650, 100, 40);
+        cancelButton.addActionListener(e -> cancelItem(oswald, lato));
         this.add(cancelButton);
-//----------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------------//
 
-    }//end of editClosetView
+    } //end of editClosetView
 
-    // Styled combo box (pull down menu's)
-    private JComboBox<String> createStyledComboBox(String[] options, Font font)
-    {
+    //styled combo box (pull down menu's)
+    private JComboBox<String> createStyledComboBox(String[] options, Font lato) {
         JComboBox<String> comboBox = new JComboBox<>(options);
-        comboBox.setFont(font.deriveFont(Font.PLAIN, 14));
-        comboBox.setBackground(new Color(235, 219, 195));
+        comboBox.setFont(lato.deriveFont(14f));
+        comboBox.setBackground(new Color(247, 248, 247));
         return comboBox;
     }
 
-    // Add a new material bar
-    private void addMaterialBar()
-    {
+    //add materials to clothing item
+    void addMaterialBar(String material, String percentage, Font lato) {
         JPanel materialBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         materialBar.setBackground(new Color(235, 219, 195));
 
-        JTextField percentageField = new JTextField(5);
+        //create the percentage field and set its initial value
+        percentageField = new JTextField(5);
         percentageField.setFont(lato.deriveFont(Font.PLAIN, 14));
+        percentageField.setText(percentage); //preload percentage
+        //prevent any other char than a digit from being typed to the text field by user
+        percentageField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent keyEvt) {
+                char keyChar = keyEvt.getKeyChar();
+                if (!Character.isDigit(keyChar)) {
+                    keyEvt.consume();
+                }
+            }
+        });
+
         materialBar.add(percentageField);
 
         JLabel percentLabel = new JLabel("%");
         percentLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         materialBar.add(percentLabel);
 
-        JComboBox<String> materialComboBox = createStyledComboBox(new String[]{"--material--", "Organic Cotton",
-                "Cotton", "Polyester", "Wool", "Nylon", "Silk"}, lato);
+        try {
+            Connection connect = myJDBC.openConnection();
+            //ensure there is a connection to the database
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return; //exit the method if connection is not valid
+            }
+
+            //get materials
+            String[] materials = getDbValues(connect, "SELECT material_type FROM material");
+            materialComboBox = createStyledComboBox(materials, lato);
+            materialComboBox.setBackground(new Color(247, 248, 247));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //preload material in the combo box if its being updated
+        if (material != null && !material.isEmpty()) {
+            materialComboBox.setSelectedItem(material); //preload material
+        }
+
         materialBar.add(materialComboBox);
 
         materialBars.add(materialBar);
@@ -188,95 +289,8 @@ public class editClosetView extends JPanel
         materialPanel.repaint();
     }
 
-    //save user input
-    private void saveItem()
-    {
-        //store user selections/input into new variables
-        String title = titleField.getText();
-        String type = (String) typeComboBox.getSelectedItem();
-        String acquisition = (String) acquiredComboBox.getSelectedItem();
-        String brand = (String) brandComboBox.getSelectedItem();
-
-        StringBuilder materials = new StringBuilder();
-        for (JPanel bar : materialBars)
-        {
-            JTextField percentageField = (JTextField) bar.getComponent(0);
-            JComboBox<String> materialComboBox = (JComboBox<String>) bar.getComponent(2);
-            String percentage = percentageField.getText();
-            String material = (String) materialComboBox.getSelectedItem();
-
-            if (!percentage.isEmpty() && material != null && !material.equals("--material--"))
-            {
-                materials.append(percentage).append("% ").append(material).append(", ");
-            }
-        }
-
-        if (materials.length() > 2)
-        {
-            materials.setLength(materials.length() - 2); // Remove trailing comma
-        } else
-        {
-            materials.append("N/A");
-        }
-
-        // Pass data back to closetView and reset
-        parentPanel.saveItemPanel(
-                title.isEmpty() ? "Untitled Item" : title,
-                type == null || type.equals("--Style--") ? "N/A" : type,
-                acquisition == null || acquisition.equals("--Acquisition Method--") ? "N/A" : acquisition,
-                brand == null || brand.equals("--Brand--") ? "N/A" : brand,
-                materials.toString(),
-                lato,
-                lato
-        );
-    }
-
-
-    // Cancel and remove panel
-    private void cancelItem()
-    {
-        parentPanel.cancelPanel();
-    }
-
-
- // Function to populate combo boxes with values from the database
-    private void populateComboBoxes() {
-        try {
-
-            Connection connect = myJDBC.openConnection();
-            //Ensure there is a connection to the database
-            if (connect == null || connect.isClosed()) {
-                System.out.println("Database connection is not established.");
-                return; // Exit the method if connection is not valid
-            }
-
-            // create Style Dropdown menu
-            String[] type = {"--Style--", "Top", "Sweater + Cardigans", "Jacket", "Jeans", "Shorts", "Skirt", "Dress", "Scarf", "Hat", "Vest", "Shoes"};
-            typeComboBox = createStyledComboBox(type, lato);
-
-            // create Acquisition Method Dropdown menu
-            String[] acquisitionMethods = {"--Acquisition Method--", "In-Store Bought", "Online Shopping", "In-Store Thrifted", "Online Thrifted", "Handmade"};
-            acquiredComboBox = createStyledComboBox(acquisitionMethods, lato);
-
-// Fetch brands
-            String[] brands = getDatabaseValues(connect, "SELECT brand_name FROM brand");
-            brandComboBox = createStyledComboBox(brands, lato);
-
-            // Fetch materials
-            String[] materials = getDatabaseValues(connect, "SELECT material_type FROM material");
-            materialComboBox = createStyledComboBox(materials, lato);
-
-            // Close the database connection
-            connect.close();
-
- } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading data from the database.", "Database Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // Helper function to execute a query and return the results as an array of Strings
-    private String[] getDatabaseValues(Connection connect, String query) {
+    //helper function to execute a query and return the results as an array of Strings
+    private String[] getDbValues(Connection connect, String query) {
         ArrayList<String> values = new ArrayList<>();
 
         try (Statement statement = connect.createStatement()) {
@@ -292,5 +306,96 @@ public class editClosetView extends JPanel
         return values.toArray(new String[0]);
     }
 
-}
+    //cancel and remove panel
+    private void cancelItem(Font oswald, Font lato) {
+        try {
+            //switch back to the closetView Panel.
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.getContentPane().removeAll(); //clear all components from the current frame
+            closetView closetView = new closetView(oswald, lato, user); //initialize new page.
+            topFrame.add(closetView, BorderLayout.CENTER); //add forumView Panel to the frame
+            topFrame.revalidate(); //refresh the frame
+            topFrame.repaint(); //repaint the frame
+        } catch (Exception e) {
+            System.out.println("General error: " + e.getMessage());
+        }
+    }
 
+    private void saveItem(Font oswald, Font lato) {
+        try {
+            Connection connect = myJDBC.openConnection();
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return;
+            }
+
+            //Escape apostrophes to avoid SQL syntax error
+            title = titleField.getText().replace("'", "''");
+            type = (String) typeComboBox.getSelectedItem();
+            acquireMethod = (String) acquiredComboBox.getSelectedItem();
+            brand = (String) brandComboBox.getSelectedItem();
+            brand = brand.replace("'", "''");
+
+            //Check if title is empty
+            if (title.isEmpty()) {
+                clothesErrorMsg.setVisible(true);
+                clothesErrorMsg.setText("Please name your clothing item!");
+                return;
+            }
+
+            //initialize temp var for clothingID
+            int clothesID = -1; //placeholder for clothes ID before saving to database
+
+            //create the ClothingItem object
+            clothingItem clothingItem = new clothingItem(title, type, acquireMethod, brand, user.getUserId(), clothesID);
+
+            //add materials to the clothing item
+            for (JPanel materialBar : materialBars) { //Loop through all material bars
+                JComboBox<String> materialCombo = (JComboBox<String>) materialBar.getComponent(2);
+                JTextField percentageField = (JTextField) materialBar.getComponent(0);
+
+                String percentageText = percentageField.getText().trim();
+
+                //skip empty or invalid percentage fields
+                if (percentageText.isEmpty()) {
+                    continue; //skip to the next material bar
+                }
+
+                int percentage = Integer.parseInt(percentageText); //validate the input is numeric
+                String material = (String) materialCombo.getSelectedItem();
+                clothingItem.addMaterial(material, percentage); //add material and percentage
+            }
+
+            //save the ClothingItem to the database
+            clothingItemDAO clothingItemDAO = new clothingItemDAO();
+            boolean saveSuccess = clothingItemDAO.saveClothingItem(clothingItem);
+
+            if (saveSuccess) {
+                //if saving is successful, retrieve the clothesID (if auto-generated) and update the ClothingItem
+                try (Connection conn = myJDBC.openConnection()) {
+                    String sql = "INSERT INTO clothes (clothes_name, clothes_type, brand, clothes_acquisition, user_id) VALUES (?, ?, ?, ?, ?)";
+                    try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                        stmt.setString(1, title);
+                        stmt.setString(2, type);
+                        stmt.setString(3, brand);
+                        stmt.setString(4, acquireMethod);
+                        stmt.setInt(5, user.getUserId());
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                //close the item form
+                cancelItem(oswald, lato);
+
+            } else {
+                System.out.println("Error saving the clothing item.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+}

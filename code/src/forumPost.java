@@ -1,5 +1,6 @@
 import java.sql.Date;
 
+
 public class forumPost {
     private int userID;
     private int postID;
@@ -16,7 +17,7 @@ public class forumPost {
         this.postDate = postDate;
     }
 
-    // Getters
+    //get functions
     public int getPostId() {
         return postID;
     }
@@ -36,4 +37,5 @@ public class forumPost {
     public Date getPostDate() {
         return postDate;
     }
+
 }

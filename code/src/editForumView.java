@@ -8,20 +8,20 @@ import java.sql.Connection;
 import java.time.LocalDate;
 
 public class editForumView extends JPanel {
-    // Labels
+    //Labels
     JLabel editForumTitle = new JLabel("CREATE FORUM POST");
     JLabel postTitle = new JLabel("Title:");
     JLabel postContent = new JLabel("What would you like to say?");
     JLabel postErrorMsg = new JLabel("Error...");
 
-    // Buttons
+    //Buttons
     JButton cancelButton = new JButton("CANCEL");
     JButton submitButton = new JButton("SUBMIT");
 
-    // Fields to be filled
+    //Fields to be filled
     JTextField ptField = new JTextField();
     JTextArea pcField = new JTextArea();
-    JScrollPane scrollPane; // Added for scrollable text area
+    JScrollPane scrollPane; //Added for scrollable text area
 
     //variables to hold the inputs
     String title;
@@ -31,7 +31,7 @@ public class editForumView extends JPanel {
 
     private final user user;
 
-    // Constructor
+    //Constructor
     editForumView(Font oswald, Font lato, user user) {
         //--------------------------------------- BG COLOR AND PANEL SIZE --------------------------------------------//
         this.setBackground(new Color(235, 219, 195));
@@ -48,13 +48,13 @@ public class editForumView extends JPanel {
         postContent.setBounds(25, 170, 250, 30);
         postErrorMsg.setBounds(25, 490 + 80, 250, 30);
 
-        // Set a green color font for labels
+        //Set a green color font for labels
         editForumTitle.setForeground(new Color(0, 99, 73));
         postTitle.setForeground(new Color(0, 99, 73));
         postContent.setForeground(new Color(0, 99, 73));
         postErrorMsg.setForeground(new Color(0, 99, 73));
 
-        // Type and size of font
+        //Type and size of font
         editForumTitle.setFont(oswald.deriveFont(30f));
         postTitle.setFont(oswald.deriveFont(18f));
         postContent.setFont(oswald.deriveFont(18f));
@@ -65,16 +65,16 @@ public class editForumView extends JPanel {
         cancelButton.setBounds(50, 540 + 80, 100, 40);
         submitButton.setBounds(200, 540 + 80, 100, 40);
 
-        // Redesign cancel button
-        cancelButton.setBackground(new Color(0, 99, 73)); // Button color: green
-        cancelButton.setForeground(new Color(247, 248, 247)); // Button text color: white
-        cancelButton.setFont(oswald.deriveFont(18f)); // Font: Oswald, size 18
+        //Redesign cancel button
+        cancelButton.setBackground(new Color(0, 99, 73)); //Button color: green
+        cancelButton.setForeground(new Color(247, 248, 247)); //Button text color: white
+        cancelButton.setFont(oswald.deriveFont(18f)); //Font: Oswald, size 18
         cancelButton.setFocusable(false);
 
-        // Redesign submit button
-        submitButton.setBackground(new Color(0, 99, 73)); // Button color: green
-        submitButton.setForeground(new Color(247, 248, 247)); // Button text color: white
-        submitButton.setFont(oswald.deriveFont(18f)); // Font: Oswald, size 18
+        //Redesign submit button
+        submitButton.setBackground(new Color(0, 99, 73)); //Button color: green
+        submitButton.setForeground(new Color(247, 248, 247)); //Button text color: white
+        submitButton.setFont(oswald.deriveFont(18f)); //Font: Oswald, size 18
         submitButton.setFocusable(false);
         //------------------------------------------------------------------------------------------------------------//
 
@@ -84,15 +84,15 @@ public class editForumView extends JPanel {
         ptField.setForeground(Color.BLACK);
         ptField.setFont(lato.deriveFont(16f));
 
-        // Configure pcField as a scrollable, wrapping text area with padding
-        pcField.setLineWrap(true); // Enable line wrapping
-        pcField.setWrapStyleWord(true); // Wrap lines at word boundaries
+        //Configure pcField as a scrollable, wrapping text area with padding
+        pcField.setLineWrap(true); //Enable line wrapping
+        pcField.setWrapStyleWord(true); //Wrap lines at word boundaries
         pcField.setFont(lato.deriveFont(16f));
         pcField.setBackground(new Color(247, 248, 247));
         pcField.setForeground(Color.BLACK);
-        pcField.setMargin(new Insets(10, 10, 10, 10)); // Add padding inside the text area
+        pcField.setMargin(new Insets(10, 10, 10, 10)); //Add padding inside the text area
 
-        // Add pcField to a JScrollPane
+        //Add pcField to a JScrollPane
         scrollPane = new JScrollPane(pcField);
         scrollPane.setBounds(25, 200, 332, 350);
         //------------------------------------------------------------------------------------------------------------//
@@ -123,11 +123,11 @@ public class editForumView extends JPanel {
         try {
             //Switch back to the forumView Panel.
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.getContentPane().removeAll(); // Clear all components from the current frame
+            topFrame.getContentPane().removeAll(); //Clear all components from the current frame
             forumView forumView = new forumView(oswald, lato, user);
-            topFrame.add(forumView, BorderLayout.CENTER); // Add forumView Panel to the frame
-            topFrame.revalidate(); // Refresh the frame
-            topFrame.repaint(); // Repaint the frame
+            topFrame.add(forumView, BorderLayout.CENTER); //Add forumView Panel to the frame
+            topFrame.revalidate(); //Refresh the frame
+            topFrame.repaint(); //Repaint the frame
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
         }
@@ -135,25 +135,25 @@ public class editForumView extends JPanel {
 
     //TODO: Move to controller
     private void submitButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-
         try {
 
             Connection connect = myJDBC.openConnection();
             //Ensure there is a connection to the database
             if (connect == null || connect.isClosed()) {
                 System.out.println("Database connection is not established.");
-                return; // Exit the method if connection is not valid
+                return; //exit the method if connection is not valid
             }
 
             //If fields are successful...
-            title = ptField.getText();
-            content = pcField.getText();
+            title = ptField.getText().replace("'", "''"); //escape apostrophes to avoid sql ' errors.
+            content = pcField.getText().replace("'", "''"); //escape apostrophes to avoid sql ' errors.
+
             if (title.isEmpty() || content.isEmpty()) {
                 postErrorMsg.setVisible(true);
                 postErrorMsg.setText("One of the fields is left blank.");
             } else { //if there are no errors,
                 Statement statement = myJDBC.connect.createStatement();
-                date = Date.valueOf(LocalDate.now()); // java.sql.Date for SQL compatibility
+                date = Date.valueOf(LocalDate.now()); //java.sql.Date for SQL compatibility
 
                 //save post into database
                 String sql = "INSERT INTO post (post_title, post_content, post_date, user_ID) VALUES ('" + title + "', '" + content + "', '" + date + "', '" + userID + "')";
@@ -161,11 +161,11 @@ public class editForumView extends JPanel {
 
                 //Switch back to the forumView Panel.
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.getContentPane().removeAll(); // Clear all components from the current frame
+                topFrame.getContentPane().removeAll(); //Clear all components from the current frame
                 forumView forumView = new forumView(oswald, lato, user);
-                topFrame.add(forumView, BorderLayout.CENTER); // Add forumView Panel to the frame
-                topFrame.revalidate(); // Refresh the frame
-                topFrame.repaint(); // Repaint the frame
+                topFrame.add(forumView, BorderLayout.CENTER); //Add forumView Panel to the frame
+                topFrame.revalidate(); //Refresh the frame
+                topFrame.repaint(); //Repaint the frame
 
                 System.out.println("Post Successful");
             }

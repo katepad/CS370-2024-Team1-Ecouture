@@ -5,12 +5,15 @@ public class forumPostDAO {
 
     public ArrayList<forumPost> getAllPosts() {
         ArrayList<forumPost> posts = new ArrayList<>();
+        //query to get all post details.
         String query = "SELECT user_ID, post_ID, post_title, post_content, post_date FROM post ORDER BY post_ID DESC";
 
-        try (Connection conn = myJDBC.openConnection();  // Replace with your JDBC connection utility
+        try (Connection conn = myJDBC.openConnection();
+             //execute the query
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
+            //add post to the array of posts belonging to logged user.
             while (rs.next()) {
                 int userID = rs.getInt("user_ID");
                 int postID = rs.getInt("post_ID");
@@ -18,7 +21,7 @@ public class forumPostDAO {
                 String content = rs.getString("post_content");
                 Date postDate = rs.getDate("post_date");
 
-                // Create a forumPost object and add it to the list
+                //create a forumPost object and add it to the list
                 posts.add(new forumPost(userID, postID, title, content, postDate));
             }
         } catch (SQLException e) {
