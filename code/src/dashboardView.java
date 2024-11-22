@@ -17,10 +17,10 @@ public class dashboardView extends JPanel {
         int userID = user.getUserId();
         //Joins 3 tables of clothes, clothes_material, and material
         String sql = "SELECT " +
-                "AVG(m.material_decomp) AS avg_decomp, " +
-                "AVG(m.material_water) AS avg_water, " +
-                "AVG(m.material_energy) AS avg_energy, " +
-                "AVG(m.material_emission) AS avg_emission " +
+                "SUM(m.material_decomp*cm.Percentage)/ SUM(cm.Percentage) AS avg_decomp, " +
+                "SUM(m.material_water*cm.Percentage)/SUM(cm.Percentage) AS avg_water, " +
+                "SUM(m.material_energy*cm.Percentage)/SUM(cm.Percentage) AS avg_energy, " +
+                "SUM(m.material_emission*cm.Percentage)/SUM(cm.Percentage) AS avg_emission " +
                 "FROM clothes c " +
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m on cm.material_ID = m.material_ID " +
@@ -181,7 +181,7 @@ public class dashboardView extends JPanel {
         PreparedStatement prepared_statement = myJDBC.connect.prepareStatement(sql);
         prepared_statement.setInt(1,userID);
         ResultSet result = prepared_statement.executeQuery();
-        
+
         //While loop to save what material there are in the closet and how much of it is there
         while(result.next()){
             String material = result.getString("material_type");
