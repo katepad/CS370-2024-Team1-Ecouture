@@ -42,7 +42,7 @@ CREATE TABLE `jdbc_ecouture`.`clothes` (
 CREATE TABLE `jdbc_ecouture`.`clothes_material` (
   `clothes_ID` INT NOT NULL,
   `material_ID` INT NOT NULL,
-  `percentage` INT NOT NULL,
+  `Percentage` DECIMAL(5,2) NOT NULL,
   FOREIGN KEY (`clothes_ID`) REFERENCES `jdbc_ecouture`.`clothes` (`clothes_ID`) ON DELETE CASCADE,
   FOREIGN KEY (`material_ID`) REFERENCES `jdbc_ecouture`.`material` (`material_ID`) ON DELETE CASCADE
 );
