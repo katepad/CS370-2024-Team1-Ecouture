@@ -263,6 +263,24 @@ public class dashboardView extends JPanel {
         this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
         //--------------------------------------------------------------------------------------------------------------
 
+        //create title
+        PageTitle = new JLabel("CLOSET DASHBOARD");
+        PageTitle.setForeground(new Color(0, 99, 73));
+        PageTitle.setFont(oswald.deriveFont(20f));
+        PageTitle.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //create top panel
+        headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(235, 219, 195));
+
+        //add them to panel
+        headerPanel.add(PageTitle, BorderLayout.CENTER);
+
+        //set panel to top of screen
+        this.add(headerPanel, BorderLayout.NORTH);
+
+        //---------------------------------------------------------------------------
+
         //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
         navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
         this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
