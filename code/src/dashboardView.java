@@ -1,15 +1,23 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.xml.transform.Result;
 import java.awt.Color;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import com.mysql.cj.protocol.Resultset;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.round;
 
 public class dashboardView extends JPanel {
     static double[] getMaterialAverageForUser() throws SQLException {
@@ -113,10 +121,34 @@ public class dashboardView extends JPanel {
         }
         double result;
         result = (decompR * .2) + (waterR*.3) + (energyR* .2) + (emissionR * .3);
-        return result;
+        return round(result,2);
     }
 
-
+    static double getCarbonFootprint(int userID) throws SQLException {
+        String sql = "SELECT " +
+                "SUM(m.material_emission * " +
+                "CASE " +
+                "WHEN c.clothes_acquisition = 'In-Store Bought' THEN 8.0 " +
+                "WHEN c.clothes_acquisition = 'Online Shopping' THEN 10.0 " +
+                "WHEN c.clothes_acquisition = 'In-Store Thrifited' THEN 1.0 " +
+                "WHEN c.clothes_acquisition = 'Online Thrifited' THEN 3.0 " +
+                "WHEN c.clothes_acquisition = 'Handmade' THEN 5.0 " +
+                "WHEN c.clothes_acquisition = 'Gifted' THEN 9.0 " +
+                "ELSE 0.0 " +
+                "END) / COUNT(c.clothes_ID) AS carbon_footprint " +
+                "FROM clothes c " +
+                "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
+                "JOIN material m ON cm.material_ID = m.material_ID " +
+                "WHERE c.user_ID = ?";
+        PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        preparedStatement.setInt(1, userID);
+        ResultSet rs = preparedStatement.executeQuery();
+        double carbonFootPrint = 0;
+        if (rs.next()) {
+            carbonFootPrint = rs.getDouble("carbon_footprint");
+        }
+        return carbonFootPrint;
+    }
     //----------------------------------Create Star Rating--------------------------------------------------------------
     //Function to display stars to show how what the rating of the user's closet is
     public void createStarRating(Container container,double rating) {
@@ -288,6 +320,11 @@ public class dashboardView extends JPanel {
         Emission.setText("Emission: " + userAvg[3] + " C02e/kg");
         Emission.setFont(lato.deriveFont(15f));
         DashPanel.add(Emission);
+
+        JLabel Carbon = new JLabel();
+        Carbon.setText("Carbon Footprint is: " + getCarbonFootprint(userID) + " kg C02e/item");
+        Carbon.setFont(lato.deriveFont(15f));
+        DashPanel.add(Carbon);
 
         //Adds the rating of the user's closet to the DashPanel
         JLabel Rating = new JLabel();
