@@ -110,6 +110,7 @@ INSERT INTO brand (brand_name, brand_description, brand_rating) VALUES
 ('Lululemon', 'Enter description here.', 2),
 ('Motel Rocks', 'Enter description here.', 1),
 ('Nasty Gal', 'Enter description here.', 2),
+('Nike', 'Enter description here.', 3),
 ('Nordstrom', 'Enter description here.', 2),
 ('Old Navy', 'Enter description here.', 3),
 ('Organic Basics', 'Enter description here.', 4),
