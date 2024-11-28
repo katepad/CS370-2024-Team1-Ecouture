@@ -26,7 +26,8 @@ public class closetView extends JPanel {
         headerPanel.setBackground(new Color(235, 219, 195));
 
         //add Page title
-        JLabel pageTitle = new JLabel("Closet Page");
+        JLabel pageTitle = new JLabel("MY CLOSET");
+        pageTitle.setForeground(new Color(0, 99, 73));
         pageTitle.setFont(oswald.deriveFont(20f));
         pageTitle.setHorizontalAlignment(SwingConstants.CENTER);
         headerPanel.add(pageTitle, BorderLayout.CENTER);
