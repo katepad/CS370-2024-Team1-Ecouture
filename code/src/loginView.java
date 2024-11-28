@@ -103,7 +103,7 @@ public class loginView extends JPanel {
     }
 
     public void loginButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-        try {
+        try (Connection conn = myJDBC.openConnection()) {
             //Ensure there is a connection to the database
             if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
                 System.out.println("Database connection is not established.");
