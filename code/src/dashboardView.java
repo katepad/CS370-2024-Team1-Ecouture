@@ -9,11 +9,16 @@ import java.util.Objects;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.statistics.*;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
+
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.round;
 
 public class dashboardView extends JPanel {
@@ -61,6 +66,9 @@ public class dashboardView extends JPanel {
         JFreeChart box = createBoxPlotDecomp(userID);
         ChartPanel chartPanel1 = new ChartPanel(box);
         chartPanel1.setPreferredSize(new Dimension(1,1));
+        chartPanel1.setRangeZoomable(true);
+        chartPanel1.setDomainZoomable(true);
+        chartPanel1.setMouseWheelEnabled(true);
 
 
         JLabel Rating = new JLabel();
@@ -70,11 +78,16 @@ public class dashboardView extends JPanel {
         DashPanel.add(Rating);
         createStarRating(DashPanel,rating);
 
+        JLabel Brand = new JLabel();
+        Brand.setText("Brand rating is " + brandRating + "/5");
+        Brand.setFont(lato.deriveFont(15f));
+        DashPanel.add(Brand);
+
         //Adds the decomposition time to the DashPanel
         JLabel Decomp = new JLabel();
         Decomp.setText("Decompostion Time: " + userAvg[0] + " months");
         Decomp.setFont(lato.deriveFont(15f));
-        DashPanel.add(Decomp);
+        //DashPanel.add(Decomp);
         //chartPanel1.setSize(1,1);
         DashPanel.add(chartPanel1);
 
@@ -82,19 +95,28 @@ public class dashboardView extends JPanel {
         JLabel Water = new JLabel();
         Water.setText("Water Used: " + userAvg[1] + " liters/kg");
         Water.setFont(lato.deriveFont(15f));
-        DashPanel.add(Water);
+        //DashPanel.add(Water);
         JFreeChart box2 = createBoxPlotWater(userID);
         ChartPanel chartPanel2 = new ChartPanel(box2);
         chartPanel2.setPreferredSize(new Dimension(1,1));
+        chartPanel2.setRangeZoomable(true);
+        chartPanel2.setDomainZoomable(true);
+        chartPanel2.setMouseWheelEnabled(true);
         DashPanel.add(chartPanel2);
 
         //Adds the energy used to the DashPanel
         JLabel Energy = new JLabel();
         Energy.setText("Energy Used: " + userAvg[2] + " MJ/kg");
         Energy.setFont(lato.deriveFont(15f));
-        DashPanel.add(Energy);
+        JFreeChart box3 = createBoxPlotEnergy(userID);
+        ChartPanel chartPanel3 = new ChartPanel(box3);
+        chartPanel3.setPreferredSize(new Dimension(1,1));
+        chartPanel3.setRangeZoomable(true);
+        chartPanel3.setDomainZoomable(true);
+        chartPanel3.setMouseWheelEnabled(true);
+        DashPanel.add(chartPanel3);
 
-        //Adds the emission rate to the DashPanel
+        /*
         JLabel Emission = new JLabel();
         Emission.setText("Emission: " + userAvg[3] + " C02e/kg");
         Emission.setFont(lato.deriveFont(15f));
@@ -104,16 +126,21 @@ public class dashboardView extends JPanel {
         Carbon.setText("Carbon Footprint is: " + getCarbonFootprint(userID) + " kg C02e/item");
         Carbon.setFont(lato.deriveFont(15f));
         DashPanel.add(Carbon);
+         */
 
-        JLabel Brand = new JLabel();
-        Brand.setText("Brand rating is " + brandRating + "/5");
-        Brand.setFont(lato.deriveFont(15f));
-        DashPanel.add(Brand);
+        JFreeChart box5 = boxPlotCarbon(userID);
+        ChartPanel chartPanel4 = new ChartPanel(box5);
+        chartPanel4.setPreferredSize(new Dimension(1,1));
+        chartPanel4.setMouseWheelEnabled(true);
+        DashPanel.add(chartPanel4);
+
 
         //Adds the rating of the user's closet to the DashPanel
 
         //This creates the box to show the stars based off of the environmental impact
         DashPanel.add(chartPanel);
+        DashPanel.revalidate();
+        DashPanel.repaint();
 
         //----------------------------------------------------------------------------------------------------------------
 
@@ -269,6 +296,7 @@ public class dashboardView extends JPanel {
     }
 
     static double getCarbonFootprint(int userID) throws SQLException {
+        double carbon = 0;
         String sql = "SELECT " +
                 "SUM(m.material_emission * " +
                 "CASE " +
@@ -287,11 +315,10 @@ public class dashboardView extends JPanel {
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         preparedStatement.setInt(1, userID);
         ResultSet rs = preparedStatement.executeQuery();
-        double carbonFootPrint = 0;
-        if (rs.next()) {
-            carbonFootPrint = rs.getDouble("carbon_footprint");
+        if(rs.next()) {
+            carbon+=(rs.getDouble("carbon_footprint"));
         }
-        return carbonFootPrint;
+        return carbon;
     }
     static double getBrandRating(int userID) throws SQLException{
         String sql = "SELECT AVG(b.brand_rating) AS avg_brand_rating " +
@@ -466,6 +493,49 @@ public class dashboardView extends JPanel {
         }
         return Water;
     }
+    static ArrayList<Double> getCarbonFootprintList(int userID) throws SQLException {
+        ArrayList<Double> carbonList = new ArrayList<>();
+        String sql = "SELECT " +
+                "c.clothes_ID, "+
+                "c.clothes_acquisition, "+
+                "m.material_emission * "+
+                "CASE " +
+                "WHEN c.clothes_acquisition = 'In-Store Bought' THEN 8.0 " +
+                "WHEN c.clothes_acquisition = 'Online Shopping' THEN 10.0 " +
+                "WHEN c.clothes_acquisition = 'In-Store Thrifited' THEN 1.0 " +
+                "WHEN c.clothes_acquisition = 'Online Thrifited' THEN 3.0 " +
+                "WHEN c.clothes_acquisition = 'Handmade' THEN 5.0 " +
+                "WHEN c.clothes_acquisition = 'Gifted' THEN 9.0 " +
+                "ELSE 0.0 " +
+                "END AS carbon_footprint " +
+                "FROM clothes c " +
+                "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
+                "JOIN material m ON cm.material_ID = m.material_ID " +
+                "WHERE c.user_ID = ?";
+        PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        preparedStatement.setInt(1, userID);
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()) {
+            double carbonF = rs.getDouble("carbon_footprint");
+            carbonList.add(carbonF);
+        }
+        return carbonList;
+    }
+    public ArrayList<Double> getEmission(int userID) throws SQLException {
+        ArrayList<Double> Emission = new ArrayList<>();
+        String sql = "Select m.material_emission FROM clothes c " +
+                "JOIN clothes_material cm on c.clothes_ID = cm.clothes_ID "+
+                "JOIN material m on cm.material_ID = m.material_ID " +
+                "WHERE c.user_ID = ?";
+        PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        preparedStatement.setInt(1,userID);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        while(rs.next()){
+            Emission.add(rs.getDouble("material_emission"));
+        }
+        return Emission;
+    }
     public ArrayList<Double> getEnergy(int userID) throws SQLException {
         ArrayList<Double> energy = new ArrayList<>();
         String sql = "Select m.material_energy FROM clothes c " +
@@ -484,11 +554,10 @@ public class dashboardView extends JPanel {
     public JFreeChart createBoxPlotDecomp(int userID) throws SQLException{
         ArrayList<Double> decomp = getDecomp(userID);
         DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
-        if(!decomp.isEmpty()){
             Collections.sort(decomp);
-            double min = decomp.get(0);
+            double min = decomp.getFirst();
             double mean = decomp.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double max = decomp.get(decomp.size()-1);
+            double max = decomp.getLast();
             double median = getMedian(decomp);
             double q1 = getPercentile(decomp, 25);
             double q3 = getPercentile(decomp, 75);
@@ -497,53 +566,151 @@ public class dashboardView extends JPanel {
             double maxOutlier = (q3+(1.5*IQR));
             BoxAndWhiskerItem boxAndWhiskerItem = new BoxAndWhiskerItem(mean, median,q1,q3,min,max,minOutlier,maxOutlier, new ArrayList<>());
             dataset.add(boxAndWhiskerItem,"Decomposition Time","Materials");
-        }
         JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
-            "Decomposition Time Distrubition",
+            "Decomposition Time Distrubition".toUpperCase(),
                 "Material",
-                "Decomposition Times",
+                "Decomposition Times (months)",
                 dataset,
                 false
         );
         ChartPanel chartPanel = new ChartPanel(chart);
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(new Color(235,219,195));
+        chart.getTitle().setPaint(new Color(0,99,73));
+        chart.getTitle().setFont(new Font("Oswlad",Font.BOLD,20));
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
+        BoxAndWhiskerRenderer renderer = (BoxAndWhiskerRenderer) plot.getRenderer();
+        renderer.setMedianVisible(true);
+        renderer.setMeanVisible(true);
+        renderer.setSeriesPaint(0, new Color(0,99,73));
+        NumberAxis numberAxis = (NumberAxis) plot.getRangeAxis();
+        numberAxis.setAutoRangeIncludesZero(false);
+        numberAxis.setUpperBound(decomp.getLast());
         chartPanel.setPreferredSize(new Dimension(1,1));
         return chart;
     }
     public JFreeChart createBoxPlotWater(int userID) throws SQLException{
         ArrayList<Double> water = getWater(userID);
         DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
-        if(!water.isEmpty()){
-            Collections.sort(water);
-            double min = water.get(0);
-            double mean = water.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double max = water.get(water.size()-1);
-            double median = getMedian(water);
-            double q1 = getPercentile(water, 25);
-            double q3 = getPercentile(water, 75);
-            double IQR = q3 - q1;
-            double minOutlier = (q1-(1.5*IQR));
-            double maxOutlier = (q3+(1.5*IQR));
-            BoxAndWhiskerItem boxAndWhiskerItem = new BoxAndWhiskerItem(mean, median,q1,q3,min,max,minOutlier,maxOutlier, new ArrayList<>());
-            dataset.add(boxAndWhiskerItem,"Water Usage","Materials");
-        }
+        Collections.sort(water);
+        double min = water.getFirst();
+        double mean = water.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        double max = water.getLast();
+        double median = getMedian(water);
+        double q1 = getPercentile(water, 25);
+        double q3 = getPercentile(water, 75);
+        double IQR = q3 - q1;
+        double minOutlier = (q1-(1.5*IQR));
+        double maxOutlier = (q3+(1.5*IQR));
+        BoxAndWhiskerItem boxAndWhiskerItem = new BoxAndWhiskerItem(mean, median,q1,q3,min,max,minOutlier,maxOutlier, new ArrayList<>());
+        dataset.add(boxAndWhiskerItem,"Water Usage","Materials");
         JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
-                "Water Usage Distrubition",
+                "Water Usage Distrubition".toUpperCase(),
                 "Material",
-                "Water Usage",
+                "Water Usage (liters/kg)",
                 dataset,
                 false
         );
         ChartPanel chartPanel = new ChartPanel(chart);
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(new Color(235,219,195));
+        chart.getTitle().setPaint(new Color(0,99,73));
+        chart.getTitle().setFont(new Font("Oswlad",Font.BOLD,20));
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
+        BoxAndWhiskerRenderer renderer = (BoxAndWhiskerRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(0,99,73));
+        renderer.setMedianVisible(true);
+        NumberAxis numberAxis = (NumberAxis) plot.getRangeAxis();
+        numberAxis.setAutoRangeIncludesZero(false);
+        numberAxis.setUpperBound(max);
         chartPanel.setPreferredSize(new Dimension(1,1));
         return chart;
     }
+    public JFreeChart createBoxPlotEnergy(int userID) throws SQLException{
+        ArrayList<Double> Energy = getEnergy(userID);
+        DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+        Collections.sort(Energy);
+        double min = Energy.getFirst();
+        double mean = Energy.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        double max = Energy.getLast();
+        double median = getMedian(Energy);
+        double q1 = getPercentile(Energy, 25);
+        double q3 = getPercentile(Energy, 75);
+        double IQR = q3 - q1;
+        double minOutlier = (q1-(1.5*IQR));
+        double maxOutlier = (q3+(1.5*IQR));
+        BoxAndWhiskerItem boxAndWhiskerItem = new BoxAndWhiskerItem(mean, median,q1,q3,min,max,minOutlier,maxOutlier, new ArrayList<>());
+        dataset.add(boxAndWhiskerItem,"Energy Usage","Materials");
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
+                "Energy Usage".toUpperCase(),
+                "Material",
+                "Energy Usage (MJ/kg)",
+                dataset,
+                false
+        );
+        ChartPanel chartPanel = new ChartPanel(chart);
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(new Color(235,219,195));
+        chart.getTitle().setPaint(new Color(0,99,73));
+        chart.getTitle().setFont(new Font("Oswlad",Font.BOLD,20));
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
+        BoxAndWhiskerRenderer renderer = (BoxAndWhiskerRenderer) plot.getRenderer();
+        renderer.setMedianVisible(true);
+        renderer.setMeanVisible(true);
+        renderer.setSeriesPaint(0, new Color(0,99,73));
+        NumberAxis numberAxis = (NumberAxis) plot.getRangeAxis();
+        numberAxis.setAutoRangeIncludesZero(false);
+        chartPanel.setPreferredSize(new Dimension(1,1));
+        return chart;
+    }
+   public JFreeChart boxPlotCarbon(int userID) throws SQLException{
+        ArrayList<Double> carbon = getCarbonFootprintList(userID);
+        Collections.sort(carbon);
+        double min = carbon.getFirst();
+        double max = carbon.getLast();
+        double median = getMedian(carbon);
+        double mean = carbon.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        double q1 = getPercentile(carbon,25);
+        double q3 = getPercentile(carbon,75);
+        double IQR = q3-q1;
+        double minOutlier = (q1-(1.5*IQR));
+        double maxOutlier = (q3+(1.5*IQR));
+       BoxAndWhiskerItem boxAndWhiskerItem = new BoxAndWhiskerItem(mean, median,q1,q3,min,max,minOutlier,maxOutlier, new ArrayList<>());
+       DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+       dataset.add(boxAndWhiskerItem,"Carbon FootPrint","Materials");
+       JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
+               "Carbon Footprint".toUpperCase(),
+               "Material",
+               "Carboon Footprint Emission (kg/C02e)",
+               dataset,
+               false
+       );
 
+       ChartPanel chartPanel = new ChartPanel(chart);
+       CategoryPlot plot = chart.getCategoryPlot();
+       plot.setBackgroundPaint(new Color(235,219,195));
+       chart.getTitle().setPaint(new Color(0,99,73));
+       chart.getTitle().setFont(new Font("Oswlad",Font.BOLD,20));
+       plot.setOrientation(PlotOrientation.HORIZONTAL);
+       BoxAndWhiskerRenderer renderer = (BoxAndWhiskerRenderer) plot.getRenderer();
+       renderer.setMedianVisible(true);
+       renderer.setMeanVisible(true);
+       renderer.setSeriesPaint(0, new Color(0,99,73));
+       NumberAxis numberAxis = (NumberAxis) plot.getRangeAxis();
+       numberAxis.setAutoRangeIncludesZero(false);
+       chartPanel.setPreferredSize(new Dimension(1,1));
+       return chart;
+    }
     private double getMedian(ArrayList<Double> data){
         int size = data.size();
-        if(size % 2 == 0){
-            return(data.get(size/2-1)) + data.get(size/2)/2;
-        }else{
+        if(size == 0){
+            return 0.0;
+        }
+        Collections.sort(data);
+        if(size % 2 == 1){
             return data.get(size/2);
+        }else{
+            return(data.get(size/2-1)) + data.get(size/2)/2;
         }
     }
 
