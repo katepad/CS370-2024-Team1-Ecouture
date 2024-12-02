@@ -283,10 +283,10 @@ public class dashboardView extends JPanel {
         return carbon;
     }
     static double getBrandRating(int userID) throws SQLException{
-        String sql = "SELECT AVG(b.brand_rating) AS avg_brand_rating " +
-                "FROM clothes c " +
-                "JOIN brand b on c.brand_ID = b.brand_ID " +
-                "WHERE c.user_ID = ?";
+        String sql = "SELECT AVG(CASE WHEN b.brand_rating > 0 THEN b.brand_rating ELSE NULL END) AS avg_brand_rating " +
+                     "FROM clothes c " +
+                     "JOIN brand b on c.brand_ID = b.brand_ID " +
+                     "WHERE c.user_ID = ?";
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         preparedStatement.setInt(1,userID);
         ResultSet rs = preparedStatement.executeQuery();
