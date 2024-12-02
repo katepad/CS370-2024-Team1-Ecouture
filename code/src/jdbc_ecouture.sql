@@ -82,6 +82,7 @@ INSERT INTO material (material_type, material_decomp, material_emission, materia
 ('Wool', 13.5, 30.0, 170000, 25, 2.6);
 
 INSERT INTO brand (brand_name, brand_rating) VALUES
+('Other', 0),
 ('Abercrombie & Fitch', 2),
 ('Adidas', 2),
 ('Alo Yoga', 2),
@@ -127,5 +128,6 @@ INSERT INTO brand (brand_name, brand_rating) VALUES
 ('Under Armour', 2),
 ('Uniqlo', 3),
 ('Urban Outfitters', 2),
+('Windsor', 1),
 ('Zara', 2),
 ('Zumiez', 2);
