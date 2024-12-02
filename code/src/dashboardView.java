@@ -286,7 +286,7 @@ public class dashboardView extends JPanel {
         String sql = "SELECT AVG(b.brand_rating) AS avg_brand_rating " +
                      "FROM clothes c " +
                      "JOIN brand b on c.brand_ID = b.brand_ID " +
-                     "WHERE c.user_ID = ? AND b.brand_rating > 0";
+                     "WHERE c.user_ID = ? AND b.brand_name NOT LIKE '%Other'";
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         preparedStatement.setInt(1,userID);
         ResultSet rs = preparedStatement.executeQuery();
