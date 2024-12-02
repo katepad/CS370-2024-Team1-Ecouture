@@ -11,7 +11,7 @@ CREATE TABLE `jdbc_ecouture`.`brand` (
   `brand_name` VARCHAR(45) NOT NULL,
   `brand_rating` DECIMAL(2,1) NOT NULL,
   PRIMARY KEY (`brand_ID`),
-  CHECK (`brand_rating` >= 1.0 AND `brand_rating` <= 5.0)
+  CHECK (`brand_rating` >= 0.0 AND `brand_rating` <= 5.0)
 );
 
 CREATE TABLE `jdbc_ecouture`.`material` (
