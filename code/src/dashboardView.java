@@ -264,8 +264,8 @@ public class dashboardView extends JPanel {
                 "CASE " +
                 "WHEN c.clothes_acquisition = 'In-Store Bought' THEN 8.0 " +
                 "WHEN c.clothes_acquisition = 'Online Shopping' THEN 10.0 " +
-                "WHEN c.clothes_acquisition = 'In-Store Thrifited' THEN 1.0 " +
-                "WHEN c.clothes_acquisition = 'Online Thrifited' THEN 3.0 " +
+               "WHEN c.clothes_acquisition =  'In-Store Thrift' THEN 1.0 " +
+                "WHEN c.clothes_acquisition = 'Online Thrift' THEN 3.0 " +
                 "WHEN c.clothes_acquisition = 'Handmade' THEN 5.0 " +
                 "WHEN c.clothes_acquisition = 'Gifted' THEN 9.0 " +
                 "ELSE 0.0 " +
