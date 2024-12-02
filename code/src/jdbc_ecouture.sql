@@ -78,7 +78,6 @@ INSERT INTO material (material_type, material_decomp, material_emission, materia
 ('Polyester', 1320.0, 14.2, 150, 90, 2.4),
 ('Polyurethane', 12000.0, 6.4, 25, 100, 2.4),
 ('Rayon/Viscose', 1.5, 14.0, 8000, 12.5, 4.2),
-('Shell', 300.0, 8.5, 600, 45, 3.5),
 ('Silk', 30.0, 25.0, 1000, 35, 2.8),
 ('Wool', 13.5, 30.0, 170000, 25, 2.6);
 
