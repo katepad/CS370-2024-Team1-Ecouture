@@ -39,35 +39,27 @@ public class dashboardView extends JPanel {
 
             int userID = user.getUserId();
 
-
+            //Stores all of user's info average into an array
             double[] userAvg = getMaterialAverageForUser();
-            double decomp = userAvg[0];
+            //double decomp = userAvg[0];
             double water = userAvg[1];
             double energy = userAvg[2];
-            double emission = userAvg[3];
+            //double emission = userAvg[3];
+            //Gets the brand rating
             double brandRating = getBrandRating(userID);
+            //Rating for materials
             double rating = getMaterialAverage();
+            //Creates the piechart
             JFreeChart piechart = createPieChart(userID);
             ChartPanel chartPanel = new ChartPanel(piechart);
-            chartPanel.setMouseWheelEnabled(true);
+            chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
             chartPanel.setPreferredSize(new Dimension(1,1));
 
+            //Piechart for the acquistion method
             JFreeChart piechart2 = createPieChartAcquisition(userID);
             ChartPanel chartPanel1 = new ChartPanel(piechart2);
             chartPanel1.setMouseWheelEnabled(true);
             chartPanel1.setPreferredSize(new Dimension(1,1));
-
-
-
-            //Adds the decomposition time to the DashPanel
-
-
-
-
-
-            //Adds the rating of the user's closet to the DashPanel
-
-            //This creates the box to show the stars based off of the environmental impact
 
 
             //----------------------------------------------------------------------------------------------------------------
@@ -83,35 +75,40 @@ public class dashboardView extends JPanel {
 
             contentPanel.setBackground(new Color(235, 219,195));
 
+            //Displays the overall rating of the closet(material_rating + brand_rating)
             JLabel Sustain = new JLabel();
             Sustain.setText("Overall sustainability is " + sustainRating(rating,brandRating) + "/5");
             Sustain.setFont((lato.deriveFont(15f)));
             contentPanel.add(Sustain);
             createStarRating(contentPanel,sustainRating(rating,brandRating));
 
-
+            //Displays brand rating
             JLabel Brand = new JLabel();
             Brand.setText("Brand rating is " + brandRating + "/5");
             Brand.setFont(lato.deriveFont(15f));
             contentPanel.add(Brand);
             createStarRating(contentPanel,brandRating);
 
+            //Displays the material rating
             JLabel mRating = new JLabel();
             mRating.setText("Overall Rating of Materials: " + rating);
             mRating.setFont(lato.deriveFont(15f));
             contentPanel.add(mRating);
             createStarRating(contentPanel,rating);
 
+            //Displays the carbon footprint
             JLabel Carbon = new JLabel();
             Carbon.setText("Carbon Footprint is: " + getCarbonFootprint(userID) + " kg C02e/item");
             Carbon.setFont(lato.deriveFont(15f));
             contentPanel.add(Carbon);
 
+            //Displays the water usage
             JLabel Water = new JLabel();
             Water.setText("Water Used: " + water + " liters/kg");
             Water.setFont(lato.deriveFont(15f));
             contentPanel.add(Water);
 
+            //Displays the energy usage
             JLabel Energy = new JLabel();
             Energy.setText("Energy Used: " + energy + " MJ/kg");
             Energy.setFont(lato.deriveFont(15f));
@@ -168,7 +165,8 @@ public class dashboardView extends JPanel {
     static double[] getMaterialAverageForUser() throws SQLException {
         double[] averages = new double[4];
         int userID = user.getUserId();
-        //Joins 3 tables of clothes, clothes_material, and material
+        //Joins 3 tables of clothes, clothes_material, and material, then in SQL, add all columns of that data and takes the average
+        //Also has percentages in mind since clothes could have different compositions
         String sql = "SELECT " +
                 "SUM(m.material_decomp*cm.Percentage)/ SUM(cm.Percentage) AS avg_decomp, " +
                 "SUM(m.material_water*cm.Percentage)/SUM(cm.Percentage) AS avg_water, " +
@@ -178,7 +176,9 @@ public class dashboardView extends JPanel {
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1, userID);
         //Sending the prepared statements to the database and executing them
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -195,18 +195,20 @@ public class dashboardView extends JPanel {
     static double getMaterialAverage() throws SQLException {
         int userID = user.getUserId();
         double material = 0;
-        //Joins 3 tables of clothes, clothes_material, and material
+        //Joins 3 tables of clothes, clothes_material, and material and gets the overall rating of the material
         String sql = "SELECT " +
                 "SUM(m.material_rating*cm.Percentage)/ SUM(cm.Percentage) AS avg_material " +
                 "FROM clothes c " +
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1, userID);
         //Sending the prepared statements to the database and executing them
         ResultSet resultSet = preparedStatement.executeQuery();
-        //Put average of closet's clothes into the array
+        //Stores the total average of the material into a variable called material
         if (resultSet.next()) {
             material = resultSet.getDouble("avg_material");
         }
@@ -276,22 +278,11 @@ public class dashboardView extends JPanel {
         return range;
     }
     //------------------------------------------------------------------------------------------------------------------------------
-    //Gets the overall rating of all the clothes in the closet
-    static double materialResult(double decomp, double water, double energy, double emission){
-        double decompR = starsForDecomp(decomp);
-        double waterR = starsForWater(water);
-        double energyR = starsForEnergy(energy);
-        double emissionR = starsForEmission(emission);
-        if(decomp == 0 && water == 0 && energy == 0 && emission == 0){
-            return 0;
-        }
-        double result;
-        result = (decompR + waterR + energyR + emissionR) /4;
-        return round(result,2);
-    }
 
     static double getCarbonFootprint(int userID) throws SQLException {
         double carbon = 0;
+        //Joins table of material, clothes to calculate carbon footprint which is emission * clothes_acquisition
+        //Case statements to check for what the user input as clothes_acquisition
         String sql = "SELECT " +
                 "SUM(m.material_emission * " +
                 "CASE " +
@@ -307,8 +298,11 @@ public class dashboardView extends JPanel {
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        //Send the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1, userID);
+        //Execute the statements
         ResultSet rs = preparedStatement.executeQuery();
         if(rs.next()) {
             carbon+=(rs.getDouble("carbon_footprint"));
@@ -316,12 +310,16 @@ public class dashboardView extends JPanel {
         return carbon;
     }
     static double getBrandRating(int userID) throws SQLException{
+        //Joining brand table with clothes table
         String sql = "SELECT AVG(b.brand_rating) AS avg_brand_rating " +
                      "FROM clothes c " +
                      "JOIN brand b on c.brand_ID = b.brand_ID " +
                      "WHERE c.user_ID = ? AND b.brand_name NOT LIKE '%Other'";
+        //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1,userID);
+        //Execute the statement
         ResultSet rs = preparedStatement.executeQuery();
 
         double avg_Brand = 0;
@@ -331,15 +329,19 @@ public class dashboardView extends JPanel {
         return avg_Brand;
     }
     static double sustainRating(double mResult, double bRating){
+        //Equation to calculate the overall rating of user's closet
         return  (mResult+bRating)/2;
     }
     //----------------------------------Create Star Rating--------------------------------------------------------------
     //Function to display stars to show how what the rating of the user's closet is
     public void createStarRating(Container container,double rating) {
         int fullstars = (int) rating;
+
         //Equation to get half star
         double fraction = rating - fullstars;
+
         int halfStar = 0;
+
         //If statement to check if there needs to be half star
         if(fraction >= .01 && fraction < .99){
             halfStar = 1;
@@ -363,6 +365,7 @@ public class dashboardView extends JPanel {
         Image image3 = empty.getScaledInstance(15,15,Image.SCALE_SMOOTH);
         ImageIcon emptyIcon = new ImageIcon(image3);
 
+        //Creates the box to display the stars
         Box starBox = Box.createHorizontalBox();
         starBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -387,20 +390,22 @@ public class dashboardView extends JPanel {
     public ArrayList<String> getMaterials(int userID) throws SQLException{
         ArrayList<String> materials = new ArrayList<>();
         double totalPercentage = 0;
-        //Count what material and how many material are there
+        //Count what material and how many material are there, joining material, clothes_material
         String sql = "SELECT m.material_type, SUM(cm.Percentage) as total_percentage " +
                 "FROM clothes c " +
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m on cm.material_ID = m.material_ID "+
                 "WHERE c.user_ID = ? " +
                 "GROUP by m.material_type";
-
+        //Sends the string to SQL as a statement as well does not care for changes
         PreparedStatement prepared_statement = myJDBC.connect.prepareStatement(
                 sql,
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY
         );
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         prepared_statement.setInt(1,userID);
+        //Executes the statement
         ResultSet result = prepared_statement.executeQuery();
 
         //While loop to save what material there are in the closet and how much of it is there
@@ -408,7 +413,9 @@ public class dashboardView extends JPanel {
             double materialPercentage = result.getDouble("total_percentage");
             totalPercentage+=materialPercentage;
         }
+        //Moves to the front of the ResultSet object
         result.beforeFirst();
+        //While loop that stores what type of material into the arraylist and get the percentage of what the clothes are made of
         while(result.next()){
             String material = result.getString("material_type");
             double materialPercentage = result.getDouble("total_percentage");
@@ -420,27 +427,36 @@ public class dashboardView extends JPanel {
     public ArrayList<String> getAcquisition(int userID) throws SQLException{
         ArrayList<String> acquisition = new ArrayList<>();
         double total = 0;
+        //Statement that counts the types of acquisition
         String sql = "SELECT c.clothes_acquisition, COUNT(c.clothes_ID) AS total_clothes "+
                       "FROM clothes c " +
                       "WHERE c.user_ID = ? "+
                       "GROUP BY c.clothes_acquisition";
+        //Sends the string to SQL as a statement as well does not care for changes
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(
                 sql,
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY
         );
+        //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1,userID);
+        //Execute statement
         ResultSet rs = preparedStatement.executeQuery();
 
+        //While loop that adds clothes_acquistion, this will be later used to get the percentage of each clothes_acquisition
         while(rs.next()){
             total += rs.getInt("total_clothes");
         }
+
+        //Move to first of the ResultSet object
         rs.beforeFirst();
 
+        //While loop that will add what type of clothes_acquisition, how much of each clothes_acquisiton, and the relative percentage of all clothes_type.
+        // Stores the result into the arraylist
         while(rs.next()){
             String acq = rs.getString("clothes_acquisition");
             int totalClothes = rs.getInt("total_clothes");
-            double relative = (double) (totalClothes/total) * 100;
+            double relative = (totalClothes/total) * 100;
             acquisition.add(acq + ": " + String.format("%.2f", relative) + "%");
         }
         return acquisition;
@@ -450,7 +466,7 @@ public class dashboardView extends JPanel {
     public JFreeChart createPieChart(int userID) throws SQLException {
         DefaultPieDataset dataset = new DefaultPieDataset();
         ArrayList<String> materials = getMaterials(userID);
-        //Loop to parse the material ArrayList to get what material and the amount of it in the closet
+        //Array for which color to cycle through when constructing pie chart
         Color[] colors = new Color[]{
                 Color.decode("#B3A1D9"),
                 Color.decode("#FBE4C7"),
@@ -473,7 +489,13 @@ public class dashboardView extends JPanel {
                 true,
                 false
         );
+
         PiePlot plot = (PiePlot) chart.getPlot();
+
+        //Loop to parse the material ArrayList to get what material and the amount of it in the closet
+        //Does this by looping through the helper function arraylist, loop will split material type by the :
+        //Then replaces the % sign with an empty space, then adds it to the dataset
+        //Then sets the section paint by using the index of the loop with the color array to cycle through those colors
         for (int i = 0; i < materials.size(); i++) {
             String material = materials.get(i);
             String[] parts = material.split(": ");
@@ -482,10 +504,18 @@ public class dashboardView extends JPanel {
             dataset.setValue(materialTypes, percentage);
             plot.setSectionPaint(materialTypes, colors[i % colors.length]);
         }
+        //Sets the background of piechart to standard color
         plot.setBackgroundPaint(new Color(235, 219, 195));
+
+        //Sets the title color to logo color
         chart.getTitle().setPaint(new Color(0, 99, 73));
+
+        //Sets the font
         chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+
+        //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));
+
         plot.setLabelBackgroundPaint(new Color(255, 178, 194));
         plot.setLabelOutlinePaint(Color.BLACK);
         plot.setLabelOutlineStroke(new BasicStroke(1.0f));
@@ -497,6 +527,7 @@ public class dashboardView extends JPanel {
     public JFreeChart createPieChartAcquisition(int userID) throws SQLException {
         DefaultPieDataset dataset = new DefaultPieDataset();
         ArrayList<String> acquisition = getAcquisition(userID);
+        //Color Array to cycle through
         Color[] colors = new Color[]{
                 Color.decode("#FBE4C7"),
                 Color.decode("#FFA07A"),
@@ -505,6 +536,7 @@ public class dashboardView extends JPanel {
                 Color.decode("#33856B"),
                 Color.decode("#004F47")
         };
+        //Sets the title, the legends for what type of acqusition are in the closet
         JFreeChart chart = ChartFactory.createPieChart(
                 "Acquisition Method".toUpperCase(),
                 dataset,
@@ -513,6 +545,10 @@ public class dashboardView extends JPanel {
                 false
         );
         PiePlot plot = (PiePlot) chart.getPlot();
+        //Loop to parse the material ArrayList to get what acquisition method and the amount of it in the closet
+        //Does this by looping through the helper function arraylist, loop will split acqusition type by the :
+        //Then replaces the % sign with an empty space, then adds it to the dataset
+        //Then sets the section paint by using the index of the loop with the color array to cycle through those colors
         for (int i = 0; i < acquisition.size(); i++) {
             String acq = acquisition.get(i);
             String[] parts = acq.split(": ");
@@ -521,45 +557,25 @@ public class dashboardView extends JPanel {
             dataset.setValue(acquisitionTypes, percentage);
             plot.setSectionPaint(acquisitionTypes, colors[i % colors.length]);
         }
+
+        //Sets the background of piechart to standard color
         plot.setBackgroundPaint(new Color(235, 219, 195));
+
+        //Sets the title color to logo color
         chart.getTitle().setPaint(new Color(0, 99, 73));
+
+        //Sets the font
         chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+
+        //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));
+
         plot.setLabelBackgroundPaint(new Color(255, 178, 194));
         plot.setLabelOutlinePaint(Color.BLACK);
         plot.setLabelOutlineStroke(new BasicStroke(1.0f));
         plot.setLabelShadowPaint(new Color(0, 0, 0, 64));
         plot.setLabelFont(new Font("Lato", Font.PLAIN, 12));
         return chart;
-    }
-
-    static ArrayList<Double> getCarbonFootprintList(int userID) throws SQLException {
-        ArrayList<Double> carbonList = new ArrayList<>();
-        String sql = "SELECT " +
-                "c.clothes_ID, "+
-                "c.clothes_acquisition, "+
-                "m.material_emission * "+
-                "CASE " +
-                "WHEN c.clothes_acquisition = 'In-Store Bought' THEN 8.0 " +
-                "WHEN c.clothes_acquisition = 'Online Shopping' THEN 10.0 " +
-                "WHEN c.clothes_acquisition = 'In-Store Thrifited' THEN 1.0 " +
-                "WHEN c.clothes_acquisition = 'Online Thrifited' THEN 3.0 " +
-                "WHEN c.clothes_acquisition = 'Handmade' THEN 5.0 " +
-                "WHEN c.clothes_acquisition = 'Gifted' THEN 9.0 " +
-                "ELSE 0.0 " +
-                "END AS carbon_footprint " +
-                "FROM clothes c " +
-                "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
-                "JOIN material m ON cm.material_ID = m.material_ID " +
-                "WHERE c.user_ID = ?";
-        PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
-        preparedStatement.setInt(1, userID);
-        ResultSet rs = preparedStatement.executeQuery();
-        while(rs.next()) {
-            double carbonF = rs.getDouble("carbon_footprint");
-            carbonList.add(carbonF);
-        }
-        return carbonList;
     }
     //-------------------------------------------------------------------------------------------------------------------
 }
