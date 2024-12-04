@@ -12,115 +12,112 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
-
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.round;
 public class dashboardView extends JPanel {
     //constructor
     dashboardView(Font oswald, Font lato, user user) throws SQLException {
-            myJDBC.openConnection();
-            //-----------------------Set background color and preferred size------------------------------------------------
-            this.setBackground(new Color(235, 219, 195));
-            this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
-            //--------------------------------------------------------------------------------------------------------------
+        myJDBC.openConnection();
+        //-----------------------Set background color and preferred size------------------------------------------------
+        this.setBackground(new Color(235, 219, 195));
+        this.setLayout(new BorderLayout());  // Use BorderLayout to properly place the navigation bar at the bottom
+        //--------------------------------------------------------------------------------------------------------------
 
-            //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
-            navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
-            this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
-            // -------------------------------------------------------------------------------------------------------------
-            //-------------------CREATE items to add to panel---------------------------------------------------------------
-            JPanel DashPanel = new JPanel();
-            DashPanel.setLayout(new BoxLayout(DashPanel, BoxLayout.Y_AXIS));
-            DashPanel.setBackground(new Color(235, 219, 195));  // Match background color
+        //-------------------CALL NAVIGATION BAR AND SET BOUNDS---------------------------------------------------------
+        navigationBarView navigationBarView = new navigationBarView(oswald, lato, user);
+        this.add(navigationBarView, BorderLayout.SOUTH);  // Place navigation bar at the bottom (SOUTH)
+        // -------------------------------------------------------------------------------------------------------------
+        //-------------------CREATE items to add to panel---------------------------------------------------------------
+        JPanel DashPanel = new JPanel();
+        DashPanel.setLayout(new BoxLayout(DashPanel, BoxLayout.Y_AXIS));
+        DashPanel.setBackground(new Color(235, 219, 195));  // Match background color
 
-            JLabel pieChartLabel = new JLabel("");
-            pieChartLabel.setFont(lato.deriveFont(18f));
-            pieChartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            //DashPanel.add(pieChartLabel);
+        JLabel pieChartLabel = new JLabel("");
+        pieChartLabel.setFont(lato.deriveFont(18f));
+        pieChartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //DashPanel.add(pieChartLabel);
 
-            int userID = user.getUserId();
+        int userID = user.getUserId();
 
-            //Stores all of user's info average into an array
-            double[] userAvg = getMaterialAverageForUser();
-            //double decomp = userAvg[0];
-            double water = userAvg[1];
-            double energy = userAvg[2];
-            //double emission = userAvg[3];
-            //Gets the brand rating
-            double brandRating = getBrandRating(userID);
-            //Rating for materials
-            double rating = getMaterialAverage();
-            //Creates the piechart
-            JFreeChart piechart = createPieChart(userID);
-            ChartPanel chartPanel = new ChartPanel(piechart);
-            chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
-            chartPanel.setPreferredSize(new Dimension(1,1));
+        //Stores all of user's info average into an array
+        double[] userAvg = getMaterialAverageForUser();
+        double water = userAvg[1];
+        double energy = userAvg[2];
+        
+        //Gets the brand rating
+        double brandRating = getBrandRating(userID);
+        //Rating for materials
+        double rating = getMaterialAverage();
+        //Creates the piechart
+        JFreeChart piechart = createPieChart(userID);
+        ChartPanel chartPanel = new ChartPanel(piechart);
+        chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
+        chartPanel.setPreferredSize(new Dimension(1,1));
 
-            //Piechart for the acquistion method
-            JFreeChart piechart2 = createPieChartAcquisition(userID);
-            ChartPanel chartPanel1 = new ChartPanel(piechart2);
-            chartPanel1.setMouseWheelEnabled(true);
-            chartPanel1.setPreferredSize(new Dimension(1,1));
-
-
-            //----------------------------------------------------------------------------------------------------------------
-
-            //--------------------------Create scroll panel-----------------------------------------------------------------
-            // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
-            JPanel contentPanel = new JPanel();
-            JScrollPane scrollPane = new JScrollPane(contentPanel);
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-
-            contentPanel.setBackground(new Color(235, 219,195));
-
-            //Displays the overall rating of the closet(material_rating + brand_rating)
-            JLabel Sustain = new JLabel();
-            Sustain.setText("Overall sustainability is " + sustainRating(rating,brandRating) + "/5");
-            Sustain.setFont((lato.deriveFont(15f)));
-            contentPanel.add(Sustain);
-            createStarRating(contentPanel,sustainRating(rating,brandRating));
-
-            //Displays brand rating
-            JLabel Brand = new JLabel();
-            Brand.setText("Brand rating is " + brandRating + "/5");
-            Brand.setFont(lato.deriveFont(15f));
-            contentPanel.add(Brand);
-            createStarRating(contentPanel,brandRating);
-
-            //Displays the material rating
-            JLabel mRating = new JLabel();
-            mRating.setText("Overall Rating of Materials: " + rating);
-            mRating.setFont(lato.deriveFont(15f));
-            contentPanel.add(mRating);
-            createStarRating(contentPanel,rating);
-
-            //Displays the carbon footprint
-            JLabel Carbon = new JLabel();
-            Carbon.setText("Carbon Footprint is: " + getCarbonFootprint(userID) + " kg C02e/item");
-            Carbon.setFont(lato.deriveFont(15f));
-            contentPanel.add(Carbon);
-
-            //Displays the water usage
-            JLabel Water = new JLabel();
-            Water.setText("Water Used: " + water + " liters/kg");
-            Water.setFont(lato.deriveFont(15f));
-            contentPanel.add(Water);
-
-            //Displays the energy usage
-            JLabel Energy = new JLabel();
-            Energy.setText("Energy Used: " + energy + " MJ/kg");
-            Energy.setFont(lato.deriveFont(15f));
-            contentPanel.add(Energy);
+        //Piechart for the acquistion method
+        JFreeChart piechart2 = createPieChartAcquisition(userID);
+        ChartPanel chartPanel1 = new ChartPanel(piechart2);
+        chartPanel1.setMouseWheelEnabled(true);
+        chartPanel1.setPreferredSize(new Dimension(1,1));
 
 
-            JLabel Title = new JLabel("Breakdown of Materials:");
-            Title.setFont(lato.deriveFont(15f));
-            Title.setAlignmentX(Component.LEFT_ALIGNMENT);
-            contentPanel.add(Title);
+        //----------------------------------------------------------------------------------------------------------------
 
-            contentPanel.add(chartPanel);
+        //--------------------------Create scroll panel-----------------------------------------------------------------
+        // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
+        JPanel contentPanel = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        contentPanel.setBackground(new Color(235, 219,195));
+
+        //Displays the overall rating of the closet(material_rating + brand_rating)
+        JLabel Sustain = new JLabel();
+        Sustain.setText("Overall sustainability is " + sustainRating(rating,brandRating) + "/5");
+        Sustain.setFont((lato.deriveFont(15f)));
+        contentPanel.add(Sustain);
+        createStarRating(contentPanel,sustainRating(rating,brandRating));
+
+        //Displays brand rating
+        JLabel Brand = new JLabel();
+        Brand.setText("Brand rating is " + brandRating + "/5");
+        Brand.setFont(lato.deriveFont(15f));
+        contentPanel.add(Brand);
+        createStarRating(contentPanel,brandRating);
+
+        //Displays the material rating
+        JLabel mRating = new JLabel();
+        mRating.setText("Overall Rating of Materials: " + rating);
+        mRating.setFont(lato.deriveFont(15f));
+        contentPanel.add(mRating);
+        createStarRating(contentPanel,rating);
+
+        //Displays the carbon footprint
+        JLabel Carbon = new JLabel();
+        Carbon.setText("Carbon Footprint is: " + getCarbonFootprint(userID) + " kg C02e/item");
+        Carbon.setFont(lato.deriveFont(15f));
+        contentPanel.add(Carbon);
+
+        //Displays the water usage
+        JLabel Water = new JLabel();
+        Water.setText("Water Used: " + water + " liters/kg");
+        Water.setFont(lato.deriveFont(15f));
+        contentPanel.add(Water);
+
+        //Displays the energy usage
+        JLabel Energy = new JLabel();
+        Energy.setText("Energy Used: " + energy + " MJ/kg");
+        Energy.setFont(lato.deriveFont(15f));
+        contentPanel.add(Energy);
+
+
+        JLabel Title = new JLabel("Breakdown of Materials:");
+        Title.setFont(lato.deriveFont(15f));
+        Title.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(Title);
+
+        contentPanel.add(chartPanel);
 
         JLabel aTitle = new JLabel("Acquistion of Clothes:");
         aTitle.setFont(lato.deriveFont(15f));
@@ -128,39 +125,39 @@ public class dashboardView extends JPanel {
         contentPanel.add(aTitle);
         contentPanel.add(chartPanel1);
 
-            // Change scroll bar appearance
-            scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-                @Override
-                protected JButton createDecreaseButton(int orientation) {
-                    return new JButton() {  // Invisible decrease button
-                        @Override
-                        public Dimension getPreferredSize() {
-                            return new Dimension(0, 0);
-                        }
-                    };
-                }
+        // Change scroll bar appearance
+        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return new JButton() {  // Invisible decrease button
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(0, 0);
+                    }
+                };
+            }
 
-                @Override
-                protected JButton createIncreaseButton(int orientation) {
-                    return new JButton() {  // Invisible increase button
-                        @Override
-                        public Dimension getPreferredSize() {
-                            return new Dimension(0, 0);
-                        }
-                    };
-                }
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return new JButton() {  // Invisible increase button
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(0, 0);
+                    }
+                };
+            }
 
-                @Override
-                protected void configureScrollBarColors() {
-                    this.thumbColor = new Color(192, 168, 144); // Color of the scroll thumb
-                    this.trackColor = new Color(235, 219, 195); // Color of the scroll track (matching panel background)
-                }
-            });
-            // Add the scrollable items to the CENTER of the layout
-            this.add(scrollPane, BorderLayout.CENTER);
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = new Color(192, 168, 144); // Color of the scroll thumb
+                this.trackColor = new Color(235, 219, 195); // Color of the scroll track (matching panel background)
+            }
+        });
+        // Add the scrollable items to the CENTER of the layout
+        this.add(scrollPane, BorderLayout.CENTER);
 
 
-            //--------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------
     }
     static double[] getMaterialAverageForUser() throws SQLException {
         double[] averages = new double[4];
@@ -176,6 +173,7 @@ public class dashboardView extends JPanel {
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        
         //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         //Uses the user_ID of the user logged in so it will not access other user's closets
@@ -202,6 +200,7 @@ public class dashboardView extends JPanel {
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        
         //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         //Uses the user_ID of the user logged in so it will not access other user's closets
@@ -214,68 +213,6 @@ public class dashboardView extends JPanel {
         }
 
         return material;
-    }
-    //-------------------------------------Getting Stars from Materials--------------------------------------------------
-    //Calculations for stars for material's environment impact
-    static int starsForDecomp(double f){
-        int range = 0;
-        if(f > 4000){
-            range = 1;
-        }else if(f >= 1000 && f < 4000){
-            range = 2;
-        }else if(f >= 100 && f < 1000){
-            range = 3;
-        }else if(f >= 10 && f < 100){
-            range = 4;
-        }else if(f < 10){
-            range = 5;
-        }
-        return range;
-    }
-    static int starsForWater(double f){
-        int range = 0;
-        if(f > 100000){
-            range = 1;
-        }else if(f >= 10000 && f < 100000){
-            range = 2;
-        }else if(f >= 1000 && f < 10000){
-            range = 3;
-        }else if(f >= 500 && f < 1000){
-            range = 4;
-        }else if(f < 500){
-            range = 5;
-        }
-        return range;
-    }
-    static int starsForEnergy(double f){
-        int range = 0;
-        if(f > 90){
-            range = 1;
-        }else if(f >= 60 && f < 90){
-            range = 2;
-        }else if(f >= 30 && f < 60){
-            range = 3;
-        }else if(f >= 20 && f < 30){
-            range = 4;
-        }else if(f < 20){
-            range = 5;
-        }
-        return range;
-    }
-    static int starsForEmission(double f){
-        int range = 0;
-        if(f > 30){
-            range = 1;
-        }else if(f >= 20 && f < 30){
-            range = 2;
-        }else if(f >= 10 && f < 20){
-            range = 3;
-        }else if(f >= 5 && f < 10){
-            range = 4;
-        }else if(f < 5){
-            range = 5;
-        }
-        return range;
     }
     //------------------------------------------------------------------------------------------------------------------------------
 
@@ -298,6 +235,7 @@ public class dashboardView extends JPanel {
                 "JOIN clothes_material cm ON c.clothes_ID = cm.clothes_ID " +
                 "JOIN material m ON cm.material_ID = m.material_ID " +
                 "WHERE c.user_ID = ?";
+        
         //Send the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         //Uses the user_ID of the user logged in so it will not access other user's closets
@@ -312,9 +250,10 @@ public class dashboardView extends JPanel {
     static double getBrandRating(int userID) throws SQLException{
         //Joining brand table with clothes table
         String sql = "SELECT AVG(b.brand_rating) AS avg_brand_rating " +
-                     "FROM clothes c " +
-                     "JOIN brand b on c.brand_ID = b.brand_ID " +
-                     "WHERE c.user_ID = ? AND b.brand_name NOT LIKE '%Other'";
+                "FROM clothes c " +
+                "JOIN brand b on c.brand_ID = b.brand_ID " +
+                "WHERE c.user_ID = ? AND b.brand_name NOT LIKE '%Other'";
+        
         //Sends the string to SQL as a statement
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(sql);
         //Uses the user_ID of the user logged in so it will not access other user's closets
@@ -349,7 +288,7 @@ public class dashboardView extends JPanel {
         //Equation for the rest of the empty stars
         int emptyStars = 5 - fullstars - halfStar;
 
-        //Images icon for full star, half star, empty star
+        //Images icon for full star, half star, empty star, gets the image, scale and smooths it out
         ImageIcon fullstar = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
         Image full = fullstar.getImage();
         Image image = full.getScaledInstance(15,15,Image.SCALE_SMOOTH);
@@ -397,6 +336,7 @@ public class dashboardView extends JPanel {
                 "JOIN material m on cm.material_ID = m.material_ID "+
                 "WHERE c.user_ID = ? " +
                 "GROUP by m.material_type";
+        
         //Sends the string to SQL as a statement as well does not care for changes
         PreparedStatement prepared_statement = myJDBC.connect.prepareStatement(
                 sql,
@@ -415,6 +355,7 @@ public class dashboardView extends JPanel {
         }
         //Moves to the front of the ResultSet object
         result.beforeFirst();
+        
         //While loop that stores what type of material into the arraylist and get the percentage of what the clothes are made of
         while(result.next()){
             String material = result.getString("material_type");
@@ -429,15 +370,17 @@ public class dashboardView extends JPanel {
         double total = 0;
         //Statement that counts the types of acquisition
         String sql = "SELECT c.clothes_acquisition, COUNT(c.clothes_ID) AS total_clothes "+
-                      "FROM clothes c " +
-                      "WHERE c.user_ID = ? "+
-                      "GROUP BY c.clothes_acquisition";
+                "FROM clothes c " +
+                "WHERE c.user_ID = ? "+
+                "GROUP BY c.clothes_acquisition";
+        
         //Sends the string to SQL as a statement as well does not care for changes
         PreparedStatement preparedStatement = myJDBC.connect.prepareStatement(
                 sql,
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY
         );
+        
         //Uses the user_ID of the user logged in so it will not access other user's closets
         preparedStatement.setInt(1,userID);
         //Execute statement
@@ -545,6 +488,7 @@ public class dashboardView extends JPanel {
                 false
         );
         PiePlot plot = (PiePlot) chart.getPlot();
+        
         //Loop to parse the material ArrayList to get what acquisition method and the amount of it in the closet
         //Does this by looping through the helper function arraylist, loop will split acqusition type by the :
         //Then replaces the % sign with an empty space, then adds it to the dataset
