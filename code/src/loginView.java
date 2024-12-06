@@ -103,7 +103,7 @@ public class loginView extends JPanel {
     }
 
     public void loginButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-        try (Connection conn = myJDBC.openConnection()) {
+        try {
             //Ensure there is a connection to the database
             if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
                 System.out.println("Database connection is not established.");
@@ -114,21 +114,14 @@ public class loginView extends JPanel {
             String username = unField.getText();
             String password = new String(pwField.getPassword()); // Use pwField for password
 
-            //TODO: put the hashing in a separate function called hashPassword()
-            // Hash password using SHA-256
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : messageDigest) {
-                hexString.append(String.format("%02x", b));
-            }
-            password = hexString.toString();
+            String hashed = hashPassword(password);
+
 
             // SQL query to match user data
             String sql = "SELECT user_ID, user_username, user_realname FROM user WHERE user_username=? AND user_password=?";
             PreparedStatement statement = myJDBC.connect.prepareStatement(sql);
             statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(2, hashed);
 
             ResultSet rs = statement.executeQuery();
 
@@ -177,7 +170,7 @@ public class loginView extends JPanel {
         }
     }
 
-    private void hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //Hash password to send to database to check
         MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
         byte[] messageDigest = md.digest(password.getBytes("UTF-8"));
@@ -185,7 +178,7 @@ public class loginView extends JPanel {
         for(byte b : messageDigest){
             hexstring.append(String.format("%02x",b)); //Format of hashing
         }
-        password = new String(hexstring);
+       return hexstring.toString();
     }
 
 }
