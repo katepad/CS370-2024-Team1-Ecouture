@@ -1,6 +1,6 @@
 
 public class user {
-    private int userId;
+    private static int userId;
     private String username;
     private String realName;
 
@@ -11,7 +11,7 @@ public class user {
     }
 
     // Get functions
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 

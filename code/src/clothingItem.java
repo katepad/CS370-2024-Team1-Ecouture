@@ -9,7 +9,7 @@ public class clothingItem {
     private final List<String> materials;
     private final List<Integer> percentages;
     private final int userID;
-    private int clothesID;
+    private final int clothesID;
 
     //constructor
     public clothingItem(String title, String type, String acquireMethod, String brand, int userID, int clothesID) {
@@ -23,14 +23,17 @@ public class clothingItem {
         this.clothesID = clothesID;
     }
 
-    //getters
+    //get title
     public String getTitle() {
         return title;
     }
 
+    //set title
     public void setTitle(String title) {
         this.title = title;
     }
+
+    //getters
 
     public String getType() {
         return type;
@@ -48,11 +51,13 @@ public class clothingItem {
         return materials;
     }
 
+    //add material
     public void addMaterial(String material, int percentage) {
         this.materials.add(material);
         this.percentages.add(percentage);
     }
 
+    //get percentages
     public List<Integer> getPercentages() {
         return percentages;
     }
@@ -63,9 +68,5 @@ public class clothingItem {
 
     public int getClothesID() {
         return clothesID;
-    }
-
-    public void setClothesID(int generatedClothesID) {
-        clothesID = generatedClothesID;
     }
 }

@@ -180,12 +180,6 @@ public class forumView extends JPanel {
 
             buttonPanel.setBackground(new Color(247, 248, 247));
 
-            //add padding inside the panel and a border
-            buttonPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(5, 10, 0, 10, new Color(235, 219, 195)), //outer border with different thickness
-                    BorderFactory.createEmptyBorder(10, 10, 10, 10) //inner padding
-            ));
-
             chatItemsPanel.add(buttonPanel);
         }
         //------------------------------------------------------------------------------------------------------------//
@@ -255,6 +249,7 @@ public class forumView extends JPanel {
         commentButton.setFocusPainted(false);
         commentButton.setOpaque(false);
 
+
         commentPanel.add(commentButton);
 
         commentButton.addActionListener(e -> createComment(post, oswald, lato, commentPanel, commentButton));
@@ -318,8 +313,16 @@ public class forumView extends JPanel {
         newCommentPanel.setLayout(new BorderLayout());
         commentPanel.setLayout(new BorderLayout());
 
+        //comment text field design
         JTextField commentField = new JTextField("");
-        JButton submitCommentButton = new JButton("Submit");
+        commentField.setFont(lato.deriveFont(12f));
+        commentField.setForeground(Color.BLACK);
+
+        //submit comment button design
+        JButton submitCommentButton = new JButton("SUBMIT");
+        submitCommentButton.setBackground((new Color(0, 99, 73)));
+        submitCommentButton.setForeground(new Color(247, 248, 247));
+        submitCommentButton.setFont(oswald.deriveFont(12f));
 
         newCommentPanel.add(commentField, BorderLayout.CENTER);
         newCommentPanel.add(submitCommentButton, BorderLayout.EAST);
@@ -377,6 +380,7 @@ public class forumView extends JPanel {
             //switch to the editForumView Page
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.getContentPane().removeAll(); //clear all components from the current frame
+
             //create editForumView panel with the forum content preloaded
             editForumView editForumView = new editForumView(oswald, lato, user);
             editForumView.ptField.setText(post.getTitle()); //preload the post title
@@ -398,14 +402,14 @@ public class forumView extends JPanel {
             topFrame.repaint(); //repaint the frame
 
             //update the post in the database when the user hits the submit button
-            updateButton.addActionListener(e -> updatePost(post, editForumView.ptField.getText(), editForumView.pcField.getText(), oswald, lato));
+            updateButton.addActionListener(e -> updatePost(post, editForumView.ptField.getText(), editForumView.pcField.getText(), oswald, lato, editForumView));
         } catch (Exception e) {
             System.out.println("Error while editing post: " + e.getMessage());
         }
     }
 
     //TODO: add to the controller
-    private void updatePost(forumPost post, String newTitle, String newContent, Font oswald, Font lato) {
+    private void updatePost(forumPost post, String newTitle, String newContent, Font oswald, Font lato, JPanel editForumView) {
         try (Connection conn = myJDBC.openConnection();
              PreparedStatement stmt = conn.prepareStatement("UPDATE post SET post_title = ?, post_content = ? WHERE post_ID = ?")) {
             stmt.setString(1, newTitle);
@@ -418,7 +422,7 @@ public class forumView extends JPanel {
             updateMessage.setLayout(new BorderLayout());
             updateMessage.setSize(300, 150);
             updateMessage.setBackground(new Color(247, 248, 247));
-            updateMessage.setLocationRelativeTo(this); //center updateMessage Box relative to the editForumView
+            updateMessage.setLocationRelativeTo(editForumView); //center updateMessage Box relative to the editForumView
 
             //create the confirmation message and OK button
             JLabel updateMessageText = new JLabel("<html><div style='width:150px; text-align: center;'><b>Post updated successfully!</b></div></html>");
@@ -449,13 +453,18 @@ public class forumView extends JPanel {
 
             //--------------------------------------------------------------------------------------------------------//
 
-            //return to forumView Page
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.getContentPane().removeAll(); //Clear all components from the current frame
-            forumView forumView = new forumView(oswald, lato, user);
-            topFrame.add(forumView, BorderLayout.CENTER); //Add forumView to the frame
-            topFrame.revalidate(); //Refresh the frame
-            topFrame.repaint(); //Repaint the frame
+            //get the JFrame that contains editForumView
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(editForumView);
+            if (topFrame != null) {
+                topFrame.getContentPane().removeAll(); //Clear all components from the current frame
+                forumView forumView = new forumView(oswald, lato, user); //Re-create the forumView
+                topFrame.add(forumView, BorderLayout.CENTER); //Add forumView to the frame
+                topFrame.revalidate(); //Refresh the frame
+                topFrame.repaint(); //Repaint the frame
+            } else {
+                //handle the case when topFrame is still null
+                System.err.println("Failed to get the parent JFrame.");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

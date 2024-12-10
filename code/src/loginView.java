@@ -178,7 +178,7 @@ public class loginView extends JPanel {
         for(byte b : messageDigest){
             hexstring.append(String.format("%02x",b)); //Format of hashing
         }
-       return hexstring.toString();
+        return hexstring.toString();
     }
 
 }

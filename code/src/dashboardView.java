@@ -31,7 +31,7 @@ public class dashboardView extends JPanel {
         headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         //add Page title
-        JLabel pageTitle = new JLabel("My Dashboard");
+        JLabel pageTitle = new JLabel("MY DASHBOARD");
         pageTitle.setFont(oswald.deriveFont(20f));
         pageTitle.setForeground(new Color(0,99,73));
         pageTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -62,21 +62,21 @@ public class dashboardView extends JPanel {
         JFreeChart piechart = createPieChart(userID);
         ChartPanel chartPanel = new ChartPanel(piechart);
         chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
-        chartPanel.setPreferredSize(new Dimension(200,300));
+        chartPanel.setPreferredSize(new Dimension(180,300));
         chartPanel.add(Box.createVerticalStrut(20));
 
-        //Piechart for the acquistion method
+        //piechart for the acquistion method
         JFreeChart piechart2 = createPieChartAcquisition(userID);
         ChartPanel chartPanel1 = new ChartPanel(piechart2);
         chartPanel1.setMouseWheelEnabled(true);
-        chartPanel1.setPreferredSize(new Dimension(200,300));
+        chartPanel1.setPreferredSize(new Dimension(180,300));
         chartPanel1.add(Box.createVerticalStrut(20));
 
 
         //----------------------------------------------------------------------------------------------------------------
 
         //--------------------------Create scroll panel-----------------------------------------------------------------
-        // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
+        // Wrap the dashboardItemsPanel inside a JScrollPane (this is the scrollable part)
         JPanel contentPanel = new JPanel();
         JPanel overallRatingPanel = new JPanel();
         JPanel brandRatingPanel = new JPanel();
@@ -546,7 +546,7 @@ public class dashboardView extends JPanel {
         chart.getTitle().setPaint(new Color(0, 99, 73));
 
         //Sets the font
-        chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+        chart.getTitle().setFont(new Font("Oswald", Font.BOLD, 20));
 
         //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));
@@ -574,7 +574,7 @@ public class dashboardView extends JPanel {
 
         //Sets the title, the legends for what type of acqusition are in the closet
         JFreeChart chart = ChartFactory.createPieChart(
-                "Acquisition Method".toUpperCase(),
+                "Acquisition Method Breakdown".toUpperCase(),
                 dataset,
                 true,
                 true,
@@ -602,7 +602,7 @@ public class dashboardView extends JPanel {
         chart.getTitle().setPaint(new Color(0, 99, 73));
 
         //Sets the font
-        chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+        chart.getTitle().setFont(new Font("Oswald", Font.BOLD, 20));
 
         //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));
@@ -616,4 +616,3 @@ public class dashboardView extends JPanel {
     }
     //-------------------------------------------------------------------------------------------------------------------
 }
-

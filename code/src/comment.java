@@ -1,10 +1,10 @@
 public class comment {
 
-    private int commentId;
-    private int postId;
-    private int userId;
-    private String content;
-    private String date;
+    private final int commentId;
+    private final int postId;
+    private final int userId;
+    private final String content;
+    private final String date;
 
     public comment(int commentId, int postId, int userId, String content, String date) {
         this.commentId = commentId;
