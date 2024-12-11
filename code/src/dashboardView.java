@@ -105,12 +105,12 @@ public class dashboardView extends JPanel {
         Sustain.setText("<html>OVERALL SUSTAINABILITY RATING:</html>");
         Sustain.setFont((oswald.deriveFont(20f)));
         Sustain.setForeground(new Color(0,99,73));
-        orating.setText((dashboardDAO.sustainRating(rating,brandRating) + "/5"));
+        orating.setText((clothingItemDAO.sustainRating(rating,brandRating) + "/5"));
         orating.setFont(oswald.deriveFont(20f));
         orating.setAlignmentX(Component.LEFT_ALIGNMENT);
         overallRatingPanel.add(Sustain);
         overallRatingPanel.add(orating);
-        clothingItemDAO.createStarRating(overallRatingPanel, dashboardDAO.sustainRating(rating, brandRating));
+        clothingItemDAO.createStarRating(overallRatingPanel, clothingItemDAO.sustainRating(rating, brandRating));
         overallRatingPanel.add(Box.createVerticalStrut(20));
         overallRatingPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
