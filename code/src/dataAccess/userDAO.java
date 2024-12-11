@@ -16,8 +16,9 @@ public class userDAO {
 
     public static void login(Font oswald, Font lato, loginView loginView){
         try {
+            Connection connect = myJDBC.openConnection();
             //Ensure there is a connection to the database
-            if (myJDBC.connect == null || myJDBC.connect.isClosed()) {
+            if (connect == null || connect.isClosed()) {
                 System.out.println("Database connection is not established.");
                 return; // Exit the method if connection is not valid
             }
