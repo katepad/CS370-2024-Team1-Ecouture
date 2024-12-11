@@ -1,11 +1,6 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.*;
-import java.sql.Connection;
-import java.time.LocalDate;
 
 public class editForumView extends JPanel {
     //Labels
@@ -21,15 +16,13 @@ public class editForumView extends JPanel {
     //Fields to be filled
     JTextField ptField = new JTextField();
     JTextArea pcField = new JTextArea();
-    JScrollPane scrollPane; //Added for scrollable text area
+    JScrollPane scrollPane; //added for scrollable text area
 
     //variables to hold the inputs
     String title;
     String content;
     Date date;
     int userID;
-
-    private final user user;
 
     //Constructor
     editForumView(Font oswald, Font lato, user user) {
@@ -39,7 +32,6 @@ public class editForumView extends JPanel {
         this.setLayout(null);
         //------------------------------------------------------------------------------------------------------------//
 
-        this.user = user;
         userID = user.getUserId();
 
         //----------------------------------------------- LABEL DESIGN -----------------------------------------------//
@@ -111,70 +103,11 @@ public class editForumView extends JPanel {
 
         //--------------------------------------------- ACTION LISTENER ----------------------------------------------//
         //cancel button to go to next page
-        cancelButton.addActionListener(e -> cancelButtonActionPerformed(e, oswald, lato));
+        cancelButton.addActionListener(e -> forumController.cancelButtonClicked(oswald, lato, this, user));
 
         //submit button to create a post and save to db
-        submitButton.addActionListener(e -> submitButtonActionPerformed(e, oswald, lato));
+        submitButton.addActionListener(e -> forumController.submitButtonClicked(oswald, lato, this, user));
         //------------------------------------------------------------------------------------------------------------//
-    }
-
-    //TODO: Move to controller
-    private void cancelButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-        try {
-            //Switch back to the forumView Panel.
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.getContentPane().removeAll(); //Clear all components from the current frame
-            forumView forumView = new forumView(oswald, lato, user);
-            topFrame.add(forumView, BorderLayout.CENTER); //Add forumView Panel to the frame
-            topFrame.revalidate(); //Refresh the frame
-            topFrame.repaint(); //Repaint the frame
-        } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
-        }
-    }
-
-    //TODO: Move to controller
-    private void submitButtonActionPerformed(ActionEvent evt, Font oswald, Font lato) {
-        try {
-
-            Connection connect = myJDBC.openConnection();
-            //Ensure there is a connection to the database
-            if (connect == null || connect.isClosed()) {
-                System.out.println("Database connection is not established.");
-                return; //exit the method if connection is not valid
-            }
-
-            //If fields are successful...
-            title = ptField.getText().replace("'", "''"); //escape apostrophes to avoid sql ' errors.
-            content = pcField.getText().replace("'", "''"); //escape apostrophes to avoid sql ' errors.
-
-            if (title.isEmpty() || content.isEmpty()) {
-                postErrorMsg.setVisible(true);
-                postErrorMsg.setText("One of the fields is left blank.");
-            } else { //if there are no errors,
-                Statement statement = myJDBC.connect.createStatement();
-                date = Date.valueOf(LocalDate.now()); //java.sql.Date for SQL compatibility
-
-                //save post into database
-                String sql = "INSERT INTO post (post_title, post_content, post_date, user_ID) VALUES ('" + title + "', '" + content + "', '" + date + "', '" + userID + "')";
-                statement.executeUpdate(sql);
-
-                //Switch back to the forumView Panel.
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.getContentPane().removeAll(); //Clear all components from the current frame
-                forumView forumView = new forumView(oswald, lato, user);
-                topFrame.add(forumView, BorderLayout.CENTER); //Add forumView Panel to the frame
-                topFrame.revalidate(); //Refresh the frame
-                topFrame.repaint(); //Repaint the frame
-
-                System.out.println("Post Successful");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("SQL error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
-        }
     }
 
 }
