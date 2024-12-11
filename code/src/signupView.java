@@ -1,10 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.sql.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class signupView extends JPanel {
 
@@ -25,7 +20,6 @@ public class signupView extends JPanel {
 
     //Error msg.
     JLabel signupError = new JLabel("");
-    boolean isError = true;
 
     //variables to store field inputs:
     String fullname;
@@ -128,169 +122,14 @@ public class signupView extends JPanel {
         signupError.setVisible(false); //hide visibility until a signup error happens.
 
         //execute an attempt to login if login is clicked.
-        loginButton.addActionListener(e -> loginButtonActionPerformed(e, oswald, lato));
+        loginButton.addActionListener(e -> userController.signupLoginButtonActionPerformed(oswald, lato, this));
 
         //execute signup method if signup is clicked.
-        signupButton.addActionListener(e -> signupButtonActionPerformed(e, oswald, lato));
+        signupButton.addActionListener(e -> userController.signupSignupButtonActionPerformed(oswald, lato, this));
 
         //show panel
         this.setVisible(true);
 
-    }
-
-    //TODO: Move to Controller.
-    private void confirmSignup(Font oswald, Font lato) {
-
-        // ------------------------------- CREATE SIGNUP MESSAGE WITH DIALOG MODAL -------------------------------//
-        JDialog SignupMessage = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Post Update", true);
-        SignupMessage.setLayout(new BorderLayout());
-        SignupMessage.setSize(300, 150);
-        SignupMessage.setBackground(new Color(247, 248, 247));
-        SignupMessage.setLocationRelativeTo(this); //center updateMessage Box relative to the editForumView
-
-        //create the confirmation message and OK button
-        JLabel SignupMessageText = new JLabel("<html><div style='width:150px; text-align: center;'><b>You have signed up successfully!</b></div></html>");
-        JPanel buttonPanel = new JPanel();
-        JButton okButton = new JButton("OK");
-
-        //------------------------------------------- redesign labels --------------------------------------------//
-        SignupMessageText.setHorizontalAlignment(SwingConstants.CENTER);
-        SignupMessageText.setFont(lato.deriveFont(18f));
-        //--------------------------------------------------------------------------------------------------------//
-
-        //------------------------------------------- redesign buttons -------------------------------------------//
-        //ok
-        okButton.setBackground(new Color (0, 99, 73)); //set button color to green
-        okButton.setForeground(new Color (247, 248, 247)); //set button text color to white
-        okButton.setFont(oswald.deriveFont(14f)); //change button text font to oswald, size 14.
-        okButton.setFocusable(false);
-        //--------------------------------------------------------------------------------------------------------//
-
-        okButton.addActionListener(e -> SignupMessage.dispose()); // Close dialog on "OK"
-
-        //add components to the Signup confirmation
-        SignupMessage.add(SignupMessageText, BorderLayout.CENTER);
-        buttonPanel.add(okButton, BorderLayout.CENTER);
-        SignupMessage.add(buttonPanel, BorderLayout.SOUTH);
-
-        SignupMessage.setVisible(true); //show Signup confirmation box
-
-        //--------------------------------------------------------------------------------------------------------//
-
-        //Switch the Signup Page by switching main JFrame
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-        loginView loginView = new loginView(oswald, lato);
-        topFrame.add(loginView, BorderLayout.CENTER); // Add SignupPage to the frame
-        topFrame.revalidate(); // Refresh the frame
-        topFrame.repaint(); // Repaint the frame
-
-    }
-
-    //TODO: Move to Controller.
-    private void validateSignup() throws SQLException {
-        // To Ensure real name has no special characters
-        fullname = fnField.getText(); //get name
-        Pattern fullnameP = Pattern.compile("[^a-zA-Z -]"); //pattern finds special characters
-        Matcher fullnameM = fullnameP.matcher(fullname); //match the string to pattern
-        boolean isInvalidRealname = fullnameM.find(); //boolean to see if there is a match
-
-        // To Ensure password fields match
-        password = new String(pwField.getPassword()); //get password
-        String passwordRetyped = new String(pwrtField.getPassword()); //get retyped password
-
-        // Ensure username field has no special characters
-        username = unField.getText(); //Get username
-        Pattern usernameP = Pattern.compile("[^a-zA-Z0-9._]"); //pattern finds special characters
-        Matcher usernameM = usernameP.matcher(username); //match the string to pattern
-        boolean isInvalidUsername = usernameM.find(); //boolean to see if there is a match
-
-        //Ensure the username is not taken.
-        Statement statement = myJDBC.connect.createStatement();
-        //sql query to match user data
-        String sql = "Select * from user where user_username='" + username + "'";
-        //find results of user data that matches the inputs from user table
-        ResultSet rs = statement.executeQuery(sql);
-
-        if (username.isEmpty() || password.isEmpty() || passwordRetyped.isEmpty() || fullname.isEmpty()) {
-            signupError.setText("Must fill out all fields");
-            signupError.setVisible(true);
-            isError = true;
-        } else if (rs.next()) {
-            signupError.setText("Username is already taken");
-            signupError.setVisible(true);
-            isError = true;
-        } else if (isInvalidUsername) {
-            signupError.setText("Your username has an invalid character");
-            signupError.setVisible(true);
-            isError = true;
-        } else if (!password.equals(passwordRetyped)) { //if passwords do not match,
-            signupError.setText("Your passwords do not match");
-            signupError.setVisible(true);
-            isError = true;
-        } else if (isInvalidRealname) {
-            signupError.setText("Your name has an invalid character");
-            signupError.setVisible(true);
-            isError = true;
-        } else {
-            isError = false;
-        }
-    }
-
-    //TODO: Move to Controller.
-    //When clicked, sign up the user to database.
-    private void signupButtonActionPerformed(Object evt, Font oswald, Font lato) {
-        try {
-
-            Connection connect = myJDBC.openConnection();
-            //Ensure there is a connection to the database
-            if (connect == null || connect.isClosed()) {
-                System.out.println("Database connection is not established.");
-                return; // Exit the method if connection is not valid
-            }
-
-            validateSignup(); //check for any errors in the signup fields.
-
-            //If fields are successful...
-            if (!isError) { //if there are no errors,
-                signupError.setText("");
-                MessageDigest md = MessageDigest.getInstance("SHA-256");
-                byte[] messageDigest = md.digest(password.getBytes(StandardCharsets.UTF_8));
-                StringBuilder hexstring = new StringBuilder();
-                for(byte b : messageDigest){
-                    hexstring.append(String.format("%02x",b));
-                }
-                password = new String(hexstring);
-                Statement statement = myJDBC.connect.createStatement();
-                String sql = "INSERT INTO user (user_username, user_password, user_realname) VALUES ('" + username + "', '" + password + "', '" + fullname + "')";
-                statement.executeUpdate(sql);
-
-                System.out.println("Signup Successful");
-
-                confirmSignup(oswald, lato);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("SQL error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
-        }
-    }
-
-    //TODO: Move to Controller.
-    //When clicked, go back to the login page.
-    private void loginButtonActionPerformed(Object evt, Font oswald, Font lato) {
-        try {
-            //Switch the Signup Page by switching main JFrame
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.getContentPane().removeAll(); // Clear all components from the current frame
-            loginView loginView = new loginView(oswald, lato);
-            topFrame.add(loginView, BorderLayout.CENTER); // Add SignupPage to the frame
-            topFrame.revalidate(); // Refresh the frame
-            topFrame.repaint(); // Repaint the frame
-        } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
-        }
     }
 
 }
