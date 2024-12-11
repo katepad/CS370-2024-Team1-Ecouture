@@ -1,3 +1,5 @@
+package view;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -6,6 +8,11 @@ import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import model.user;
+import controller.closetController;
+import dataAccess.clothingItemDAO;
+import dataAccess.myJDBC;
 
 public class editClosetView extends JPanel {
 
@@ -16,26 +23,26 @@ public class editClosetView extends JPanel {
     JLabel clothesAcquisitionTitle = new JLabel("Acquired by:");
     JLabel clothesBrandTitle = new JLabel("Brand:");
     JLabel clothesMaterialTitle = new JLabel("Material(s):");
-    JLabel clothesErrorMsg = new JLabel("Error...");
+    public JLabel clothesErrorMsg = new JLabel("Error...");
 
     //input fields
-    final JTextField titleField; //user input title
-    JComboBox<String> typeComboBox; //user selected clothing item
-    JComboBox<String> acquiredComboBox; //user selected acquired method
-    JComboBox<String> brandComboBox; //user selected brand
-    JComboBox<String> materialComboBox; //user selected material
-    JTextField percentageField;
+    public final JTextField titleField; //user input title
+    public JComboBox<String> typeComboBox; //user selected clothing item
+    public JComboBox<String> acquiredComboBox; //user selected acquired method
+    public JComboBox<String> brandComboBox; //user selected brand
+    public JComboBox<String> materialComboBox; //user selected material
+    public JTextField percentageField;
     private JPanel materialPanel; //user input material
-    final ArrayList<JPanel> materialBars; //multiple materials
+    public final ArrayList<JPanel> materialBars; //multiple materials
 
     //variables to hold the input to save clothing objects
-    String title;
-    String type;
-    String acquireMethod;
-    String brand;
+    public String title;
+    public String type;
+    public String acquireMethod;
+    public String brand;
 
     //save button
-    JButton saveButton = new JButton("SUBMIT");
+    public JButton saveButton = new JButton("SUBMIT");
 
     private final user user;
 
@@ -227,7 +234,7 @@ public class editClosetView extends JPanel {
     } //end of editClosetView
 
     //styled combo box (pull down menu's)
-    JComboBox<String> createStyledComboBox(String[] options, Font lato) {
+    public JComboBox<String> createStyledComboBox(String[] options, Font lato) {
         JComboBox<String> comboBox = new JComboBox<>(options);
         comboBox.setFont(lato.deriveFont(14f));
         comboBox.setBackground(new Color(247, 248, 247));
@@ -235,7 +242,7 @@ public class editClosetView extends JPanel {
     }
 
     //add materials to clothing item
-    void addMaterialBar(String material, String percentage, Font lato) {
+    public void addMaterialBar(String material, String percentage, Font lato) {
         JPanel materialBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         materialBar.setBackground(new Color(235, 219, 195));
 

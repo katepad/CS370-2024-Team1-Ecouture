@@ -1,5 +1,11 @@
+package controller;
+
 import javax.swing.*;
 import java.awt.*;
+
+import dataAccess.userDAO;
+import view.loginView;
+import view.signupView;
 
 public class userController {
 
@@ -9,7 +15,7 @@ public class userController {
     }
 
     //this is for the loginView
-    static void signupButtonActionPerformed(Font oswald, Font lato, loginView loginView) {
+    public static void signupButtonActionPerformed(Font oswald, Font lato, loginView loginView) {
         //Switch the Signup Page by switching main JFrame
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(loginView);
         topFrame.getContentPane().removeAll(); // Clear all components from the current frame
@@ -20,13 +26,13 @@ public class userController {
     }
 
 
-    static void signupSignupButtonActionPerformed(Font oswald, Font lato, signupView signupView) {
+    public static void signupSignupButtonActionPerformed(Font oswald, Font lato, signupView signupView) {
         //when clicked, sign up the user to database.
         userDAO.signup(oswald, lato, signupView);
     }
 
     //when clicked, go back to the login page.
-    static void signupLoginButtonActionPerformed(Font oswald, Font lato, signupView signupView) {
+    public static void signupLoginButtonActionPerformed(Font oswald, Font lato, signupView signupView) {
         //Switch the Signup Page by switching main JFrame
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(signupView);
         topFrame.getContentPane().removeAll(); // Clear all components from the current frame

@@ -1,7 +1,12 @@
+package dataAccess;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+
+import model.comment;
+import model.forumPost;
 
 public class commentDAO {
 
@@ -47,7 +52,7 @@ public class commentDAO {
     }
 
 
-    static void populatePostComments(Font lato, JPanel commentPanel, forumPost post) {
+    public static void populatePostComments(Font lato, JPanel commentPanel, forumPost post) {
         //set layout to BoxLayout for vertical alignment
         commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.Y_AXIS));
 

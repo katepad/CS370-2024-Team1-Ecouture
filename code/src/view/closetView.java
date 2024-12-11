@@ -1,6 +1,12 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+
+import model.user;
+import model.closetManagement;
+import controller.closetController;
 
 public class closetView extends JPanel {
 

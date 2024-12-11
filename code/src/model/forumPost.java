@@ -1,5 +1,6 @@
-import java.sql.Date;
+package model;
 
+import java.sql.Date;
 
 public class forumPost {
     private int userID;

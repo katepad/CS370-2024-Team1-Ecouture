@@ -1,3 +1,5 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -9,12 +11,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import model.user;
+import dataAccess.forumPostDAO;
+import model.forumPost;
+import dataAccess.commentDAO;
+import model.comment;
+import controller.forumController;
+import dataAccess.myJDBC;
+
 public class forumView extends JPanel {
 
     private static user user;
 
     //constructor
-    forumView(Font oswald, Font lato, user user) throws SQLException {
+    public forumView(Font oswald, Font lato, user user) throws SQLException {
         //----------------------- Set background color and preferred size --------------------------------------------//
         this.setBackground(new Color(235, 219, 195));
         this.setLayout(new BorderLayout());  //Use BorderLayout to properly place the navigation bar at the bottom

@@ -1,5 +1,9 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
+
+import controller.userController;
 
 public class signupView extends JPanel {
 
@@ -13,21 +17,21 @@ public class signupView extends JPanel {
     JLabel fullnameTitle = new JLabel("PREFERRED NAME");
 
     //Fields to be filled
-    JTextField unField = new JTextField();
-    JPasswordField pwField = new JPasswordField();
-    JPasswordField pwrtField = new JPasswordField();
-    JTextField fnField = new JTextField();
+    public JTextField unField = new JTextField();
+    public JPasswordField pwField = new JPasswordField();
+    public JPasswordField pwrtField = new JPasswordField();
+    public JTextField fnField = new JTextField();
 
     //Error msg.
-    JLabel signupError = new JLabel("");
+    public JLabel signupError = new JLabel("");
 
     //variables to store field inputs:
-    String fullname;
-    String password;
-    String username;
+    public String fullname;
+    public String password;
+    public String username;
 
     //Constructor to make Signup Panel
-    signupView(Font oswald, Font lato) {
+    public signupView(Font oswald, Font lato) {
 
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));

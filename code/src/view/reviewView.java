@@ -1,3 +1,5 @@
+package view;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -5,6 +7,9 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.sql.*;
+
+import model.user;
+import dataAccess.myJDBC;
 
 public class reviewView extends JPanel {
 
@@ -106,7 +111,7 @@ public class reviewView extends JPanel {
             brandBox.setBackground(new Color(247, 248, 247));
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL error: " + e.getMessage());
         }
 
         brandBox.setBounds(70, 550, 250, 50);
@@ -114,7 +119,7 @@ public class reviewView extends JPanel {
         mainContentPanel.add(brandBox);
 
 
-        ImageIcon coverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/susBrand.jpg")));
+        ImageIcon coverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/susBrand.jpg")));
         Image scaledFact = coverImg.getImage().getScaledInstance(300, 250, 4); // Resize image smoothly
         coverImg = new ImageIcon(scaledFact); // Update fact with resized image
         imgDisplay = new JLabel(coverImg);
@@ -205,7 +210,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 20, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/AF3.jpeg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/AF3.jpeg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -214,7 +219,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -223,7 +228,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -252,7 +257,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 50, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/adidas2.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/adidas2.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -261,7 +266,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -270,7 +275,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -299,7 +304,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 20, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/alo4.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/alo4.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -308,7 +313,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -317,7 +322,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -348,7 +353,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/AE2.jpg.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/AE2.jpg.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -357,7 +362,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -366,7 +371,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -396,7 +401,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/aritzia.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/aritzia.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -405,7 +410,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -414,7 +419,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -445,7 +450,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/anthro.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/anthro.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -454,7 +459,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -463,7 +468,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -492,7 +497,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/afends2.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/afends2.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -501,7 +506,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -510,7 +515,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -539,7 +544,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/Brandy.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/Brandy.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -548,7 +553,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -557,7 +562,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -587,7 +592,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/change.jpg.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/change.jpg.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -596,7 +601,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -605,7 +610,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -632,7 +637,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/char.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/char.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -641,7 +646,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -650,7 +655,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -682,7 +687,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/cottonOn.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/cottonOn.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -691,7 +696,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -700,7 +705,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -730,7 +735,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/DKact.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/DKact.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -739,7 +744,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 575, 50, 50);
@@ -748,7 +753,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 575, 50, 50);
@@ -777,7 +782,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fashonNova.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fashonNova.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -786,7 +791,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -795,7 +800,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -822,7 +827,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/forever21.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/forever21.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -831,7 +836,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -840,7 +845,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -869,7 +874,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fran.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fran.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -878,7 +883,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -887,7 +892,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -916,7 +921,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/freePeople.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/freePeople.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -925,7 +930,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -934,7 +939,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -962,7 +967,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/gfCol.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/gfCol.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -971,7 +976,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -980,7 +985,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1007,7 +1012,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/gap.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/gap.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1016,7 +1021,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1025,7 +1030,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1053,7 +1058,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/guess.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/guess.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1062,7 +1067,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1071,7 +1076,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1099,7 +1104,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/h&m3.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/h&m3.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1108,7 +1113,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1117,7 +1122,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1147,7 +1152,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/holister.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/holister.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1156,7 +1161,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1165,7 +1170,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1194,7 +1199,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/hotTopic.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/hotTopic.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1203,7 +1208,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1212,7 +1217,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1242,7 +1247,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/jcrew.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/jcrew.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1251,7 +1256,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1260,7 +1265,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1291,7 +1296,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 350);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/levi.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/levi.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1300,7 +1305,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1309,7 +1314,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1340,7 +1345,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 350);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/lululemon.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/lululemon.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1349,7 +1354,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 555, 50, 50);
@@ -1358,7 +1363,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 555, 50, 50);
@@ -1384,7 +1389,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/motelRock.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/motelRock.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(200, 250, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1393,7 +1398,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 575, 50, 50);
@@ -1402,7 +1407,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 575, 50, 50);
@@ -1429,7 +1434,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/nastyGal.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/nastyGal.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1438,7 +1443,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1447,7 +1452,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1478,7 +1483,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 330);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/nike3.jpeg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/nike3.jpeg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1487,7 +1492,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 560, 50, 50);
@@ -1496,7 +1501,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 560, 50, 50);
@@ -1526,7 +1531,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/nordstrom.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/nordstrom.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1535,7 +1540,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1544,7 +1549,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1572,7 +1577,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/oldNavy.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/oldNavy.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1582,7 +1587,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1591,7 +1596,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1619,7 +1624,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/organic3.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/organic3.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 220, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1628,7 +1633,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 570, 50, 50);
@@ -1637,7 +1642,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 570, 50, 50);
@@ -1665,7 +1670,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/pacSun.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/pacSun.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1674,7 +1679,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1683,7 +1688,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1712,7 +1717,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 350);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/pretty.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/pretty.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1721,7 +1726,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 555, 50, 50);
@@ -1730,7 +1735,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 555, 50, 50);
@@ -1759,7 +1764,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/princessPolly.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/princessPolly.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 250, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1768,7 +1773,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 585, 50, 50);
@@ -1777,7 +1782,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 585, 50, 50);
@@ -1803,7 +1808,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/ralphLauren.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/ralphLauren.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(350, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1812,7 +1817,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1821,7 +1826,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1845,7 +1850,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/romwe.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/romwe.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1854,7 +1859,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1863,7 +1868,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1890,7 +1895,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/shein2.jpeg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/shein2.jpeg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1899,7 +1904,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1908,7 +1913,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1934,7 +1939,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/steveMadden.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/steveMadden.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1943,7 +1948,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1952,7 +1957,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1980,7 +1985,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/tillys.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/tillys.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -1989,7 +1994,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -1998,7 +2003,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2029,7 +2034,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 350);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/tommyHill.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/tommyHill.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2038,7 +2043,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2047,7 +2052,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2077,7 +2082,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/tripulse.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/tripulse.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(350, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2086,7 +2091,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2095,7 +2100,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2125,7 +2130,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 320);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/under.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/under.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2134,7 +2139,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 565, 50, 50);
@@ -2143,7 +2148,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 565, 50, 50);
@@ -2174,7 +2179,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/uniqlo2.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/uniqlo2.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2183,7 +2188,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2192,7 +2197,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2220,7 +2225,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/urban.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/urban.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2229,7 +2234,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2238,7 +2243,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2269,7 +2274,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 40, 400, 320);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/zara3.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/zara3.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2278,7 +2283,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 585, 50, 50);
@@ -2287,7 +2292,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 585, 50, 50);
@@ -2315,7 +2320,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/zumiez.png")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/zumiez.png")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2324,7 +2329,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2333,7 +2338,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2385,7 +2390,7 @@ public class reviewView extends JPanel {
             brand.setBounds(-5, 30, 400, 300);
             mainContentPanel.add(brand);
 
-            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/urban.jpg")));
+            ImageIcon brandImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/urban.jpg")));
             Image scaledFact2 = brandImg.getImage().getScaledInstance(300, 200, 4); // Resize image smoothly
             brandImg = new ImageIcon(scaledFact2); // Update fact with resized image
             brandDisplay = new JLabel(brandImg);
@@ -2394,7 +2399,7 @@ public class reviewView extends JPanel {
 
             // Display stars based on the rating
             for (int i = 0; i < rating; i++) {
-                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/fullStars.png")));
+                ImageIcon fullStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/fullStars.png")));
                 Image scaledStar = fullStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);
@@ -2403,7 +2408,7 @@ public class reviewView extends JPanel {
             }
 
             for (int i = rating; i < 5; i++) {
-                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/emptyStars.png")));
+                ImageIcon emptyStars = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/emptyStars.png")));
                 Image scaledStar = emptyStars.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 JLabel starLabel = new JLabel(new ImageIcon(scaledStar));
                 starLabel.setBounds(startX, 550, 50, 50);

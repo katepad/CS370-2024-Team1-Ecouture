@@ -1,3 +1,5 @@
+package dataAccess;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -16,7 +18,7 @@ public class myJDBC {
         } catch (Exception e) {
             // If connection is unsuccessful...
             System.out.println("didn't connect");
-            e.printStackTrace();
+            System.out.println("SQL error: " + e.getMessage());
         }
         return connect; // Return the actual connection object
     }

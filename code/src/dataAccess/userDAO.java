@@ -1,8 +1,16 @@
+package dataAccess;
+
 import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.*;
+
+import view.loginView;
+import view.signupView;
+import view.startPageView;
+import model.user;
+import model.userManagement;
 
 public class userDAO {
 
@@ -35,7 +43,7 @@ public class userDAO {
                 String realName = rs.getString("user_realname");
 
                 // Initialize User object
-                user loggedInUser = new user(userId, username, realName);
+                user loggedInUser = new user(userId, realName);
 
                 // Switch the Start Page by passing the User object
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(loginView);
@@ -56,7 +64,7 @@ public class userDAO {
         } catch (SQLException e) {
             System.out.println("SQL error: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

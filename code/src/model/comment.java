@@ -1,3 +1,5 @@
+package model;
+
 public class comment {
 
     private final int commentId;

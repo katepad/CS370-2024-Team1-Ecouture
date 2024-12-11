@@ -1,3 +1,4 @@
+package model;
 
 public class user {
     private static int userId;

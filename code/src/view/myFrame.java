@@ -1,3 +1,5 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -7,13 +9,10 @@ import java.io.IOException;
 
 public class myFrame extends JFrame {
 
-    public Font lato;
-    public Font oswald;
+    public static Font lato;
+    public static Font oswald;
 
     public myFrame() { //constructor to create a JFrame.
-
-        createFonts();
-
         this.setTitle("Ecouture"); //Title of the frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //if you close the frame, exit the program
         this.setResizable(false); //prevents frame from being resized
@@ -35,7 +34,7 @@ public class myFrame extends JFrame {
         this.setVisible(true); //actually show the JFrame
     }
 
-    public void createFonts() {
+    public static void createFonts() {
 
         //Create Lato font
         try {

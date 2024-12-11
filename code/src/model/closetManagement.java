@@ -1,12 +1,19 @@
+package model;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import view.closetView;
+import view.editClosetView;
+import dataAccess.clothingItemDAO;
+
+
 public class closetManagement {
 
-    static void saveItemLogic(Font oswald, Font lato, editClosetView editClosetView, user user) {
+    public static void saveItemLogic(Font oswald, Font lato, editClosetView editClosetView, user user) {
 
         //Escape apostrophes to avoid SQL syntax error
         editClosetView.title = editClosetView.titleField.getText().replace("'", "''");

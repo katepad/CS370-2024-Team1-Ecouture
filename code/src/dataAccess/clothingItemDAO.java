@@ -1,3 +1,5 @@
+package dataAccess;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
@@ -11,10 +13,17 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.List;
 
+import model.clothingItem;
+import view.editClosetView;
+import view.closetView;
+import model.user;
+import controller.closetController;
+
+
 public class clothingItemDAO {
 
 
-    static void updateClothingItem(clothingItem item, editClosetView editClosetView, Font oswald, Font lato, user user) {
+    public static void updateClothingItem(clothingItem item, editClosetView editClosetView, Font oswald, Font lato, user user) {
 
         try (Connection conn = myJDBC.openConnection()) {
             conn.setAutoCommit(false); //Begin transaction
@@ -164,7 +173,7 @@ public class clothingItemDAO {
         }
     }
 
-    static void deleteClothingItemFromDB(clothingItem clothingItem, Font oswald, Font lato, closetView closetView, user user) {
+    public static void deleteClothingItemFromDB(clothingItem clothingItem, Font oswald, Font lato, closetView closetView, user user) {
 
         //connect to the database and execute the deletion query
         try (Connection conn = myJDBC.openConnection();
@@ -254,7 +263,7 @@ public class clothingItemDAO {
     }
 
     //helper function to execute a query and return the results as an array of Strings
-    static String[] getDbValues(Connection connect, String query) {
+    public static String[] getDbValues(Connection connect, String query) {
         ArrayList<String> values = new ArrayList<>();
 
         try (Statement statement = connect.createStatement()) {
@@ -514,7 +523,7 @@ public class clothingItemDAO {
         }
         return avg_Brand;
     }
-    static double sustainRating(double mResult, double bRating){
+    public static double sustainRating(double mResult, double bRating){
         //Equation to calculate the overall rating of user's closet
         return  (mResult+bRating)/2;
     }
@@ -557,8 +566,8 @@ public class clothingItemDAO {
 
         //Loops to add stars into a box to display it
         for (int i = 0; i < fullstars; i++) {
-            JLabel starLables = new JLabel(fullIcon);
-            starBox.add(starLables);
+            JLabel starLabels = new JLabel(fullIcon);
+            starBox.add(starLabels);
         }
         for(int i = 0; i < halfStar; i++){
             JLabel halfLabel = new JLabel(halfIcon);
@@ -633,7 +642,7 @@ public class clothingItemDAO {
         //Execute statement
         ResultSet rs = preparedStatement.executeQuery();
 
-        //While loop that adds clothes_acquistion, this will be later used to get the percentage of each clothes_acquisition
+        //While loop that adds clothes_acquisition, this will be later used to get the percentage of each clothes_acquisition
         while(rs.next()){
             total += rs.getInt("total_clothes");
         }
@@ -641,7 +650,7 @@ public class clothingItemDAO {
         //Move to first of the ResultSet object
         rs.beforeFirst();
 
-        //While loop that will add what type of clothes_acquisition, how much of each clothes_acquisiton, and the relative percentage of all clothes_type.
+        //While loop that will add what type of clothes_acquisition, how much of each clothes_acquisition, and the relative percentage of all clothes_type.
         // Stores the result into the arraylist
         while(rs.next()){
             String acq = rs.getString("clothes_acquisition");
@@ -694,14 +703,14 @@ public class clothingItemDAO {
             dataset.setValue(materialTypes, percentage);
             plot.setSectionPaint(materialTypes, colors[i % colors.length]);
         }
-        //Sets the background of piechart to standard color
+        //Sets the background of pie chart to standard color
         plot.setBackgroundPaint(new Color(235, 219, 195));
 
         //Sets the title color to logo color
         chart.getTitle().setPaint(new Color(0, 99, 73));
 
         //Sets the font
-        chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+        chart.getTitle().setFont(new Font("Oswald", Font.BOLD, 20));
 
         //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));
@@ -727,7 +736,7 @@ public class clothingItemDAO {
                 Color.decode("#5F4B8B")
         };
 
-        //Sets the title, the legends for what type of acqusition are in the closet
+        //Sets the title, the legends for what type of acquisition are in the closet
         JFreeChart chart = ChartFactory.createPieChart(
                 "Acquisition Method".toUpperCase(),
                 dataset,
@@ -738,7 +747,7 @@ public class clothingItemDAO {
         PiePlot plot = (PiePlot) chart.getPlot();
 
         //Loop to parse the material ArrayList to get what acquisition method and the amount of it in the closet
-        //Does this by looping through the helper function arraylist, loop will split acqusition type by the :
+        //Does this by looping through the helper function arraylist, loop will split acquisition type by the :
         //Then replaces the % sign with an empty space, then adds it to the dataset
         //Then sets the section paint by using the index of the loop with the color array to cycle through those colors
         for (int i = 0; i < acquisition.size(); i++) {
@@ -750,14 +759,14 @@ public class clothingItemDAO {
             plot.setSectionPaint(acquisitionTypes, colors[i % colors.length]);
         }
 
-        //Sets the background of piechart to standard color
+        //Sets the background of pie chart to standard color
         plot.setBackgroundPaint(new Color(235, 219, 195));
 
         //Sets the title color to logo color
         chart.getTitle().setPaint(new Color(0, 99, 73));
 
         //Sets the font
-        chart.getTitle().setFont(new Font("Oswlad", Font.BOLD, 20));
+        chart.getTitle().setFont(new Font("Oswald", Font.BOLD, 20));
 
         //Shows the percentage of all materials, instead of having to hover it
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1}%"));

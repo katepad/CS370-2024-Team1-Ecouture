@@ -1,6 +1,10 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+
+import controller.userController;
 
 public class loginView extends JPanel {
 
@@ -8,11 +12,11 @@ public class loginView extends JPanel {
     JButton signupButton = new JButton("SIGN UP");
     JLabel usernameTitle = new JLabel("USERNAME");
     JLabel passwordTitle = new JLabel("PASSWORD");
-    JTextField unField = new JTextField();
-    JPasswordField pwField = new JPasswordField();
+    public JTextField unField = new JTextField();
+    public JPasswordField pwField = new JPasswordField();
     ImageIcon logo;
     JLabel logoDisplay;
-    JLabel loginError = new JLabel("Invalid Username or Password.");
+    public JLabel loginError = new JLabel("Invalid Username or Password.");
     JLabel loginTitle = new JLabel("LOGIN");
 
     //Constructor to make Login Panel
@@ -23,7 +27,7 @@ public class loginView extends JPanel {
         this.setLayout(null);
 
         //create image for logo to be put at the bottom
-        logo = new ImageIcon (Objects.requireNonNull(getClass().getResource("pictures/ecouturelogo2.png")));
+        logo = new ImageIcon (Objects.requireNonNull(getClass().getResource("/pictures/ecouturelogo2.png")));
         Image scaledLogo = logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Resize image to 100x100
         logo = new ImageIcon(scaledLogo);  // Update logo with resized image
         logoDisplay = new JLabel(logo);

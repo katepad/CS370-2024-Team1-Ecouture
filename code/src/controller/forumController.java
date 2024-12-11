@@ -1,11 +1,20 @@
+package controller;
+
 import javax.swing.*;
 import java.awt.*;
+
+import view.forumView;
+import view.editForumView;
+import model.forumManagement;
+import model.user;
+import dataAccess.forumPostDAO;
+import model.forumPost;
 
 public class forumController {
 
     //--------------------------------------- EDIT FORUM VIEW ACTION HANDLERS ----------------------------------------//
     //cancel button clicked from editForumView
-    static void cancelButtonClicked(Font oswald, Font lato, editForumView editForumView, user user) {
+    public static void cancelButtonClicked(Font oswald, Font lato, editForumView editForumView, user user) {
         try {
             //Switch back to the forumView Panel.
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(editForumView);
@@ -20,23 +29,23 @@ public class forumController {
     }
 
     //submit button clicked from editForumView
-    static void submitButtonClicked(Font oswald, Font lato, editForumView editForumView, user user) {
+    public static void submitButtonClicked(Font oswald, Font lato, editForumView editForumView, user user) {
         forumPostDAO.submitPost(oswald, lato, editForumView, user);
     }
     //----------------------------------------------------------------------------------------------------------------//
 
 
     //------------------------------------ MAIN FORUM VIEW ACTION HANDLERS -------------------------------------------//
-    static void editPost(forumPost post, Font oswald, Font lato, forumView forumView, user user) {
+    public static void editPost(forumPost post, Font oswald, Font lato, forumView forumView, user user) {
         //let the user go back to editForumView to edit their post.
         forumManagement.editPostWithEditView(post, oswald, lato, forumView, user);
     }
 
-    static void deletePost(forumPost post, Font oswald, Font lato, forumView forumView, user user) {
+    public static void deletePost(forumPost post, Font oswald, Font lato, forumView forumView, user user) {
         forumPostDAO.deletePost(post, oswald, lato,forumView, user);
     }
 
-    static void addPostClicked(Font oswald, Font lato, forumView forumView, user user) {
+    public static void addPostClicked(Font oswald, Font lato, forumView forumView, user user) {
         try {
             //Switch to the editForumView Page
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(forumView);

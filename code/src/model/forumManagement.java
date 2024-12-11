@@ -1,9 +1,15 @@
+package model;
+
 import javax.swing.*;
 import java.awt.*;
 
+import view.forumView;
+import view.editForumView;
+import dataAccess.forumPostDAO;
+
 public class forumManagement {
 
-    static void editPostWithEditView(forumPost post, Font oswald, Font lato, forumView forumView, user user){
+    public static void editPostWithEditView(forumPost post, Font oswald, Font lato, forumView forumView, user user){
         try {
             //switch to the editForumView Page
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(forumView);

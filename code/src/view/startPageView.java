@@ -1,3 +1,5 @@
+package view;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -6,13 +8,15 @@ import java.awt.*;
 import java.awt.Color;
 import java.util.Objects;
 
+import model.user;
+
 public class startPageView extends JPanel {
 
     //button variables for navigation bar and texts
     JLabel aboutUs, aboutText, MissonText;
 
     //constructor
-    startPageView(Font oswald, Font lato, user user) {
+    public startPageView(Font oswald, Font lato, user user) {
 
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
@@ -101,7 +105,7 @@ public class startPageView extends JPanel {
 
     //----------------------------------IMAGE FOR HOME PAGE CURRENT IMAGE IS PLACE HOLDER!!!! -----------------------------
         //load the image and scale it to the desired size
-        ImageIcon fact = new ImageIcon(Objects.requireNonNull(getClass().getResource("pictures/rec2.png")));
+        ImageIcon fact = new ImageIcon(Objects.requireNonNull(getClass().getResource("/pictures/rec2.png")));
         Image scaledFact = fact.getImage().getScaledInstance(200, 200, 4); // Resize image smoothly
         fact = new ImageIcon(scaledFact);  // Update fact with resized image
         //create a JLabel to display the image

@@ -1,3 +1,5 @@
+package model;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.UnsupportedEncodingException;
@@ -10,9 +12,13 @@ import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import view.loginView;
+import view.signupView;
+import dataAccess.myJDBC;
+
 public class userManagement {
 
-    static String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //Hash password to send to database to check
         MessageDigest md = MessageDigest.getInstance("SHA-256");//Using SHA256sum hashing algorithm
         byte[] messageDigest = md.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -23,7 +29,7 @@ public class userManagement {
         return hexstring.toString();
     }
 
-    static boolean validateSignup(signupView signupView) throws SQLException {
+    public static boolean validateSignup(signupView signupView) throws SQLException {
         // To Ensure real name has no special characters
         signupView.fullname = signupView.fnField.getText(); //get name
         Pattern fullnameP = Pattern.compile("[^a-zA-Z -]"); //pattern finds special characters
@@ -71,7 +77,7 @@ public class userManagement {
         return false;
     }
 
-    static void confirmSignup(Font oswald, Font lato, signupView signupView) {
+    public static void confirmSignup(Font oswald, Font lato, signupView signupView) {
 
         // ------------------------------- CREATE SIGNUP MESSAGE WITH DIALOG MODAL -------------------------------//
         JDialog SignupMessage = new JDialog((Frame) SwingUtilities.getWindowAncestor(signupView), "Post Update", true);

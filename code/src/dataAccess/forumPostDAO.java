@@ -1,8 +1,15 @@
+package dataAccess;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import model.forumPost;
+import view.editForumView;
+import model.user;
+import view.forumView;
 
 public class forumPostDAO {
 
@@ -34,7 +41,7 @@ public class forumPostDAO {
         return posts;
     }
 
-    static void submitPost(Font oswald, Font lato, editForumView editForumView, user user){
+    public static void submitPost(Font oswald, Font lato, editForumView editForumView, user user){
         try {
 
             Connection connect = myJDBC.openConnection();
@@ -77,7 +84,7 @@ public class forumPostDAO {
         }
     }
 
-    static void updatePost(forumPost post, String newTitle, String newContent, Font oswald, Font lato, JPanel editForumView, forumView forumView, user user) {
+    public static void updatePost(forumPost post, String newTitle, String newContent, Font oswald, Font lato, JPanel editForumView, forumView forumView, user user) {
         try (Connection conn = myJDBC.openConnection();
              PreparedStatement stmt = conn.prepareStatement("UPDATE post SET post_title = ?, post_content = ? WHERE post_ID = ?")) {
             stmt.setString(1, newTitle);
@@ -139,7 +146,7 @@ public class forumPostDAO {
         }
     }
 
-    static void deletePost(forumPost post, Font oswald, Font lato, forumView forumView, user user){
+    public static void deletePost(forumPost post, Font oswald, Font lato, forumView forumView, user user){
         try (Connection conn = myJDBC.openConnection();
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM post WHERE post_ID = ?")) {
             stmt.setInt(1, post.getPostId());

@@ -1,6 +1,10 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+
+import model.user;
 
 
 //class to use throughout all other programs

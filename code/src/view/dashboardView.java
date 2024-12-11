@@ -1,10 +1,17 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.Color;
 import java.sql.*;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+
+import dataAccess.clothingItemDAO;
+import dataAccess.myJDBC;
+import model.user;
 
 public class dashboardView extends JPanel {
     //constructor
@@ -23,10 +30,15 @@ public class dashboardView extends JPanel {
         //-------------------CREATE items to add to panel---------------------------------------------------------------
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(235, 219, 195));
-        headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        //add space outside of header panel
+        headerPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 0, 0, new Color(235, 219, 195)), //Outer border with different thickness
+                BorderFactory.createEmptyBorder(8, 0, 8, 10) //Inner padding
+        ));
 
         //add Page title
-        JLabel pageTitle = new JLabel("My Dashboard");
+        JLabel pageTitle = new JLabel("MY DASHBOARD");
         pageTitle.setFont(oswald.deriveFont(20f));
         pageTitle.setForeground(new Color(0,99,73));
         pageTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -57,14 +69,14 @@ public class dashboardView extends JPanel {
         JFreeChart piechart = clothingItemDAO.createPieChart(userID);
         ChartPanel chartPanel = new ChartPanel(piechart);
         chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
-        chartPanel.setPreferredSize(new Dimension(200,300));
+        chartPanel.setPreferredSize(new Dimension(180,300));
         chartPanel.add(Box.createVerticalStrut(20));
 
         //Piechart for the acquistion method
         JFreeChart piechart2 = clothingItemDAO.createPieChartAcquisition(userID);
         ChartPanel chartPanel1 = new ChartPanel(piechart2);
         chartPanel1.setMouseWheelEnabled(true);
-        chartPanel1.setPreferredSize(new Dimension(200,300));
+        chartPanel1.setPreferredSize(new Dimension(180,300));
         chartPanel1.add(Box.createVerticalStrut(20));
 
 
@@ -97,7 +109,6 @@ public class dashboardView extends JPanel {
         this.add(scrollPane,BorderLayout.CENTER);
 
         contentPanel.setBackground(new Color(235,219,195));
-        contentPanel.add(pageTitle);
 
         //Displays the overall rating of the closet(material_rating + brand_rating)
         JLabel Sustain = new JLabel();
@@ -247,4 +258,3 @@ public class dashboardView extends JPanel {
         //--------------------------------------------------------------------------------------------------------------
     }
 }
-

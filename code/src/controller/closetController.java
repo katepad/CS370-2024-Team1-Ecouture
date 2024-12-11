@@ -1,10 +1,18 @@
+package controller;
+
 import javax.swing.*;
 import java.awt.*;
+
+import model.closetManagement;
+import model.user;
+import view.closetView;
+import view.editClosetView;
+
 
 public class closetController {
 
     //cancel and switch editClosetView to closetView
-    static void cancelItem(Font oswald, Font lato, editClosetView editClosetView, user user) {
+    public static void cancelItem(Font oswald, Font lato, editClosetView editClosetView, user user) {
         try {
             //switch back to the closetView Panel.
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(editClosetView);
@@ -18,12 +26,12 @@ public class closetController {
         }
     }
 
-    static void saveItemClicked(Font oswald, Font lato, editClosetView editClosetView, user user) {
+    public static void saveItemClicked(Font oswald, Font lato, editClosetView editClosetView, user user) {
         closetManagement.saveItemLogic(oswald, lato, editClosetView, user);
     }
 
     //switch to the editClosetView so user can add more clothes items to their closet.
-    static void addNewItemPanelButtonClicked(Font oswald, Font lato, user user, closetView closetView)
+    public static void addNewItemPanelButtonClicked(Font oswald, Font lato, user user, closetView closetView)
     {
         //switch frame from main closet to editing panel
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(closetView);

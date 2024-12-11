@@ -1,31 +1,36 @@
+package view;
+
 import java.awt.*;
 import java.sql.Date;
 import javax.swing.*;
+
+import model.user;
+import controller.forumController;
 
 public class editForumView extends JPanel {
     //Labels
     JLabel editForumTitle = new JLabel("CREATE FORUM POST");
     JLabel postTitle = new JLabel("Title:");
     JLabel postContent = new JLabel("What would you like to say?");
-    JLabel postErrorMsg = new JLabel("Error...");
+    public JLabel postErrorMsg = new JLabel("Error...");
 
     //Buttons
     JButton cancelButton = new JButton("CANCEL");
-    JButton submitButton = new JButton("SUBMIT");
+    public JButton submitButton = new JButton("SUBMIT");
 
     //Fields to be filled
-    JTextField ptField = new JTextField();
-    JTextArea pcField = new JTextArea();
+    public JTextField ptField = new JTextField();
+    public JTextArea pcField = new JTextArea();
     JScrollPane scrollPane; //added for scrollable text area
 
     //variables to hold the inputs
-    String title;
-    String content;
-    Date date;
-    int userID;
+    public String title;
+    public String content;
+    public Date date;
+    public int userID;
 
     //Constructor
-    editForumView(Font oswald, Font lato, user user) {
+    public editForumView(Font oswald, Font lato, user user) {
         //--------------------------------------- BG COLOR AND PANEL SIZE --------------------------------------------//
         this.setBackground(new Color(235, 219, 195));
         this.setPreferredSize(new Dimension(400, 800));
