@@ -13,6 +13,263 @@ import java.util.List;
 
 public class clothingItemDAO {
 
+
+    static void updateClothingItem(clothingItem item, editClosetView editClosetView, Font oswald, Font lato, user user) {
+
+        try (Connection conn = myJDBC.openConnection()) {
+            conn.setAutoCommit(false); //Begin transaction
+
+            //Extract updated details from editClosetView
+            String newTitle = editClosetView.titleField.getText().trim();
+            String newType = (String) editClosetView.typeComboBox.getSelectedItem();
+            String newBrand = (String) editClosetView.brandComboBox.getSelectedItem(); //Brand name
+            String newAcquireMethod = (String) editClosetView.acquiredComboBox.getSelectedItem();
+
+            //Get the brand_ID from the brand table
+            int brandID;
+            try (PreparedStatement getBrandIDStmt = conn.prepareStatement(
+                    "SELECT brand_ID FROM brand WHERE brand_name = ?")) {
+                getBrandIDStmt.setString(1, newBrand);
+                try (ResultSet rs = getBrandIDStmt.executeQuery()) {
+                    if (rs.next()) {
+                        brandID = rs.getInt("brand_ID");
+                    } else {
+                        throw new SQLException("Brand not found: " + newBrand);
+                    }
+                }
+            }
+
+            //get updated materials with their corresponding material_IDs
+            List<Integer> materialIDs = new ArrayList<>(); //to hold material id
+            List<Integer> materialPercentages = new ArrayList<>(); //to hold the percentage
+
+            for (JPanel materialBar : editClosetView.materialBars) {
+                Component firstComponent = materialBar.getComponent(0); //percentage field
+                Component secondComponent = materialBar.getComponent(2); //material combo box
+
+                System.out.println("Component 0: " + (firstComponent != null ? firstComponent.getClass().getSimpleName() : "null"));
+                System.out.println("Component 1: " + (secondComponent != null ? secondComponent.getClass().getSimpleName() : "null"));
+
+                if (firstComponent instanceof JTextField && secondComponent instanceof JComboBox) {
+                    JTextField percentageField = (JTextField) firstComponent;
+                    JComboBox<String> materialComboBox = (JComboBox<String>) secondComponent;
+
+                    String materialName = (String) materialComboBox.getSelectedItem();
+
+                    int percentage = Integer.parseInt(percentageField.getText().trim());
+
+                    //Get the material_ID for the selected materialName
+                    int materialID;
+                    try (PreparedStatement stmt = conn.prepareStatement(
+                            "SELECT material_ID FROM material WHERE material_type = ?")) {
+                        stmt.setString(1, materialName);
+                        try (ResultSet rs = stmt.executeQuery()) {
+                            if (rs.next()) {
+                                materialID = rs.getInt("material_ID");
+                            } else {
+                                throw new SQLException("Material not found: " + materialName);
+                            }
+                        }
+                    }
+                    materialIDs.add(materialID);
+                    materialPercentages.add(percentage);
+                } else {
+                    String errorMessage = "Unexpected component types in materialBar: "
+                            + "Expected JTextField and JComboBox, but found "
+                            + (firstComponent != null ? firstComponent.getClass().getSimpleName() : "null") + " and "
+                            + (secondComponent != null ? secondComponent.getClass().getSimpleName() : "null");
+                    throw new IllegalStateException(errorMessage);
+                }
+            }
+
+            //update main clothing item details
+            try (PreparedStatement updateClothingStmt = conn.prepareStatement(
+                    "UPDATE clothes SET clothes_name = ?, clothes_type = ?, brand_ID = ?, clothes_acquisition = ? WHERE clothes_ID = ?")) {
+                updateClothingStmt.setString(1, newTitle);
+                updateClothingStmt.setString(2, newType);
+                updateClothingStmt.setInt(3, brandID); //Use the brand_ID
+                updateClothingStmt.setString(4, newAcquireMethod);
+                updateClothingStmt.setInt(5, item.getClothesID());
+                updateClothingStmt.executeUpdate();
+            }
+
+            //clear existing materials for the item
+            try (PreparedStatement deleteMaterialsStmt = conn.prepareStatement(
+                    "DELETE FROM clothes_material WHERE clothes_ID = ?")) {
+                deleteMaterialsStmt.setInt(1, item.getClothesID());
+                deleteMaterialsStmt.executeUpdate();
+            }
+
+            //insert updated materials with material_ID
+            try (PreparedStatement insertMaterialStmt = conn.prepareStatement(
+                    "INSERT INTO clothes_material (clothes_ID, material_ID, percentage) VALUES (?, ?, ?)")) {
+                for (int i = 0; i < materialIDs.size(); i++) {
+                    insertMaterialStmt.setInt(1, item.getClothesID());
+                    insertMaterialStmt.setInt(2, materialIDs.get(i));  //Use material_ID
+                    insertMaterialStmt.setInt(3, materialPercentages.get(i));
+                    insertMaterialStmt.addBatch(); //Add to batch for efficiency
+                }
+                insertMaterialStmt.executeBatch();
+            }
+
+            //commit the transaction
+            conn.commit();
+
+            //display success message
+            JDialog updateMessage = new JDialog((Frame) SwingUtilities.getWindowAncestor(editClosetView), "Clothing Item Update", true);
+            updateMessage.setLayout(new BorderLayout());
+            updateMessage.setSize(300, 150);
+            updateMessage.setBackground(new Color(247, 248, 247));
+            updateMessage.setLocationRelativeTo(editClosetView);
+
+            JLabel updateMessageText = new JLabel("<html><div style='width:150px; text-align: center;'><b>Clothing item updated successfully!</b></div></html>");
+            updateMessageText.setHorizontalAlignment(SwingConstants.CENTER);
+            updateMessageText.setFont(lato.deriveFont(18f));
+
+            JButton okButton = new JButton("OK");
+            okButton.setBackground(new Color(0, 99, 73));
+            okButton.setForeground(new Color(247, 248, 247));
+            okButton.setFont(oswald.deriveFont(14f));
+            okButton.setFocusable(false);
+            okButton.addActionListener(e -> updateMessage.dispose());
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(okButton);
+
+            updateMessage.add(updateMessageText, BorderLayout.CENTER);
+            updateMessage.add(buttonPanel, BorderLayout.SOUTH);
+            updateMessage.setVisible(true);
+
+            //get the JFrame that contains editClosetView
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(editClosetView);
+            if (topFrame != null) {
+                topFrame.getContentPane().removeAll(); //Clear all components from the current frame
+                closetView closetView = new closetView(oswald, lato, user); //Re-create the closetView
+                topFrame.add(closetView, BorderLayout.CENTER); //Add closetView to the frame
+                topFrame.revalidate(); //Refresh the frame
+                topFrame.repaint(); //Repaint the frame
+            } else {
+                //handle the case when topFrame is still null
+                System.err.println("Failed to get the parent JFrame.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+            //handle rollback in case of error
+            try (Connection conn = myJDBC.openConnection()) {
+                conn.rollback();
+            } catch (SQLException rollbackEx) {
+                System.out.println("SQL error: " + e.getMessage());
+            }
+        }
+    }
+
+    static void deleteClothingItemFromDB(clothingItem clothingItem, Font oswald, Font lato, closetView closetView, user user) {
+
+        //connect to the database and execute the deletion query
+        try (Connection conn = myJDBC.openConnection();
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM clothes WHERE clothes_ID = ?")) {
+
+            //get clothing ID.
+            int clothesID = clothingItem.getClothesID();
+            System.out.println(clothesID);
+
+            //set the clothing item's ID in the prepared statement
+            stmt.setInt(1, clothesID);
+            stmt.executeUpdate(); //execute the deletion query
+
+            System.out.println("Clothing item deleted successfully!");
+
+            //refresh the closet view after deletion
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(closetView);
+            topFrame.getContentPane().removeAll(); //clear the current view
+            closetView newclosetView = new closetView(oswald, lato, user); //recreate closet view
+            topFrame.add(newclosetView, BorderLayout.CENTER); //add the updated closet view
+            topFrame.revalidate(); //refresh the frame
+            topFrame.repaint(); //repaint the frame
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        }
+    }
+
+    public static void saveClothingItemAfterEditing(clothingItem clothingItem, editClosetView editClosetView, Font oswald, Font lato, user user) {
+        try {
+            Connection connect = myJDBC.openConnection();
+            //ensure there is a connection to the database
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return;
+            }
+
+            //save the ClothingItem to the database
+            clothingItemDAO clothingItemDAO = new clothingItemDAO();
+            boolean saveSuccess = clothingItemDAO.saveClothingItem(clothingItem);
+
+            if (saveSuccess) {
+                //if saving is successful, retrieve the clothesID (if auto-generated) and update the ClothingItem
+                try (Connection conn = myJDBC.openConnection()) {
+                    String sql = "INSERT INTO clothes (clothes_name, clothes_type, brand, clothes_acquisition, user_id) VALUES (?, ?, ?, ?, ?)";
+                    try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                        stmt.setString(1, editClosetView.title);
+                        stmt.setString(2, editClosetView.type);
+                        stmt.setString(3, editClosetView.brand);
+                        stmt.setString(4, editClosetView.acquireMethod);
+                        stmt.setInt(5, user.getUserId());
+
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQL error: " + e.getMessage());
+                }
+
+                //close the item form
+                closetController.cancelItem(oswald, lato, editClosetView, user);
+
+            } else {
+                System.out.println("Error saving the clothing item.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        }
+    }
+
+    public static void getAllClothes(editClosetView editClosetView, Font lato) {
+        try {
+            Connection connect = myJDBC.openConnection();
+            //ensure there is a connection to the database
+            if (connect == null || connect.isClosed()) {
+                System.out.println("Database connection is not established.");
+                return; //exit the method if connection is not valid
+            }
+
+            //get materials
+            String[] materials = getDbValues(connect, "SELECT material_type FROM material");
+            editClosetView.materialComboBox = editClosetView.createStyledComboBox(materials, lato);
+            editClosetView.materialComboBox.setBackground(new Color(247, 248, 247));
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        }
+    }
+
+    //helper function to execute a query and return the results as an array of Strings
+    static String[] getDbValues(Connection connect, String query) {
+        ArrayList<String> values = new ArrayList<>();
+
+        try (Statement statement = connect.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                values.add(resultSet.getString(1));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        }
+        return values.toArray(new String[0]);
+    }
+
     public boolean saveClothingItem(clothingItem clothingItem) throws SQLException {
 
         //query to get brand ID that matches selected brand name
@@ -145,7 +402,7 @@ public class clothingItemDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL error: " + e.getMessage());
         }
         return clothingItems;
     }

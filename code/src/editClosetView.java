@@ -124,11 +124,11 @@ public class editClosetView extends JPanel {
             }
 
             //fetch brands
-            String[] brands = getDbValues(connect, "SELECT brand_name FROM brand");
+            String[] brands = clothingItemDAO.getDbValues(connect, "SELECT brand_name FROM brand");
             brandComboBox = createStyledComboBox(brands, lato);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL error: " + e.getMessage());
         }
         brandComboBox.setBounds(25, 380, 300, 30);
         brandComboBox.setBackground(new Color(247, 248, 247));
@@ -211,7 +211,7 @@ public class editClosetView extends JPanel {
         saveButton.setBackground(new Color(0, 99, 73)); //green button
         saveButton.setForeground(new Color(247, 248, 247)); //white text
         saveButton.setBounds(200, 650, 100, 40);
-        saveButton.addActionListener(e -> saveItem(oswald, lato));
+        saveButton.addActionListener(e -> closetController.saveItemClicked(oswald, lato, this, user));
         this.add(saveButton);
 
         //cancel button
@@ -220,14 +220,14 @@ public class editClosetView extends JPanel {
         cancelButton.setBackground(new Color(0, 99, 73)); //green button
         cancelButton.setForeground(new Color(247, 248, 247)); //white text
         cancelButton.setBounds(50, 650, 100, 40);
-        cancelButton.addActionListener(e -> cancelItem(oswald, lato));
+        cancelButton.addActionListener(e -> closetController.cancelItem(oswald, lato, this, user));
         this.add(cancelButton);
         //------------------------------------------------------------------------------------------------------------//
 
     } //end of editClosetView
 
     //styled combo box (pull down menu's)
-    private JComboBox<String> createStyledComboBox(String[] options, Font lato) {
+    JComboBox<String> createStyledComboBox(String[] options, Font lato) {
         JComboBox<String> comboBox = new JComboBox<>(options);
         comboBox.setFont(lato.deriveFont(14f));
         comboBox.setBackground(new Color(247, 248, 247));
@@ -259,22 +259,7 @@ public class editClosetView extends JPanel {
         percentLabel.setFont(lato.deriveFont(Font.PLAIN, 14));
         materialBar.add(percentLabel);
 
-        try {
-            Connection connect = myJDBC.openConnection();
-            //ensure there is a connection to the database
-            if (connect == null || connect.isClosed()) {
-                System.out.println("Database connection is not established.");
-                return; //exit the method if connection is not valid
-            }
-
-            //get materials
-            String[] materials = getDbValues(connect, "SELECT material_type FROM material");
-            materialComboBox = createStyledComboBox(materials, lato);
-            materialComboBox.setBackground(new Color(247, 248, 247));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        clothingItemDAO.getAllClothes(this, lato);
 
         //preload material in the combo box if its being updated
         if (material != null && !material.isEmpty()) {
@@ -288,114 +273,5 @@ public class editClosetView extends JPanel {
         materialPanel.revalidate();
         materialPanel.repaint();
     }
-
-    //helper function to execute a query and return the results as an array of Strings
-    private String[] getDbValues(Connection connect, String query) {
-        ArrayList<String> values = new ArrayList<>();
-
-        try (Statement statement = connect.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-
-            while (resultSet.next()) {
-                values.add(resultSet.getString(1));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return values.toArray(new String[0]);
-    }
-
-    //cancel and remove panel
-    private void cancelItem(Font oswald, Font lato) {
-        try {
-            //switch back to the closetView Panel.
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.getContentPane().removeAll(); //clear all components from the current frame
-            closetView closetView = new closetView(oswald, lato, user); //initialize new page.
-            topFrame.add(closetView, BorderLayout.CENTER); //add forumView Panel to the frame
-            topFrame.revalidate(); //refresh the frame
-            topFrame.repaint(); //repaint the frame
-        } catch (Exception e) {
-            System.out.println("General error: " + e.getMessage());
-        }
-    }
-
-    private void saveItem(Font oswald, Font lato) {
-        try {
-            Connection connect = myJDBC.openConnection();
-            if (connect == null || connect.isClosed()) {
-                System.out.println("Database connection is not established.");
-                return;
-            }
-
-            //Escape apostrophes to avoid SQL syntax error
-            title = titleField.getText().replace("'", "''");
-            type = (String) typeComboBox.getSelectedItem();
-            acquireMethod = (String) acquiredComboBox.getSelectedItem();
-            brand = (String) brandComboBox.getSelectedItem();
-            brand = brand.replace("'", "''");
-
-            //Check if title is empty
-            if (title.isEmpty()) {
-                clothesErrorMsg.setVisible(true);
-                clothesErrorMsg.setText("Please name your clothing item!");
-                return;
-            }
-
-            //initialize temp var for clothingID
-            int clothesID = -1; //placeholder for clothes ID before saving to database
-
-            //create the ClothingItem object
-            clothingItem clothingItem = new clothingItem(title, type, acquireMethod, brand, user.getUserId(), clothesID);
-
-            //add materials to the clothing item
-            for (JPanel materialBar : materialBars) { //Loop through all material bars
-                JComboBox<String> materialCombo = (JComboBox<String>) materialBar.getComponent(2);
-                JTextField percentageField = (JTextField) materialBar.getComponent(0);
-
-                String percentageText = percentageField.getText().trim();
-
-                //skip empty or invalid percentage fields
-                if (percentageText.isEmpty()) {
-                    continue; //skip to the next material bar
-                }
-
-                int percentage = Integer.parseInt(percentageText); //validate the input is numeric
-                String material = (String) materialCombo.getSelectedItem();
-                clothingItem.addMaterial(material, percentage); //add material and percentage
-            }
-
-            //save the ClothingItem to the database
-            clothingItemDAO clothingItemDAO = new clothingItemDAO();
-            boolean saveSuccess = clothingItemDAO.saveClothingItem(clothingItem);
-
-            if (saveSuccess) {
-                //if saving is successful, retrieve the clothesID (if auto-generated) and update the ClothingItem
-                try (Connection conn = myJDBC.openConnection()) {
-                    String sql = "INSERT INTO clothes (clothes_name, clothes_type, brand, clothes_acquisition, user_id) VALUES (?, ?, ?, ?, ?)";
-                    try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                        stmt.setString(1, title);
-                        stmt.setString(2, type);
-                        stmt.setString(3, brand);
-                        stmt.setString(4, acquireMethod);
-                        stmt.setInt(5, user.getUserId());
-
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                //close the item form
-                cancelItem(oswald, lato);
-
-            } else {
-                System.out.println("Error saving the clothing item.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }
