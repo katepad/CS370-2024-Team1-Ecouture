@@ -8,13 +8,8 @@ import org.jfree.chart.JFreeChart;
 
 public class dashboardView extends JPanel {
     //constructor
-    private dashboardDAO dashboardDAO;
-    private user user;
-    private myJDBC myJDBC;
     dashboardView(Font oswald, Font lato, user user) throws SQLException {
-        this.myJDBC = myJDBC;
-        this.dashboardDAO = new dashboardDAO(user, myJDBC);
-        this.user = user;
+        clothingItemDAO clothingItemDAO = new clothingItemDAO();
         myJDBC.openConnection();
         //-----------------------Set background color and preferred size------------------------------------------------
         this.setBackground(new Color(235, 219, 195));
@@ -50,23 +45,23 @@ public class dashboardView extends JPanel {
         int userID = user.getUserId();
 
         //Stores all of user's info average into an array
-        double[] userAvg = dashboardDAO.getMaterialAverageForUser();
+        double[] userAvg = clothingItemDAO.getMaterialAverageForUser();
         double water = userAvg[1];
         double energy = userAvg[2];
 
         //Gets the brand rating
-        double brandRating = dashboardDAO.getBrandRating(userID);
+        double brandRating = clothingItemDAO.getBrandRating(userID);
         //Rating for materials
-        double rating = dashboardDAO.getMaterialAverage();
+        double rating = clothingItemDAO.getMaterialAverage();
         //Creates the piechart
-        JFreeChart piechart = dashboardDAO.createPieChart(userID);
+        JFreeChart piechart = clothingItemDAO.createPieChart(userID);
         ChartPanel chartPanel = new ChartPanel(piechart);
         chartPanel.setMouseWheelEnabled(true);//Lets the piechart with mouse wheel
         chartPanel.setPreferredSize(new Dimension(200,300));
         chartPanel.add(Box.createVerticalStrut(20));
 
         //Piechart for the acquistion method
-        JFreeChart piechart2 = dashboardDAO.createPieChartAcquisition(userID);
+        JFreeChart piechart2 = clothingItemDAO.createPieChartAcquisition(userID);
         ChartPanel chartPanel1 = new ChartPanel(piechart2);
         chartPanel1.setMouseWheelEnabled(true);
         chartPanel1.setPreferredSize(new Dimension(200,300));
@@ -76,7 +71,7 @@ public class dashboardView extends JPanel {
         //----------------------------------------------------------------------------------------------------------------
 
         //--------------------------Create scroll panel-----------------------------------------------------------------
-        // Wraps the inside a JScrollPane (this is the scrollable part)
+        // Wrap the closetItemsPanel inside a JScrollPane (this is the scrollable part)
         JPanel contentPanel = new JPanel();
         JPanel overallRatingPanel = new JPanel();
         JPanel brandRatingPanel = new JPanel();
@@ -86,7 +81,6 @@ public class dashboardView extends JPanel {
         JPanel energyPanel = new JPanel();
         JPanel pie = new JPanel();
         JPanel acq = new JPanel();
-        //All sets the layout of the panels 
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         overallRatingPanel.setLayout(new BoxLayout(overallRatingPanel, BoxLayout.Y_AXIS));
         brandRatingPanel.setLayout(new BoxLayout(brandRatingPanel, BoxLayout.Y_AXIS));
@@ -97,7 +91,6 @@ public class dashboardView extends JPanel {
         pie.setLayout(new BoxLayout(pie, BoxLayout.Y_AXIS));
         acq.setLayout(new BoxLayout(acq,BoxLayout.Y_AXIS));
 
-        //Actual scrolling panel
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -117,7 +110,7 @@ public class dashboardView extends JPanel {
         orating.setAlignmentX(Component.LEFT_ALIGNMENT);
         overallRatingPanel.add(Sustain);
         overallRatingPanel.add(orating);
-        dashboardDAO.createStarRating(overallRatingPanel, dashboardDAO.sustainRating(rating, brandRating));
+        clothingItemDAO.createStarRating(overallRatingPanel, dashboardDAO.sustainRating(rating, brandRating));
         overallRatingPanel.add(Box.createVerticalStrut(20));
         overallRatingPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
@@ -135,7 +128,7 @@ public class dashboardView extends JPanel {
         bRating.setAlignmentX(Component.LEFT_ALIGNMENT);
         brandRatingPanel.add(Brand);
         brandRatingPanel.add(bRating);
-        dashboardDAO.createStarRating(brandRatingPanel,brandRating);
+        clothingItemDAO.createStarRating(brandRatingPanel,brandRating);
         brandRatingPanel.add(Box.createVerticalStrut(20));
         brandRatingPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
@@ -153,7 +146,7 @@ public class dashboardView extends JPanel {
         Material.setAlignmentX(Component.LEFT_ALIGNMENT);
         materialRatingPanel.add(mRating);
         materialRatingPanel.add(Material);
-        dashboardDAO.createStarRating(materialRatingPanel, rating);
+        clothingItemDAO.createStarRating(materialRatingPanel, rating);
         materialRatingPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(materialRatingPanel);
         contentPanel.add(Box.createVerticalStrut(20));
@@ -164,7 +157,7 @@ public class dashboardView extends JPanel {
         Carbon.setText("CARBON FOOTPRINT IS:");
         Carbon.setFont(oswald.deriveFont(20f));
         Carbon.setForeground(new Color(0, 99,73));
-        carbonRating.setText(dashboardDAO.getCarbonFootprint(userID) + " kg C02e/item");
+        carbonRating.setText(clothingItemDAO.getCarbonFootprint(userID) + " kg C02e/item");
         carbonRating.setFont(oswald.deriveFont(20f));
         carbonRating.setAlignmentX(Component.LEFT_ALIGNMENT);
         carbonPanel.add(Carbon);
@@ -248,6 +241,10 @@ public class dashboardView extends JPanel {
                 this.trackColor = new Color(235, 219, 195); // Color of the scroll track (matching panel background)
             }
         });
+        // Add the scrollable items to the CENTER of the layout
+
+
+        //--------------------------------------------------------------------------------------------------------------
     }
 }
 
